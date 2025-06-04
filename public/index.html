@@ -2,178 +2,240 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Cartographie Applicative</title>
+  <title>Cartographie des Hôpitaux Publics de Corse</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    h2 {
-      margin-top: 1em;
-    }
-    .legend {
-      margin-bottom: 20px;
-    }
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      margin-right: 10px;
-    }
-    .legend-color {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: 4px;
-    }
-    .domain {
-      border-radius: 8px;
-      border: 1px solid #555;
-      padding: 10px;
-      margin-bottom: 20px;
-    }
-    .domain h3 {
-      margin-top: 0;
-      cursor: pointer;
-    }
-    .process {
-      border: 1px solid #ccc;
-      background: #fff;
-      padding: 5px;
-      border-radius: 6px;
-      margin: 5px;
-    }
-    .application {
-      display: inline-block;
-      vertical-align: top;
-      width: 180px;
-      margin: 5px;
-      padding: 5px;
-      border: 2px solid #999;
-      border-radius: 4px;
-      background: #fff;
-    }
-    .interfaces {
-      margin-top: 5px;
-    }
-    .iface-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 3px;
-    }
+    /* ===== RESET & BASE ===== */
+    *,*::before,*::after{box-sizing:border-box;}
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;background:#fafafa;color:#222;}
+
+    /* ===== HERO HEADER ===== */
+    .hero{background:#1B75BC;color:#fff;padding:40px 24px 32px;border-bottom-left-radius:20px;border-bottom-right-radius:20px;text-align:center;}
+    .hero h1{margin:0;font-size:2.2rem;letter-spacing:0.5px;}
+    .hero p{margin:10px auto 0;max-width:680px;font-size:1rem;line-height:1.4;}
+
+    /* ===== LEGEND ===== */
+    .legend-wrapper{background:#fff;padding:16px 24px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.08);width:fit-content;margin:20px auto 32px;}
+    .legend-title{margin:0 0 12px;font-size:1.1rem;text-align:center;}
+    .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;}
+    .legend-item{display:inline-flex;align-items:center;font-size:0.9rem;}
+    .legend-color{width:14px;height:14px;border-radius:50%;margin-right:6px;border:1px solid rgba(0,0,0,0.25);}  
+    .legend-icon{font-size:1rem;margin-right:6px;}
+
+    /* ===== ESTABLISHMENT & DOMAIN ===== */
+    h2{margin:0 0 12px;padding:10px 14px;background:#ececec;border-radius:8px;cursor:pointer;font-size:1.3rem;}
+    .domain{border-radius:8px;border:1px solid #555;padding:14px;margin-bottom:26px;}
+    .domain h3{margin:0 0 6px;font-size:1.1rem;cursor:pointer;}
+    .domain p{margin:0 0 8px;font-size:0.9rem;color:#444;}
+
+    /* ===== PROCESS GRID – 3 per row ===== */
+    .process-container{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    @media(max-width:800px){.process-container{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:500px){.process-container{grid-template-columns:1fr;} }
+
+    .process{border:1px solid #ccc;background:#fff;padding:10px;border-radius:8px;display:flex;flex-direction:column;}
+    .process h4{margin:0 0 6px;font-size:1rem;}
+    .process p{margin:0 0 6px;font-size:0.85rem;color:#555;}
+
+    /* ===== APPLICATION ===== */
+    .application{position:relative;display:block;width:100%;margin:6px 0;padding:6px 8px;border:2px solid #999;border-radius:6px;background:#fff;word-break:break-word;}
+    .application h5{margin:0 0 4px;font-size:0.88rem;display:inline-flex;align-items:center;gap:4px;}
+
+    /* criticity dot */
+    .crit-dot{position:absolute;top:4px;right:4px;width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,0.3);cursor:pointer;}
+    /* multi icon inline */
+    .multi-icon{font-size:1.05rem;vertical-align:middle;}
+
+    .interfaces{margin-top:4px;}
+    .iface-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;border:1px solid rgba(0,0,0,0.15);}   
   </style>
 </head>
 <body>
-  <h1>Cartographie Applicative</h1>
-  <div class="legend" id="legend"></div>
-  <div id="content">Chargement...</div>
+
+  <!-- ===== HERO (Titre + Description) ===== -->
+  <header class="hero">
+    <h1>Cartographie des Hôpitaux Publics de Corse</h1>
+    <p>Explorez de façon interactive les domaines fonctionnels, processus métiers et applications déployées au sein des principaux centres hospitaliers publics de l'île.<br>
+       Cliquez sur un établissement pour développer sa cartographie, puis sur un domaine pour voir les processus et applications associées.</p>
+  </header>
+
+  <!-- ===== Légende ===== -->
+  <section class="legend-wrapper">
+    <h2 class="legend-title">Légende</h2>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <main style="padding:0 20px 40px;" id="content">Chargement...</main>
+
   <script>
-    const interfaceColors = {
-      Medicale: '#4caf50',
-      Administrative: '#ffeb3b',
-      Planification: '#2196f3',
-      Facturation: '#f44336',
-      Divers: '#9c27b0',
-      Autre: '#9e9e9e'
-    };
+    /* === Données de correspondance des couleurs === */
+    const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',Facturation:'#f44336',Divers:'#9c27b0',Autre:'#9e9e9e'};
 
-    function criticityColor(level) {
-      if (level === 'Haute' || level === 'Critique') return 'red';
-      if (level === 'Majeure' || level === 'Moyenne') return 'orange';
-      return 'gray';
-    }
+    const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
+    let domainIndex=0;
 
-    const domainColors = ['#e5f4fd', '#fbf4e9', '#eaf7eb', '#f9ebf2', '#ede8fd', '#fdf3e5'];
-    let domainIndex = 0;
+    /* === Fonctions utilitaires === */
+    const criticityColor=level=>['Haute','Critique'].includes(level)?'red':(['Majeure','Moyenne'].includes(level)?'orange':'gray');
 
-    function createLegend() {
-      const legend = document.getElementById('legend');
-      Object.entries(interfaceColors).forEach(([name, color]) => {
-        const item = document.createElement('div');
-        item.className = 'legend-item';
-        const dot = document.createElement('span');
-        dot.className = 'legend-color';
-        dot.style.backgroundColor = color;
-        item.appendChild(dot);
-        item.appendChild(document.createTextNode(name));
-        legend.appendChild(item);
+    /* === Construction de la légende === */
+    function createLegend(){
+      const legend=document.getElementById('legend');
+      legend.innerHTML='';
+
+      // Interfaces
+      Object.entries(interfaceColors).forEach(([name,color])=>{
+        addLegendItem(color,name);
       });
-    }
 
-    async function loadData() {
-      try {
-        const res = await fetch('/api/landscape');
-        const data = await res.json();
-        const container = document.getElementById('content');
-        container.innerHTML = '';
-        createLegend();
-        data.etablissements.forEach(etab => {
-          const etabDiv = document.createElement('div');
-          etabDiv.innerHTML = `<h2>${etab.nom}</h2>`;
-          etab.domaines.forEach(domain => {
-            const domainDiv = document.createElement('div');
-            const color = domainColors[domainIndex % domainColors.length];
-            domainIndex++;
-            domainDiv.className = 'domain';
-            domainDiv.style.backgroundColor = color;
-            const title = document.createElement('h3');
-            title.textContent = domain.nom;
-            const desc = document.createElement('p');
-            desc.textContent = domain.description;
-            const content = document.createElement('div');
-            domain.processus.forEach(proc => {
-              const procDiv = document.createElement('div');
-              procDiv.className = 'process';
-              const procTitle = document.createElement('h4');
-              procTitle.textContent = proc.nom;
-              procDiv.appendChild(procTitle);
-              const procDesc = document.createElement('p');
-              procDesc.textContent = proc.description;
-              procDiv.appendChild(procDesc);
-              proc.applications.forEach(app => {
-                const appDiv = document.createElement('div');
-                appDiv.className = 'application';
-                appDiv.style.borderColor = criticityColor(app.criticite);
-                appDiv.title = `Éditeur: ${app.editeur}\nRéférent: ${app.referent}\nHébergement: ${app.hebergement}`;
-                const appTitle = document.createElement('h5');
-                appTitle.textContent = app.nom;
-                appDiv.appendChild(appTitle);
-                const ifaceContainer = document.createElement('div');
-                ifaceContainer.className = 'interfaces';
-                Object.entries(app.interfaces).forEach(([type, active]) => {
-                  if (active && interfaceColors[type]) {
-                    const dot = document.createElement('span');
-                    dot.className = 'iface-dot';
-                    dot.style.backgroundColor = interfaceColors[type];
-                    dot.title = type;
-                    ifaceContainer.appendChild(dot);
-                  }
-                });
-                if (ifaceContainer.childNodes.length) {
-                  appDiv.appendChild(ifaceContainer);
-                }
-                procDiv.appendChild(appDiv);
-              });
-              content.appendChild(procDiv);
-            });
-            domainDiv.appendChild(title);
-            domainDiv.appendChild(desc);
-            domainDiv.appendChild(content);
-            title.addEventListener('click', () => {
-              content.style.display = content.style.display === 'none' ? '' : 'none';
-            });
-            etabDiv.appendChild(domainDiv);
-          });
-          container.appendChild(etabDiv);
-        });
-      } catch (err) {
-        document.getElementById('content').textContent = 'Erreur lors du chargement des données';
+      // Séparateur visuel
+      const sep=document.createElement('span');
+      sep.textContent='|';
+      sep.style.margin='0 6px';
+      legend.appendChild(sep);
+
+      // Criticité
+      addLegendItem('red','Criticité haute/critique');
+      addLegendItem('orange','Criticité moyenne/majeure');
+      addLegendItem('gray','Criticité basse');
+
+      // multi-établissement
+      const multi=document.createElement('div');
+      multi.className='legend-item';
+      const icon=document.createElement('span');
+      icon.className='legend-icon';
+      icon.textContent='🏛️';
+      multi.appendChild(icon);
+      multi.appendChild(document.createTextNode('Multi-établissement'));
+      legend.appendChild(multi);
+
+      function addLegendItem(color,label){
+        const item=document.createElement('div');
+        item.className='legend-item';
+        const dot=document.createElement('span');
+        dot.className='legend-color';
+        dot.style.backgroundColor=color;
+        item.appendChild(dot);
+        item.appendChild(document.createTextNode(label));
+        legend.appendChild(item);
       }
     }
 
+    /* === Chargement dynamique === */
+    async function loadData(){
+      try{
+        const res=await fetch('/api/landscape');
+        const data=await res.json();
+        const container=document.getElementById('content');
+        container.innerHTML='';
+        createLegend();
+
+        data.etablissements.forEach(etab=>{
+          /* ==== Établissement ==== */
+          const etabDiv=document.createElement('div');
+          const etabTitle=document.createElement('h2');
+          etabTitle.textContent=etab.nom;
+          etabDiv.appendChild(etabTitle);
+
+          const domainsWrapper=document.createElement('div');
+          domainsWrapper.style.display='none';
+
+          etab.domaines.forEach(domain=>{
+            const domainDiv=document.createElement('div');
+            domainDiv.className='domain';
+            domainDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
+
+            const dTitle=document.createElement('h3');
+            dTitle.textContent=domain.nom;
+            const dDesc=document.createElement('p');
+            dDesc.textContent=domain.description;
+
+            const processContainer=document.createElement('div');
+            processContainer.className='process-container';
+
+            domain.processus.forEach(proc=>{
+              const procDiv=document.createElement('div');
+              procDiv.className='process';
+              const pTitle=document.createElement('h4');
+              pTitle.textContent=proc.nom;
+              const pDesc=document.createElement('p');
+              pDesc.textContent=proc.description;
+              procDiv.appendChild(pTitle);
+              procDiv.appendChild(pDesc);
+
+              proc.applications.forEach(app=>{
+                const appDiv=document.createElement('div');
+                appDiv.className='application';
+                appDiv.style.borderColor='#999';
+                appDiv.title=`Éditeur: ${app.editeur}\nRéférent: ${app.referent}\nHébergement: ${app.hebergement}`;
+
+                const aTitle=document.createElement('h5');
+                aTitle.textContent=app.nom;
+
+                if(app.multi){
+                  const multiIcon=document.createElement('span');
+                  multiIcon.className='multi-icon';
+                  multiIcon.textContent='🏛️';
+                  multiIcon.title='Application utilisée par plusieurs établissements';
+                  aTitle.appendChild(multiIcon);
+                }
+
+                appDiv.appendChild(aTitle);
+
+                const dotLink=document.createElement('a');
+                dotLink.href=(app.prtgUrl||'#');
+                dotLink.target='_blank';
+                dotLink.className='crit-dot';
+                dotLink.style.backgroundColor=criticityColor(app.criticite);
+                dotLink.title=`Niveau de criticité : ${app.criticite}\nOuvrir le sondage PRTG`;
+                appDiv.appendChild(dotLink);
+
+                const ifaceContainer=document.createElement('div');
+                ifaceContainer.className='interfaces';
+                Object.entries(app.interfaces).forEach(([type,active])=>{
+                  if(active&&interfaceColors[type]){
+                    const dot=document.createElement('span');
+                    dot.className='iface-dot';
+                    dot.style.backgroundColor=interfaceColors[type];
+                    dot.title=type;
+                    ifaceContainer.appendChild(dot);
+                  }
+                });
+                if(ifaceContainer.childNodes.length){appDiv.appendChild(ifaceContainer);}  
+
+                procDiv.appendChild(appDiv);
+              });
+
+              processContainer.appendChild(procDiv);
+            });
+
+            domainDiv.appendChild(dTitle);
+            domainDiv.appendChild(dDesc);
+            domainDiv.appendChild(processContainer);
+
+            dTitle.addEventListener('click',()=>{
+              const hidden=processContainer.style.display==='none';
+              processContainer.style.display=hidden?'':'none';
+              dDesc.style.display=hidden?'':'none';
+            });
+
+            domainsWrapper.appendChild(domainDiv);
+          });
+
+          etabTitle.addEventListener('click',()=>{
+            domainsWrapper.style.display=domainsWrapper.style.display==='none'?'':'none';
+          });
+
+          etabDiv.appendChild(domainsWrapper);
+          container.appendChild(etabDiv);
+        });
+
+      }catch(err){
+        document.getElementById('content').textContent='Erreur lors du chargement des données';
+        console.error(err);
+      }
+    }
+
+    createLegend();
     loadData();
   </script>
 </body>
 </html>
-

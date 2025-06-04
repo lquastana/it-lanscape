@@ -943,7 +943,7 @@
               ]
             },
             {
-              "nom": "Oncologie / Chimio",
+              "DxCa": "Oncologie / Chimio",
               "description": "Prescription et suivi des chimiothérapies.",
               "applications": [
                 {
@@ -985,11 +985,1155 @@
               ]
             }
           ]
+        },
+                {
+          "nom": "DP Administrative",
+          "description": "Gestion administrative du parcours patient.",
+          "processus": [
+            {
+              "nom": "GAP",
+              "description": "Gestion Administrative du Patient.",
+              "applications": [
+                {
+                  "nom": "Pastel",
+                  "description": "Admission, identités, mouvements.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Certificats de décès",
+              "description": "Émission dématérialisée des certificats.",
+              "applications": [
+                {
+                  "nom": "Cert. DC",
+                  "description": "Module certificats de décès.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Tutelles / Curatelles",
+              "description": "Suivi des mesures de protection juridique.",
+              "applications": [
+                {
+                  "nom": "Élap TUTELLE",
+                  "description": "Gestion des tutelles et curatelles.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Commun",
+          "description": "Applications transversales utilisées par tous les services.",
+          "processus": [
+            {
+              "nom": "DPI",
+              "description": "Dossier Patient Informatisé.",
+              "applications": [
+                {
+                  "nom": "DxCare",
+                  "description": "DPI – dossier clinique central.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "DxPlanning",
+                  "description": "Planification intégrée au DPI.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Pharmacie",
+              "description": "Dispensation, prescription et stock.",
+              "applications": [
+                {
+                  "nom": "Pharma",
+                  "description": "Gestion des médicaments et DMI.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "VIDAL Sécurisation",
+                  "description": "Aide à la prescription sécurisée.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Repas",
+              "description": "Gestion des repas patients / résidents.",
+              "applications": [
+                {
+                  "nom": "WinREST",
+                  "description": "Planification et suivi des repas.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHB",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Traçabilité DMI",
+              "description": "Suivi des dispositifs implantables.",
+              "applications": [
+                {
+                  "nom": "Pharma",
+                  "description": "Module traçabilité DMI (Pharma).",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Dossier médico-techniques",
+          "description": "Plateaux techniques et imagerie.",
+          "processus": [
+            {
+              "nom": "Télémédecine",
+              "description": "Télé-imagerie, RCP, téléconsultation.",
+              "applications": [
+                {
+                  "nom": "Telediag",
+                  "description": "Plate-forme de télé-imagerie.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "NEXUS",
+                  "description": "PACS (dom. organes).",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Alta Strada – RCP",
+                  "description": "Réunions de concertation pluridisciplinaire.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Alta Strada – Télémed.",
+                  "description": "Téléconsultations spécialisées.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Imagerie",
+              "description": "PACS, RIS, gravure médias.",
+              "applications": [
+                {
+                  "nom": "Synapse (PACS)",
+                  "description": "Archivage et diffusion d’images.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Xplore (RIS)",
+                  "description": "Gestion des examens radiologiques.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "MedBurn",
+                  "description": "Gravure CD / DVD d’imagerie.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "XdPrint",
+                  "description": "Impression dossiers imaging.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Laboratoire",
+              "description": "Middleware et gestion d’analyses.",
+              "applications": [
+                {
+                  "nom": "Kalisil/Kalilab",
+                  "description": "Gestion chaîne analytique.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "EpiCenter",
+                  "description": "Veille épidémiologique.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Adagio",
+                  "description": "Gestion dérivés sanguins.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "InfectioLabo",
+                  "description": "Suivi microbiologie / infectio.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "CoagOne",
+                  "description": "Gestion de la coagulation.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "MPL Roche",
+                  "description": "Serveur Roche middleware.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Anapath",
+              "description": "Anatomopathologie.",
+              "applications": [
+                {
+                  "nom": "Diamic",
+                  "description": "Gestion des examens anapath.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Stérilisation",
+              "description": "Traçabilité et pilotage stérilisation.",
+              "applications": [
+                {
+                  "nom": "Optim",
+                  "description": "Gestion de la stérilisation.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "SYSUS",
+                  "description": "Traçabilité instruments.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Bloc",
+              "description": "Planification et pilotage du bloc opératoire.",
+              "applications": [
+                {
+                  "nom": "DxBloc",
+                  "description": "Gestion informatisée du bloc.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "SMS",
+                  "description": "Suivi temps réel des interventions.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Induitive",
+                  "description": "Check-list et traçabilité bloc.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "EP Manager",
+                  "description": "Gestion des équipements de bloc.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Échange de données",
+          "description": "Messageries sécurisées et EAI.",
+          "processus": [
+            {
+              "nom": "MSS",
+              "description": "Messagerie Sécurisée de Santé.",
+              "applications": [
+                {
+                  "nom": "Medimail",
+                  "description": "MSS pour échanges externes sécurisés.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "EAI",
+              "description": "Middleware d’interopérabilité.",
+              "applications": [
+                {
+                  "nom": "Cloverleaf",
+                  "description": "EAI hospitalier principal.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Enovacom",
+                  "description": "Plaque d’échanges de données.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Référentiels",
+              "description": "Référentiels nationaux / régionaux.",
+              "applications": [
+                {
+                  "nom": "ROR",
+                  "description": "Répertoire Opérationnel des Ressources.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "CIODC",
+                  "description": "Référentiel d’identités régionales.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "CIODM",
+                  "description": "Référentiel médico-technique.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Cyber sécurité",
+          "description": "Protection, détection et sensibilisation.",
+          "processus": [
+            {
+              "nom": "Gestion des accès",
+              "description": "Accès distants et bastions.",
+              "applications": [
+                {
+                  "nom": "Splashtop",
+                  "description": "Accès bureau distant sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Systancia Bastion",
+                  "description": "Bastion d’administration.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Lockself",
+                  "description": "Coffre-fort mots de passe.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Audit",
+              "description": "Contrôle de la posture sécurité.",
+              "applications": [
+                {
+                  "nom": "Board of Cyberex",
+                  "description": "Tableaux de bord cyber.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Prévention des intrusions",
+              "description": "Pare-feu, antivirus, filtrage.",
+              "applications": [
+                {
+                  "nom": "Fortinet",
+                  "description": "Pare-feu réseau.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Vade m365 mail",
+                  "description": "Antispam Office 365.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Sentinel anti-virus",
+                  "description": "Protection endpoints.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Supervision des menaces",
+              "description": "SOC et veille CTI.",
+              "applications": [
+                {
+                  "nom": "Orange Micro SOC",
+                  "description": "Service SOC externalisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Sekoia exploitation",
+                  "description": "Plate-forme CTI / SIEM.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Sensibilisation",
+              "description": "Formation utilisateurs.",
+              "applications": [
+                {
+                  "nom": "Avant de cliquer",
+                  "description": "Campagnes d’hameçonnage simulé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Sureté",
+          "description": "Sécurité physique du site.",
+          "processus": [
+            {
+              "nom": "Contrôle des accès",
+              "description": "Badges et verrous.",
+              "applications": [
+                {
+                  "nom": "PCPass",
+                  "description": "Gestion des badges.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Haute",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Contrôle des pneumatique",
+              "description": "Réseau de transport par tube.",
+              "applications": [
+                {
+                  "nom": "Transponet",
+                  "description": "Pilotage transport pneumatique.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Outils techniques",
+          "description": "Outils transverses de gestion du SI.",
+          "processus": [
+            {
+              "nom": "Supervision SI",
+              "description": "Monitoring applicatif et réseau.",
+              "applications": [
+                {
+                  "nom": "PRTG",
+                  "description": "Supervision de l’infrastructure.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHB",
+                  "multiEtablissement": true,
+                  "criticite": "Haute",
+                  "lienPRTG": "https://prtg.example.com/",
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GLPI",
+              "description": "Gestion de parc et support.",
+              "applications": [
+                {
+                  "nom": "GLPI",
+                  "description": "Inventaire matériel + help-desk.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": true,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Annuaire & ref. internes",
+          "description": "Référentiels organisation & finances.",
+          "processus": [
+            {
+              "nom": "Comptes budgétaires",
+              "description": "Plan comptable interne.",
+              "applications": [
+                {
+                  "nom": "Magh2",
+                  "description": "Référentiel budgétaire.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Structures & nomenclatures",
+              "description": "Structure interne des unités.",
+              "applications": [
+                {
+                  "nom": "Convergence",
+                  "description": "Nomenclature services et UF.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHA",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Divers": false,
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
         }
-
       ]
     },
-
     { "nom": "CH Bastia",       "domaines": [] },
     { "nom": "CH Castelluccio", "domaines": [] },
     { "nom": "CH Sartene",      "domaines": [] }
