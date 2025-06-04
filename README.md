@@ -1,2 +1,42 @@
 # it-landscape
-IT application landscape
+
+Ce projet contient un exemple minimal de cartographie applicative basé sur un stack JavaScript.
+Il s'appuie sur un fichier JSON décrivant les domaines fonctionnels, les processus et les applications.
+Un petit serveur Express fournit une API et sert une page web affichant les données.
+
+## Installation
+
+```bash
+npm install
+```
+
+## Lancer le serveur
+
+```bash
+npm start
+```
+
+Le serveur démarre sur `http://localhost:3000`. Rendez-vous sur cette adresse dans votre navigateur pour voir la cartographie.
+
+## Structure des données
+
+Le fichier `data/landscape.json` suit la structure suivante :
+
+- **domaines** : liste des domaines fonctionnels
+  - **nom** : nom du domaine
+  - **description** : description du domaine
+  - **processus** : liste des processus rattachés
+    - **nom** : nom du processus
+    - **description** : description du processus
+    - **applications** : liste des applications associées
+      - **nom** : nom de l'application
+      - **description** : description
+      - **editeur** : éditeur de l'application
+      - **referent** : personne référente
+      - **hebergement** : lieu d'hébergement (Etablissement, Esanté, SAS)
+      - **multiEtablissement** : booleen indiquant si l'application est multi-établissement
+      - **criticite** : niveau de criticité
+      - **lienPRTG** : lien de supervision PRTG
+      - **interfaces** : interfaces classées par type (Divers, Planification, Facturation, Administrative, Medicale, Autre)
+
+Un exemple de domaine, de processus et d'application est fourni dans `data/landscape.json`.

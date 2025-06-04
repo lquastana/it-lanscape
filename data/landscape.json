@@ -1,0 +1,34 @@
+{
+  "domaines": [
+    {
+      "nom": "DP Spécialités",
+      "description": "Gestion des dossiers patients pour les spécialités médicales.",
+      "processus": [
+        {
+          "nom": "Urgences",
+          "description": "Prise en charge des patients en situation d'urgence.",
+          "applications": [
+            {
+              "nom": "GestionUrgences",
+              "description": "Application de suivi des urgences hospitalières.",
+              "editeur": "Logiciel Santé Inc.",
+              "referent": "Dr Martin",
+              "hebergement": "Etablissement",
+              "multiEtablissement": true,
+              "criticite": "Haute",
+              "lienPRTG": "https://prtg.example.com/gestionurgences",
+              "interfaces": {
+                "Divers": ["Messagerie"],
+                "Planification": ["CalendrierHopital"],
+                "Facturation": [],
+                "Administrative": ["GestionPatients"],
+                "Medicale": ["Imagerie"],
+                "Autre": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

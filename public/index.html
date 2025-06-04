@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cartographie Applicative</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { margin-top: 1em; }
+    .domain, .process, .application { margin-left: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Cartographie Applicative</h1>
+  <div id="content">Chargement...</div>
+  <script>
+    async function loadData() {
+      try {
+        const res = await fetch('/api/landscape');
+        const data = await res.json();
+        const container = document.getElementById('content');
+        container.innerHTML = '';
+        data.domaines.forEach(domain => {
+          const domainDiv = document.createElement('div');
+          domainDiv.className = 'domain';
+          domainDiv.innerHTML = `<h2>${domain.nom}</h2><p>${domain.description}</p>`;
+          domain.processus.forEach(proc => {
+            const procDiv = document.createElement('div');
+            procDiv.className = 'process';
+            procDiv.innerHTML = `<h3>${proc.nom}</h3><p>${proc.description}</p>`;
+            proc.applications.forEach(app => {
+              const appDiv = document.createElement('div');
+              appDiv.className = 'application';
+              appDiv.innerHTML = `
+                <h4>${app.nom}</h4>
+                <p>${app.description}</p>
+                <ul>
+                  <li><strong>Éditeur:</strong> ${app.editeur}</li>
+                  <li><strong>Référent:</strong> ${app.referent}</li>
+                  <li><strong>Hébergement:</strong> ${app.hebergement}</li>
+                  <li><strong>Multi-établissement:</strong> ${app.multiEtablissement ? 'Oui' : 'Non'}</li>
+                  <li><strong>Criticité:</strong> ${app.criticite}</li>
+                  <li><strong>Lien PRTG:</strong> <a href="${app.lienPRTG}">${app.lienPRTG}</a></li>
+                </ul>
+              `;
+              const interfaceList = document.createElement('ul');
+              Object.entries(app.interfaces).forEach(([type, ifaces]) => {
+                if (ifaces.length > 0) {
+                  const li = document.createElement('li');
+                  li.innerHTML = `<strong>${type}:</strong> ${ifaces.join(', ')}`;
+                  interfaceList.appendChild(li);
+                }
+              });
+              if (interfaceList.children.length > 0) {
+                appDiv.appendChild(interfaceList);
+              }
+              procDiv.appendChild(appDiv);
+            });
+            domainDiv.appendChild(procDiv);
+          });
+          container.appendChild(domainDiv);
+        });
+      } catch (err) {
+        document.getElementById('content').textContent = 'Erreur lors du chargement des données';
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
