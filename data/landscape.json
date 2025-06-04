@@ -61,7 +61,7 @@
               "applications": [
                 {
                   "nom": "GRECAPS",
-                  "description": "Portail et gestion des commandes PUI.",
+                  "description": "Groupement Régional Corse d’Achats de Produits de Santé.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
@@ -157,9 +157,9 @@
               "applications": [
                 {
                   "nom": "Zap",
-                  "description": "Gestion des commandes et des sorties magasin.",
+                  "description": "Gestion logistique et magasin (stocks, commandes, sorties).",
                   "editeur": null,
-                  "referent": null,
+                  "referent": "Xavier-Joseph Tavera",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
@@ -411,13 +411,13 @@
               "applications": [
                 {
                   "nom": "AGIRH GTT",
-                  "description": "Suivi du temps de travail médical.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Gestion du Temps de Travail (médical).",
+                  "editeur": "MIPIH",
+                  "referent": "Frédéric Paccosi",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30403&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": true,
@@ -484,13 +484,13 @@
                 },
                 {
                   "nom": "Outils ATIH",
-                  "description": "Suite d’outils ATIH pour le PMSI.",
-                  "editeur": "ATIH",
-                  "referent": null,
+                  "description": "Portail financier / qualité proposant divers outils ATIH.",
+                  "editeur": "Gouvernement",
+                  "referent": "Nina Lebeau",
                   "hebergement": "SAS",
                   "multiEtablissement": true,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
@@ -532,13 +532,13 @@
               "applications": [
                 {
                   "nom": "Magellan",
-                  "description": "Contrôle de gestion hospitalier.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Suite d’outils décisionnels pour le pilotage économique.",
+                  "editeur": "SIB",
+                  "referent": "Nina Lebeau",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Haute",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
@@ -636,9 +636,9 @@
               "applications": [
                 {
                   "nom": "TU",
-                  "description": "Triage et dossier patient Urgences.",
-                  "editeur": null,
-                  "referent": "Cadre Urgences",
+                  "description": "Triage Urgences : dossier médical du patient.",
+                  "editeur": "IES",
+                  "referent": "Lisandru Benedetti",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Haute",
@@ -654,13 +654,13 @@
                 },
                 {
                   "nom": "ORUBox",
-                  "description": "Échanges de résultats laboratoires (HL7 ORU).",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Gestion des AVC par télémédecine (échanges HL7 ORU).",
+                  "editeur": "ORU PACA",
+                  "referent": "Lisandru Benedetti",
                   "hebergement": "SAS",
                   "multiEtablissement": true,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30354&tabid=1",
                   "interfaces": {
                     "Divers": true,
                     "Planification": false,
@@ -696,7 +696,7 @@
                 },
                 {
                   "nom": "IntelliVue",
-                  "description": "Monitorage réanimation.",
+                  "description": "Suite Philips de monitorage réanimation.",
                   "editeur": "Philips",
                   "referent": null,
                   "hebergement": "CHA",
@@ -720,13 +720,13 @@
               "applications": [
                 {
                   "nom": "Cardioreport",
-                  "description": "Gestion du dossier cardio.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Application d’aide à la rédaction et à l’interprétation des comptes-rendus cardiologiques.",
+                  "editeur": "Medireport",
+                  "referent": "Julien Versini",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=37243&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
@@ -738,9 +738,9 @@
                 },
                 {
                   "nom": "IntelliSpace",
-                  "description": "Plate-forme d’imagerie cardiovasculaire.",
+                  "description": "Plate-forme Philips d’imagerie cardiovasculaire et d’analytique.",
                   "editeur": "Philips",
-                  "referent": null,
+                  "referent": "Julien Versini",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Haute",
@@ -864,9 +864,9 @@
               "applications": [
                 {
                   "nom": "Hemadialyse",
-                  "description": "Gestion des patients dialysés.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Suivi des patients insuffisants rénaux ; gestion et optimisation des séances de dialyse.",
+                  "editeur": "Hemadialyse",
+                  "referent": "Laurence Milani",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Haute",
@@ -888,13 +888,13 @@
               "applications": [
                 {
                   "nom": "SAMUScript",
-                  "description": "Fiche d’appels et régulation SAMU.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Dossier de régulation médicale (centre 15).",
+                  "editeur": "Scriptal",
+                  "referent": "Andrée Mori",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Haute",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=12901&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": true,
@@ -906,13 +906,13 @@
                 },
                 {
                   "nom": "Mediq",
-                  "description": "Gestion des interventions SMUR.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Centre de contacts SAMU (console d’appels).",
+                  "editeur": "NXO",
+                  "referent": "Andrée Mori",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30472&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": true,
@@ -924,9 +924,9 @@
                 },
                 {
                   "nom": "Nice Recorder",
-                  "description": "Enregistrements radio SAMU.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Enregistrement et archivage des communications radio SAMU.",
+                  "editeur": "NXO",
+                  "referent": "Andrée Mori",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
@@ -986,7 +986,8 @@
             }
           ]
         },
-                {
+
+        {
           "nom": "DP Administrative",
           "description": "Gestion administrative du parcours patient.",
           "processus": [
@@ -1045,7 +1046,7 @@
                 {
                   "nom": "Élap TUTELLE",
                   "description": "Gestion des tutelles et curatelles.",
-                  "editeur": null,
+                  "editeur": "Médiane",
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": false,
@@ -1064,6 +1065,7 @@
             }
           ]
         },
+
         {
           "nom": "DP Commun",
           "description": "Applications transversales utilisées par tous les services.",
@@ -1092,9 +1094,9 @@
                 },
                 {
                   "nom": "DxPlanning",
-                  "description": "Planification intégrée au DPI.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Module intégré de planification des ressources (agenda, lits, blocs).",
+                  "editeur": "Dedalus",
+                  "referent": "Isabelle Re",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Haute",
@@ -1134,9 +1136,9 @@
                 },
                 {
                   "nom": "VIDAL Sécurisation",
-                  "description": "Aide à la prescription sécurisée.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Module de sécurisation de l’ordonnance (alertes CI, posologie, allergies…).",
+                  "editeur": "VIDAL",
+                  "referent": "Benjamin Darmon",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Haute",
@@ -1159,7 +1161,7 @@
                 {
                   "nom": "WinREST",
                   "description": "Planification et suivi des repas.",
-                  "editeur": null,
+                  "editeur": "Datameal",
                   "referent": null,
                   "hebergement": "CHB",
                   "multiEtablissement": true,
@@ -1202,6 +1204,7 @@
             }
           ]
         },
+
         {
           "nom": "Dossier médico-techniques",
           "description": "Plateaux techniques et imagerie.",
@@ -1213,8 +1216,8 @@
                 {
                   "nom": "Telediag",
                   "description": "Plate-forme de télé-imagerie.",
-                  "editeur": null,
-                  "referent": null,
+                  "editeur": "Telediag",
+                  "referent": "Julien Versini",
                   "hebergement": "SAS",
                   "multiEtablissement": true,
                   "criticite": "Haute",
@@ -1290,13 +1293,13 @@
               "applications": [
                 {
                   "nom": "Synapse (PACS)",
-                  "description": "Archivage et diffusion d’images.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "PACS Synapse : archivage et diffusion d’images médicales.",
+                  "editeur": "Softway Medical",
+                  "referent": "Julien Versini",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Haute",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30502&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
@@ -1326,13 +1329,13 @@
                 },
                 {
                   "nom": "MedBurn",
-                  "description": "Gravure CD / DVD d’imagerie.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Gravure CD/DVD des examens d’imagerie.",
+                  "editeur": "EDL",
+                  "referent": "Julien Versini",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=39623&tabid=1",
                   "interfaces": {
                     "Divers": true,
                     "Planification": false,
@@ -1344,13 +1347,13 @@
                 },
                 {
                   "nom": "XdPrint",
-                  "description": "Impression dossiers imaging.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Impression de dossiers et pochettes d’imagerie.",
+                  "editeur": "System X",
+                  "referent": "Julien Versini",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=39625&tabid=1",
                   "interfaces": {
                     "Divers": true,
                     "Planification": false,
@@ -1440,13 +1443,13 @@
                 },
                 {
                   "nom": "CoagOne",
-                  "description": "Gestion de la coagulation.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Middleware de gestion de la coagulation (hémostase).",
+                  "editeur": "Stago",
+                  "referent": "Clarisse Durand",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=46437&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
@@ -1506,13 +1509,13 @@
               "applications": [
                 {
                   "nom": "Optim",
-                  "description": "Gestion de la stérilisation.",
-                  "editeur": null,
+                  "description": "Gestion et traçabilité du circuit de stérilisation.",
+                  "editeur": "NEXUS",
                   "referent": null,
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34947&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
@@ -1524,13 +1527,13 @@
                 },
                 {
                   "nom": "SYSUS",
-                  "description": "Traçabilité instruments.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Supervision du lavage et de la stérilisation (lignes Stayinfo).",
+                  "editeur": "Stayinfo",
+                  "referent": "Benjamin Darmon",
                   "hebergement": "CHA",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34947&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
@@ -1622,6 +1625,7 @@
             }
           ]
         },
+
         {
           "nom": "Échange de données",
           "description": "Messageries sécurisées et EAI.",
@@ -1674,13 +1678,13 @@
                 },
                 {
                   "nom": "Enovacom",
-                  "description": "Plaque d’échanges de données.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Plaque d’échanges de données (EAI) – interopérabilité applicative.",
+                  "editeur": "Xperis",
+                  "referent": "DSI AJA",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Standard",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34115&tabid=1",
                   "interfaces": {
                     "Divers": true,
                     "Planification": false,
@@ -1754,6 +1758,7 @@
             }
           ]
         },
+
         {
           "nom": "Cyber sécurité",
           "description": "Protection, détection et sensibilisation.",
@@ -1908,13 +1913,13 @@
               "applications": [
                 {
                   "nom": "Orange Micro SOC",
-                  "description": "Service SOC externalisé.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Service SOC externalisé (surveillance, détection, réponse).",
+                  "editeur": "Orange Cyberdefense",
+                  "referent": "David Lecerf",
                   "hebergement": "SAS",
                   "multiEtablissement": true,
                   "criticite": "Haute",
-                  "lienPRTG": null,
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Divers": true,
                     "Planification": false,
@@ -1970,6 +1975,7 @@
             }
           ]
         },
+
         {
           "nom": "Sureté",
           "description": "Sécurité physique du site.",
@@ -2024,6 +2030,7 @@
             }
           ]
         },
+
         {
           "nom": "Outils techniques",
           "description": "Outils transverses de gestion du SI.",
@@ -2034,13 +2041,13 @@
               "applications": [
                 {
                   "nom": "PRTG",
-                  "description": "Supervision de l’infrastructure.",
-                  "editeur": null,
-                  "referent": null,
+                  "description": "Surveillance en temps réel de l’infrastructure (Paessler PRTG).",
+                  "editeur": "Paessler AG",
+                  "referent": "Natale Pantalacci",
                   "hebergement": "CHB",
                   "multiEtablissement": true,
                   "criticite": "Haute",
-                  "lienPRTG": "https://prtg.example.com/",
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Divers": true,
                     "Planification": false,
@@ -2078,6 +2085,7 @@
             }
           ]
         },
+
         {
           "nom": "Annuaire & ref. internes",
           "description": "Référentiels organisation & finances.",

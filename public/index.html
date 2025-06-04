@@ -1,238 +1,246 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <title>Cartographie des Hôpitaux Publics de Corse</title>
   <style>
-    /* ===== RESET & BASE ===== */
+    /* Styles similaires à ceux déjà fournis, condensés ici pour clarté */
     *,*::before,*::after{box-sizing:border-box;}
-    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;background:#fafafa;color:#222;}
-
-    /* ===== HERO HEADER ===== */
-    .hero{background:#1B75BC;color:#fff;padding:40px 24px 32px;border-bottom-left-radius:20px;border-bottom-right-radius:20px;text-align:center;}
-    .hero h1{margin:0;font-size:2.2rem;letter-spacing:0.5px;}
-    .hero p{margin:10px auto 0;max-width:680px;font-size:1rem;line-height:1.4;}
-
-    /* ===== LEGEND ===== */
-    .legend-wrapper{background:#fff;padding:16px 24px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.08);width:fit-content;margin:20px auto 32px;}
-    .legend-title{margin:0 0 12px;font-size:1.1rem;text-align:center;}
-    .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;}
+    body{font-family:Arial,sans-serif;margin:0;padding:0;background:#fafafa;color:#222;}
+    .hero{background:#1B75BC;color:#fff;padding:40px 24px 32px;text-align:center;border-bottom-left-radius:20px;border-bottom-right-radius:20px;}
+    .hero h1{margin:0;font-size:2.2rem;}
+    .hero p{margin-top:10px;max-width:680px;margin-left:auto;margin-right:auto;}
+    .legend-wrapper{background:#fff;padding:16px 24px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.08);width:fit-content;margin:24px auto;}
+    .legend-title{margin-bottom:16px;font-size:1.3rem;text-align:center;}
+    .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:20px;}
     .legend-item{display:inline-flex;align-items:center;font-size:0.9rem;}
-    .legend-color{width:14px;height:14px;border-radius:50%;margin-right:6px;border:1px solid rgba(0,0,0,0.25);}  
+    .legend-color{width:14px;height:14px;border-radius:50%;margin-right:6px;border:1px solid rgba(0,0,0,0.25);}
     .legend-icon{font-size:1rem;margin-right:6px;}
-
-    /* ===== ESTABLISHMENT & DOMAIN ===== */
-    h2{margin:0 0 12px;padding:10px 14px;background:#ececec;border-radius:8px;cursor:pointer;font-size:1.3rem;}
-    .domain{border-radius:8px;border:1px solid #555;padding:14px;margin-bottom:26px;}
-    .domain h3{margin:0 0 6px;font-size:1.1rem;cursor:pointer;}
-    .domain p{margin:0 0 8px;font-size:0.9rem;color:#444;}
-
-    /* ===== PROCESS GRID – 3 per row ===== */
-    .process-container{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-    @media(max-width:800px){.process-container{grid-template-columns:repeat(2,1fr);} }
-    @media(max-width:500px){.process-container{grid-template-columns:1fr;} }
-
-    .process{border:1px solid #ccc;background:#fff;padding:10px;border-radius:8px;display:flex;flex-direction:column;}
-    .process h4{margin:0 0 6px;font-size:1rem;}
-    .process p{margin:0 0 6px;font-size:0.85rem;color:#555;}
-
-    /* ===== APPLICATION ===== */
-    .application{position:relative;display:block;width:100%;margin:6px 0;padding:6px 8px;border:2px solid #999;border-radius:6px;background:#fff;word-break:break-word;}
-    .application h5{margin:0 0 4px;font-size:0.88rem;display:inline-flex;align-items:center;gap:4px;}
-
-    /* criticity dot */
-    .crit-dot{position:absolute;top:4px;right:4px;width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,0.3);cursor:pointer;}
-    /* multi icon inline */
-    .multi-icon{font-size:1.05rem;vertical-align:middle;}
-
-    .interfaces{margin-top:4px;}
-    .iface-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;border:1px solid rgba(0,0,0,0.15);}   
+    .filters{text-align:center;}
+    .filters label{display:inline-block;margin:0 10px 10px;}
+    .filters select, .filters input{padding:4px;}
+    .domain, .process, .application{background:#fff;border-radius:8px;margin-bottom:16px;padding:10px;}
+    .domain{border:1px solid #555;}
+    .domain h3{cursor:pointer;}
+    .process{border:1px solid #ccc;}
+    .application{border:2px solid #999;position:relative;}
+    .application h5{margin:0 0 4px;}
+    .crit-dot{position:absolute;top:4px;right:4px;width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,0.3);}
+    .multi-icon{margin-left:6px;}
+    .iface-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;border:1px solid rgba(0,0,0,0.2);}
   </style>
 </head>
 <body>
-
-  <!-- ===== HERO (Titre + Description) ===== -->
   <header class="hero">
     <h1>Cartographie des Hôpitaux Publics de Corse</h1>
-    <p>Explorez de façon interactive les domaines fonctionnels, processus métiers et applications déployées au sein des principaux centres hospitaliers publics de l'île.<br>
-       Cliquez sur un établissement pour développer sa cartographie, puis sur un domaine pour voir les processus et applications associées.</p>
+    <p>Explorez les domaines, processus et applications. Cliquez pour replier/déplier.</p>
   </header>
 
-  <!-- ===== Légende ===== -->
   <section class="legend-wrapper">
-    <h2 class="legend-title">Légende</h2>
+    <h2 class="legend-title">Légende & Filtres</h2>
     <div class="legend" id="legend"></div>
+    <div class="filters">
+      <label>Établissement : <select id="filter-etab"><option value="">Tous</option></select></label>
+      <label>Domaine : <select id="filter-domaine"><option value="">Tous</option></select></label>
+      <label>Criticité : 
+        <select id="filter-criticite">
+          <option value="">Tous</option>
+          <option value="Standard">Standard</option>
+          <option value="Haute">Haute</option>
+        </select>
+      </label>
+      <label>Hébergement : <select id="filter-heberg"><option value="">Tous</option></select></label>
+      <label>Interface : <select id="filter-interface"><option value="">Toutes</option></select></label>
+    </div>
   </section>
 
   <main style="padding:0 20px 40px;" id="content">Chargement...</main>
 
   <script>
-    /* === Données de correspondance des couleurs === */
-    const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',Facturation:'#f44336',Divers:'#9c27b0',Autre:'#9e9e9e'};
+    const interfaceColors = {
+      Medicale:'#4caf50',
+      Administrative:'#ffeb3b',
+      Planification:'#2196f3',
+      Facturation:'#f44336',
+      Autre:'#9e9e9e'
+    };
 
-    const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
-    let domainIndex=0;
+    const domainColors = ['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
+    let domainIndex = 0;
+    let fullData = null;
 
-    /* === Fonctions utilitaires === */
-    const criticityColor=level=>['Haute','Critique'].includes(level)?'red':(['Majeure','Moyenne'].includes(level)?'orange':'gray');
+    const criticityColor = level => ['Haute','Critique'].includes(level) ? 'red' : 'gray';
 
-    /* === Construction de la légende === */
     function createLegend(){
       const legend=document.getElementById('legend');
       legend.innerHTML='';
-
-      // Interfaces
       Object.entries(interfaceColors).forEach(([name,color])=>{
-        addLegendItem(color,name);
-      });
-
-      // Séparateur visuel
-      const sep=document.createElement('span');
-      sep.textContent='|';
-      sep.style.margin='0 6px';
-      legend.appendChild(sep);
-
-      // Criticité
-      addLegendItem('red','Criticité haute/critique');
-      addLegendItem('orange','Criticité moyenne/majeure');
-      addLegendItem('gray','Criticité basse');
-
-      // multi-établissement
-      const multi=document.createElement('div');
-      multi.className='legend-item';
-      const icon=document.createElement('span');
-      icon.className='legend-icon';
-      icon.textContent='🏛️';
-      multi.appendChild(icon);
-      multi.appendChild(document.createTextNode('Multi-établissement'));
-      legend.appendChild(multi);
-
-      function addLegendItem(color,label){
         const item=document.createElement('div');
         item.className='legend-item';
         const dot=document.createElement('span');
         dot.className='legend-color';
         dot.style.backgroundColor=color;
         item.appendChild(dot);
-        item.appendChild(document.createTextNode(label));
+        item.appendChild(document.createTextNode(name));
         legend.appendChild(item);
+      });
+      const sep=document.createElement('span');
+      sep.textContent='|';
+      sep.style.margin='0 6px';
+      legend.appendChild(sep);
+      [['red','Criticité haute'],['gray','Criticité standard']].forEach(([color,text])=>{
+        const item=document.createElement('div');
+        item.className='legend-item';
+        const dot=document.createElement('span');
+        dot.className='legend-color';
+        dot.style.backgroundColor=color;
+        item.appendChild(dot);
+        item.appendChild(document.createTextNode(text));
+        legend.appendChild(item);
+      });
+    }
+
+    function populateDropdowns(data){
+      const sets = {etab: new Set(), domaine: new Set(), heberg: new Set(), interface: new Set()};
+      data.etablissements.forEach(etab=>{
+        sets.etab.add(etab.nom);
+        etab.domaines.forEach(dom=>{
+          sets.domaine.add(dom.nom);
+          dom.processus.forEach(p=>p.applications.forEach(a=>{
+            sets.heberg.add(a.hebergement);
+            Object.entries(a.interfaces).forEach(([k,v])=>{ if(v) sets.interface.add(k); });
+          }));
+        });
+      });
+
+      for (const [key, set] of Object.entries(sets)) {
+        const sel = document.getElementById('filter-'+key);
+        sel.innerHTML = '<option value="">Tous</option>';
+        [...set].sort().forEach(v=>{
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v;
+          sel.appendChild(opt);
+        });
       }
     }
 
-    /* === Chargement dynamique === */
+    function render(){
+      const filters = {
+        etab: document.getElementById('filter-etab').value,
+        domaine: document.getElementById('filter-domaine').value,
+        criticite: document.getElementById('filter-criticite').value,
+        heberg: document.getElementById('filter-heberg').value,
+        interface: document.getElementById('filter-interface').value
+      };
+
+      const container = document.getElementById('content');
+      container.innerHTML = '';
+      domainIndex = 0;
+
+      fullData.etablissements.forEach(etab=>{
+        if(filters.etab && filters.etab !== etab.nom) return;
+        const etabDiv=document.createElement('div');
+        const h2=document.createElement('h2');
+        h2.textContent=etab.nom;
+        h2.style.cursor='pointer';
+        const content=document.createElement('div');
+
+        h2.onclick = () => {
+          content.style.display = content.style.display === 'none' ? '' : 'none';
+        };
+        etabDiv.appendChild(h2);
+
+        etab.domaines.forEach(domain=>{
+          if(filters.domaine && filters.domaine !== domain.nom) return;
+          const domainDiv=document.createElement('div');
+          domainDiv.className='domain';
+          domainDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
+
+          const h3=document.createElement('h3');
+          h3.textContent=domain.nom;
+          const ddesc=document.createElement('p');
+          ddesc.textContent=domain.description;
+
+          const procCont=document.createElement('div');
+          domain.processus.forEach(proc=>{
+            const procDiv=document.createElement('div');
+            procDiv.className='process';
+            procDiv.innerHTML = '<h4>'+proc.nom+'</h4><p>'+proc.description+'</p>';
+
+            proc.applications.forEach(app=>{
+              const isCrit = !filters.criticite ||
+                (filters.criticite === 'Standard' && !['Haute','Critique'].includes(app.criticite)) ||
+                (filters.criticite === 'Haute' && ['Haute','Critique'].includes(app.criticite));
+              const isIntf = !filters.interface || app.interfaces[filters.interface];
+              if(!isCrit || (filters.heberg && app.hebergement !== filters.heberg) || !isIntf) return;
+
+              const appDiv=document.createElement('div');
+              appDiv.className='application';
+              const h5=document.createElement('h5');
+              h5.textContent=app.nom;
+              if(app.multi){
+                const span=document.createElement('span');
+                span.className='multi-icon';
+                span.textContent='🏛️';
+                h5.appendChild(span);
+              }
+              appDiv.appendChild(h5);
+              const crit=document.createElement('span');
+              crit.className='crit-dot';
+              crit.style.backgroundColor=criticityColor(app.criticite);
+              appDiv.appendChild(crit);
+
+              const iface=document.createElement('div');
+              Object.entries(app.interfaces).forEach(([type,active])=>{
+                if(active && interfaceColors[type]){
+                  const dot=document.createElement('span');
+                  dot.className='iface-dot';
+                  dot.style.backgroundColor=interfaceColors[type];
+                  dot.title=type;
+                  iface.appendChild(dot);
+                }
+              });
+              appDiv.appendChild(iface);
+              appDiv.innerHTML += '<p>'+app.description+'</p><p style="font-style:italic;color:#666">Hébergement : '+app.hebergement+'</p>';
+              procDiv.appendChild(appDiv);
+            });
+
+            if(procDiv.querySelector('.application')) procCont.appendChild(procDiv);
+          });
+
+          if(procCont.childNodes.length){
+            h3.style.cursor='pointer';
+            let opened=true;
+            h3.onclick=()=>{ opened=!opened; procCont.style.display=opened?'':'none'; ddesc.style.display=opened?'':'none'; };
+            domainDiv.appendChild(h3);
+            domainDiv.appendChild(ddesc);
+            domainDiv.appendChild(procCont);
+            content.appendChild(domainDiv);
+          }
+        });
+
+        etabDiv.appendChild(content);
+        container.appendChild(etabDiv);
+      });
+    }
+
     async function loadData(){
       try{
         const res=await fetch('/api/landscape');
-        const data=await res.json();
-        const container=document.getElementById('content');
-        container.innerHTML='';
+        fullData = await res.json();
         createLegend();
-
-        data.etablissements.forEach(etab=>{
-          /* ==== Établissement ==== */
-          const etabDiv=document.createElement('div');
-          const etabTitle=document.createElement('h2');
-          etabTitle.textContent=etab.nom;
-          etabDiv.appendChild(etabTitle);
-
-          const domainsWrapper=document.createElement('div');
-          domainsWrapper.style.display='none';
-
-          etab.domaines.forEach(domain=>{
-            const domainDiv=document.createElement('div');
-            domainDiv.className='domain';
-            domainDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
-
-            const dTitle=document.createElement('h3');
-            dTitle.textContent=domain.nom;
-            const dDesc=document.createElement('p');
-            dDesc.textContent=domain.description;
-
-            const processContainer=document.createElement('div');
-            processContainer.className='process-container';
-
-            domain.processus.forEach(proc=>{
-              const procDiv=document.createElement('div');
-              procDiv.className='process';
-              const pTitle=document.createElement('h4');
-              pTitle.textContent=proc.nom;
-              const pDesc=document.createElement('p');
-              pDesc.textContent=proc.description;
-              procDiv.appendChild(pTitle);
-              procDiv.appendChild(pDesc);
-
-              proc.applications.forEach(app=>{
-                const appDiv=document.createElement('div');
-                appDiv.className='application';
-                appDiv.style.borderColor='#999';
-                appDiv.title=`Éditeur: ${app.editeur}\nRéférent: ${app.referent}\nHébergement: ${app.hebergement}`;
-
-                const aTitle=document.createElement('h5');
-                aTitle.textContent=app.nom;
-
-                if(app.multi){
-                  const multiIcon=document.createElement('span');
-                  multiIcon.className='multi-icon';
-                  multiIcon.textContent='🏛️';
-                  multiIcon.title='Application utilisée par plusieurs établissements';
-                  aTitle.appendChild(multiIcon);
-                }
-
-                appDiv.appendChild(aTitle);
-
-                const dotLink=document.createElement('a');
-                dotLink.href=(app.prtgUrl||'#');
-                dotLink.target='_blank';
-                dotLink.className='crit-dot';
-                dotLink.style.backgroundColor=criticityColor(app.criticite);
-                dotLink.title=`Niveau de criticité : ${app.criticite}\nOuvrir le sondage PRTG`;
-                appDiv.appendChild(dotLink);
-
-                const ifaceContainer=document.createElement('div');
-                ifaceContainer.className='interfaces';
-                Object.entries(app.interfaces).forEach(([type,active])=>{
-                  if(active&&interfaceColors[type]){
-                    const dot=document.createElement('span');
-                    dot.className='iface-dot';
-                    dot.style.backgroundColor=interfaceColors[type];
-                    dot.title=type;
-                    ifaceContainer.appendChild(dot);
-                  }
-                });
-                if(ifaceContainer.childNodes.length){appDiv.appendChild(ifaceContainer);}  
-
-                procDiv.appendChild(appDiv);
-              });
-
-              processContainer.appendChild(procDiv);
-            });
-
-            domainDiv.appendChild(dTitle);
-            domainDiv.appendChild(dDesc);
-            domainDiv.appendChild(processContainer);
-
-            dTitle.addEventListener('click',()=>{
-              const hidden=processContainer.style.display==='none';
-              processContainer.style.display=hidden?'':'none';
-              dDesc.style.display=hidden?'':'none';
-            });
-
-            domainsWrapper.appendChild(domainDiv);
-          });
-
-          etabTitle.addEventListener('click',()=>{
-            domainsWrapper.style.display=domainsWrapper.style.display==='none'?'':'none';
-          });
-
-          etabDiv.appendChild(domainsWrapper);
-          container.appendChild(etabDiv);
-        });
-
-      }catch(err){
-        document.getElementById('content').textContent='Erreur lors du chargement des données';
-        console.error(err);
+        populateDropdowns(fullData);
+        render();
+      }catch(e){
+        document.getElementById('content').textContent='Erreur de chargement.';
       }
     }
+
+    ['filter-etab','filter-domaine','filter-criticite','filter-heberg','filter-interface'].forEach(id=>{
+      document.getElementById(id).addEventListener('change', render);
+    });
 
     createLegend();
     loadData();
