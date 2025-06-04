@@ -21,12 +21,12 @@
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg.example.com/gestionurgences",
                   "interfaces": {
-                    "Divers": ["Messagerie"],
-                    "Planification": ["CalendrierHopital"],
-                    "Facturation": [],
-                    "Administrative": ["GestionPatients"],
-                    "Medicale": ["Imagerie"],
-                    "Autre": []
+                    "Divers": true,
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
                   }
                 }
               ]

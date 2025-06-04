@@ -141,12 +141,12 @@
                 appDiv.appendChild(appTitle);
                 const ifaceContainer = document.createElement('div');
                 ifaceContainer.className = 'interfaces';
-                Object.entries(app.interfaces).forEach(([type, ifaces]) => {
-                  if (ifaces.length > 0 && interfaceColors[type]) {
+                Object.entries(app.interfaces).forEach(([type, active]) => {
+                  if (active && interfaceColors[type]) {
                     const dot = document.createElement('span');
                     dot.className = 'iface-dot';
                     dot.style.backgroundColor = interfaceColors[type];
-                    dot.title = `${type}: ${ifaces.join(', ')}`;
+                    dot.title = type;
                     ifaceContainer.appendChild(dot);
                   }
                 });

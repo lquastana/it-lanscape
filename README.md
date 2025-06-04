@@ -47,6 +47,6 @@ Le fichier `data/landscape.json` suit la structure suivante :
         - **multiEtablissement** : booleen indiquant si l'application est multi-établissement
         - **criticite** : niveau de criticité
         - **lienPRTG** : lien de supervision PRTG
-        - **interfaces** : interfaces classées par type (Divers, Planification, Facturation, Administrative, Medicale, Autre)
+        - **interfaces** : objet listant les types d'interfaces (Divers, Planification, Facturation, Administrative, Medicale, Autre) avec pour valeur `true` ou `false` selon la présence du type
 
 Un exemple complet est fourni dans `data/landscape.json`.
