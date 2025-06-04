@@ -1,0 +1,13 @@
+{
+  "name": "it-landscape",
+  "version": "1.0.0",
+  "description": "Sample application cartography stack",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/check-data.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
