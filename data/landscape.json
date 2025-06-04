@@ -943,7 +943,7 @@
               ]
             },
             {
-              "DxCa": "Oncologie / Chimio",
+              "nom": "Oncologie / Chimio",
               "description": "Prescription et suivi des chimiothérapies.",
               "applications": [
                 {
