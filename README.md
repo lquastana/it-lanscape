@@ -18,25 +18,35 @@ npm start
 
 Le serveur démarre sur `http://localhost:3000`. Rendez-vous sur cette adresse dans votre navigateur pour voir la cartographie.
 
+## Tests
+
+L'exécution de `npm test` vérifie simplement que le fichier JSON respecte la structure attendue.
+
+```bash
+npm test
+```
+
 ## Structure des données
 
 Le fichier `data/landscape.json` suit la structure suivante :
 
-- **domaines** : liste des domaines fonctionnels
-  - **nom** : nom du domaine
-  - **description** : description du domaine
-  - **processus** : liste des processus rattachés
-    - **nom** : nom du processus
-    - **description** : description du processus
-    - **applications** : liste des applications associées
-      - **nom** : nom de l'application
-      - **description** : description
-      - **editeur** : éditeur de l'application
-      - **referent** : personne référente
-      - **hebergement** : lieu d'hébergement (Etablissement, Esanté, SAS)
-      - **multiEtablissement** : booleen indiquant si l'application est multi-établissement
-      - **criticite** : niveau de criticité
-      - **lienPRTG** : lien de supervision PRTG
-      - **interfaces** : interfaces classées par type (Divers, Planification, Facturation, Administrative, Medicale, Autre)
+- **etablissements** : liste des établissements
+  - **nom** : nom de l'établissement (ex. CH Ajaccio)
+  - **domaines** : liste des domaines fonctionnels
+    - **nom** : nom du domaine
+    - **description** : description du domaine
+    - **processus** : liste des processus rattachés
+      - **nom** : nom du processus
+      - **description** : description du processus
+      - **applications** : liste des applications associées
+        - **nom** : nom de l'application
+        - **description** : description
+        - **editeur** : éditeur de l'application
+        - **referent** : personne référente
+        - **hebergement** : lieu d'hébergement (Etablissement, Esanté, SAS)
+        - **multiEtablissement** : booleen indiquant si l'application est multi-établissement
+        - **criticite** : niveau de criticité
+        - **lienPRTG** : lien de supervision PRTG
+        - **interfaces** : interfaces classées par type (Divers, Planification, Facturation, Administrative, Medicale, Autre)
 
-Un exemple de domaine, de processus et d'application est fourni dans `data/landscape.json`.
+Un exemple complet est fourni dans `data/landscape.json`.
