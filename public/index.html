@@ -4,61 +4,164 @@
   <meta charset="UTF-8" />
   <title>Cartographie Applicative</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h2 { margin-top: 1em; }
-    .domain, .process, .application { margin-left: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 1em;
+    }
+    .legend {
+      margin-bottom: 20px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 10px;
+    }
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .domain {
+      border-radius: 8px;
+      border: 1px solid #555;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    .domain h3 {
+      margin-top: 0;
+      cursor: pointer;
+    }
+    .process {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 5px;
+      border-radius: 6px;
+      margin: 5px;
+    }
+    .application {
+      display: inline-block;
+      vertical-align: top;
+      width: 180px;
+      margin: 5px;
+      padding: 5px;
+      border: 2px solid #999;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .interfaces {
+      margin-top: 5px;
+    }
+    .iface-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 3px;
+    }
   </style>
 </head>
 <body>
   <h1>Cartographie Applicative</h1>
+  <div class="legend" id="legend"></div>
   <div id="content">Chargement...</div>
   <script>
+    const interfaceColors = {
+      Medicale: '#4caf50',
+      Administrative: '#ffeb3b',
+      Planification: '#2196f3',
+      Facturation: '#f44336',
+      Divers: '#9c27b0',
+      Autre: '#9e9e9e'
+    };
+
+    function criticityColor(level) {
+      if (level === 'Haute' || level === 'Critique') return 'red';
+      if (level === 'Majeure' || level === 'Moyenne') return 'orange';
+      return 'gray';
+    }
+
+    const domainColors = ['#e5f4fd', '#fbf4e9', '#eaf7eb', '#f9ebf2', '#ede8fd', '#fdf3e5'];
+    let domainIndex = 0;
+
+    function createLegend() {
+      const legend = document.getElementById('legend');
+      Object.entries(interfaceColors).forEach(([name, color]) => {
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        const dot = document.createElement('span');
+        dot.className = 'legend-color';
+        dot.style.backgroundColor = color;
+        item.appendChild(dot);
+        item.appendChild(document.createTextNode(name));
+        legend.appendChild(item);
+      });
+    }
+
     async function loadData() {
       try {
         const res = await fetch('/api/landscape');
         const data = await res.json();
         const container = document.getElementById('content');
         container.innerHTML = '';
+        createLegend();
         data.etablissements.forEach(etab => {
           const etabDiv = document.createElement('div');
           etabDiv.innerHTML = `<h2>${etab.nom}</h2>`;
           etab.domaines.forEach(domain => {
             const domainDiv = document.createElement('div');
+            const color = domainColors[domainIndex % domainColors.length];
+            domainIndex++;
             domainDiv.className = 'domain';
-            domainDiv.innerHTML = `<h3>${domain.nom}</h3><p>${domain.description}</p>`;
+            domainDiv.style.backgroundColor = color;
+            const title = document.createElement('h3');
+            title.textContent = domain.nom;
+            const desc = document.createElement('p');
+            desc.textContent = domain.description;
+            const content = document.createElement('div');
             domain.processus.forEach(proc => {
               const procDiv = document.createElement('div');
               procDiv.className = 'process';
-              procDiv.innerHTML = `<h4>${proc.nom}</h4><p>${proc.description}</p>`;
+              const procTitle = document.createElement('h4');
+              procTitle.textContent = proc.nom;
+              procDiv.appendChild(procTitle);
+              const procDesc = document.createElement('p');
+              procDesc.textContent = proc.description;
+              procDiv.appendChild(procDesc);
               proc.applications.forEach(app => {
                 const appDiv = document.createElement('div');
                 appDiv.className = 'application';
-                appDiv.innerHTML = `
-                  <h5>${app.nom}</h5>
-                  <p>${app.description}</p>
-                  <ul>
-                    <li><strong>Éditeur:</strong> ${app.editeur}</li>
-                    <li><strong>Référent:</strong> ${app.referent}</li>
-                    <li><strong>Hébergement:</strong> ${app.hebergement}</li>
-                    <li><strong>Multi-établissement:</strong> ${app.multiEtablissement ? 'Oui' : 'Non'}</li>
-                    <li><strong>Criticité:</strong> ${app.criticite}</li>
-                    <li><strong>Lien PRTG:</strong> <a href="${app.lienPRTG}">${app.lienPRTG}</a></li>
-                  </ul>
-                `;
-                const interfaceList = document.createElement('ul');
+                appDiv.style.borderColor = criticityColor(app.criticite);
+                appDiv.title = `Éditeur: ${app.editeur}\nRéférent: ${app.referent}\nHébergement: ${app.hebergement}`;
+                const appTitle = document.createElement('h5');
+                appTitle.textContent = app.nom;
+                appDiv.appendChild(appTitle);
+                const ifaceContainer = document.createElement('div');
+                ifaceContainer.className = 'interfaces';
                 Object.entries(app.interfaces).forEach(([type, ifaces]) => {
-                  if (ifaces.length > 0) {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${type}:</strong> ${ifaces.join(', ')}`;
-                    interfaceList.appendChild(li);
+                  if (ifaces.length > 0 && interfaceColors[type]) {
+                    const dot = document.createElement('span');
+                    dot.className = 'iface-dot';
+                    dot.style.backgroundColor = interfaceColors[type];
+                    dot.title = `${type}: ${ifaces.join(', ')}`;
+                    ifaceContainer.appendChild(dot);
                   }
                 });
-                if (interfaceList.children.length > 0) {
-                  appDiv.appendChild(interfaceList);
+                if (ifaceContainer.childNodes.length) {
+                  appDiv.appendChild(ifaceContainer);
                 }
                 procDiv.appendChild(appDiv);
               });
-              domainDiv.appendChild(procDiv);
+              content.appendChild(procDiv);
+            });
+            domainDiv.appendChild(title);
+            domainDiv.appendChild(desc);
+            domainDiv.appendChild(content);
+            title.addEventListener('click', () => {
+              content.style.display = content.style.display === 'none' ? '' : 'none';
             });
             etabDiv.appendChild(domainDiv);
           });
