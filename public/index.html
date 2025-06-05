@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Cartographie des Hôpitaux Publics de Corse</title>
+
   <style>
-    /* ---------- Styles généraux ---------- */
     *,*::before,*::after{box-sizing:border-box;}
     body{font-family:Arial,sans-serif;margin:0;padding:0;background:#fafafa;color:#222;}
 
-    /* ---------- En-tête ---------- */
     .hero{
       background:#1B75BC;color:#fff;padding:40px 24px 32px;
       text-align:center;border-bottom-left-radius:20px;border-bottom-right-radius:20px;
@@ -16,7 +15,6 @@
     .hero h1{margin:0;font-size:2.2rem;}
     .hero p{margin-top:10px;max-width:680px;margin:0 auto;}
 
-    /* ---------- Légende & filtres ---------- */
     .legend-wrapper{
       background:#fff;padding:16px 24px;border-radius:12px;
       box-shadow:0 2px 6px rgba(0,0,0,0.08);width:fit-content;margin:24px auto;
@@ -29,28 +27,25 @@
     .filters label{display:inline-block;}
     .filters select{padding:4px;}
 
-    /* ---------- Cartographie ---------- */
     .domain{background:#fff;border:1px solid #555;border-radius:8px;margin-bottom:16px;padding:10px;}
     .domain h3{cursor:pointer;margin:0 0 4px 0;}
     .process{
       border:1px solid #ccc;border-radius:8px;
-      background:rgba(255,255,255,0.25); /* 25% opaque white pour laisser transparaître la couleur du domaine */
+      background:rgba(255,255,255,0.25);
       padding:10px;margin-bottom:16px;
     }
     .process h4{margin:0 0 4px 0;font-weight:bold;}
     .process p:first-of-type{margin:0 0 8px 0;color:#444;}
 
-    /* --- Conteneur grille d’applications --- */
     .apps{display:flex;flex-wrap:wrap;gap:16px;}
     .apps .application{
-      flex:0 0 calc(33.333% - 16px);   /* 3 par ligne */
+      flex:0 0 calc(33.333% - 16px);
       background:#fff;border:2px solid #999;border-radius:8px;
       position:relative;padding:10px;margin:0;
     }
     @media (max-width:900px){ .apps .application{flex:0 0 calc(50% - 16px);} }
     @media (max-width:600px){ .apps .application{flex:0 0 100%;} }
 
-    /* ---------- Détails carte application ---------- */
     .application h5{margin:0 0 4px 0;display:flex;align-items:center;gap:6px;}
     .crit-dot{
       position:absolute;top:4px;right:4px;
@@ -62,6 +57,35 @@
       margin-right:4px;border:1px solid rgba(0,0,0,0.2);
     }
     .multi-icon{font-size:1rem;}
+
+    .chatbox{max-width:700px;margin:40px auto 80px;padding:16px;background:#fff;
+             border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+    #chat-log{max-height:400px;overflow-y:auto;margin-bottom:12px;}
+    .chat-msg{margin:6px 0;padding:8px 10px;border-radius:8px;white-space:pre-wrap;}
+    .user{background:#1B75BC;color:#fff;text-align:right;}
+    .bot{background:#eee;}
+    #chat-form{display:flex;gap:6px;}
+    #chat-q{flex:1;padding:8px;border-radius:8px;border:1px solid #ccc;}
+
+    #chat-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      background: #1B75BC;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      font-size: 1.4rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+
+    .chatbox.hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -74,8 +98,12 @@
     <h2 class="legend-title">Légende &amp; Filtres</h2>
     <div class="legend" id="legend"></div>
     <div class="filters">
-      <label>Établissement : <select id="filter-etab"><option value="">Tous</option></select></label>
-      <label>Domaine : <select id="filter-domaine"><option value="">Tous</option></select></label>
+      <label>Établissement :
+        <select id="filter-etab"><option value="">Tous</option></select>
+      </label>
+      <label>Domaine :
+        <select id="filter-domaine"><option value="">Tous</option></select>
+      </label>
       <label>Criticité :
         <select id="filter-criticite">
           <option value="">Tous</option>
@@ -83,9 +111,13 @@
           <option value="Haute">Haute</option>
         </select>
       </label>
-      <label>Hébergement : <select id="filter-heberg"><option value="">Tous</option></select></label>
-      <label>Interface : <select id="filter-interface"><option value="">Toutes</option></select></label>
-      <label>Multi‑établissement :
+      <label>Hébergement :
+        <select id="filter-heberg"><option value="">Tous</option></select>
+      </label>
+      <label>Interface :
+        <select id="filter-interface"><option value="">Toutes</option></select>
+      </label>
+      <label>Multi-établissement :
         <select id="filter-multi">
           <option value="">Tous</option>
           <option value="Oui">Oui</option>
@@ -97,35 +129,43 @@
 
   <main style="padding:0 20px 40px;" id="content">Chargement...</main>
 
+  <section class="chatbox hidden">
+    <div id="chat-log"></div>
+    <form id="chat-form">
+      <input id="chat-q" placeholder="Posez votre question…" autocomplete="off" required />
+      <button type="submit">Envoyer</button>
+    </form>
+  </section>
+
+  <button id="chat-toggle">💬</button>
+
   <script>
-    /* ---------- Configuration couleurs ---------- */
-    const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',Facturation:'#f44336',Autre:'#9e9e9e'};
+    const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',
+      Planification:'#2196f3',Facturation:'#f44336',Autre:'#9e9e9e'};
     const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
     let domainIndex=0, fullData=null;
     const criticityColor=l=>['Haute','Critique'].includes(l)?'#d32f2f':'#616161';
 
-    /* ---------- Légende ---------- */
     function createLegend(){
       const el=document.getElementById('legend'); el.innerHTML='';
-      // Interfaces
       Object.entries(interfaceColors).forEach(([n,c])=>{
         const i=document.createElement('div'); i.className='legend-item';
-        const d=document.createElement('span'); d.className='legend-color'; d.style.backgroundColor=c;
-        i.appendChild(d); i.appendChild(document.createTextNode(n)); el.appendChild(i);
+        const d=document.createElement('span'); d.className='legend-color';
+        d.style.backgroundColor=c; i.appendChild(d); i.appendChild(document.createTextNode(n));
+        el.appendChild(i);
       });
-      // Criticité
       [['#d32f2f','Criticité haute'],['#616161','Criticité standard']].forEach(([c,t])=>{
         const i=document.createElement('div'); i.className='legend-item';
-        const d=document.createElement('span'); d.className='legend-color'; d.style.backgroundColor=c;
-        i.appendChild(d); i.appendChild(document.createTextNode(t)); el.appendChild(i);
+        const d=document.createElement('span'); d.className='legend-color';
+        d.style.backgroundColor=c; i.appendChild(d); i.appendChild(document.createTextNode(t));
+        el.appendChild(i);
       });
-      // Multi‑établissement
       const multi=document.createElement('div'); multi.className='legend-item';
       const icon=document.createElement('span'); icon.textContent='🏛️'; icon.className='multi-icon';
-      multi.appendChild(icon); multi.appendChild(document.createTextNode(' Multi‑établissement')); el.appendChild(multi);
+      multi.appendChild(icon); multi.appendChild(document.createTextNode(' Multi-établissement'));
+      el.appendChild(multi);
     }
 
-    /* ---------- Filtres ---------- */
     function populateDropdowns(data){
       const sets={etab:new Set(),domaine:new Set(),heberg:new Set(),interface:new Set(),multi:new Set()};
       data.etablissements.forEach(e=>{
@@ -134,7 +174,7 @@
           sets.domaine.add(d.nom);
           d.processus.forEach(p=>p.applications.forEach(a=>{
             sets.heberg.add(a.hebergement);
-            sets.multi.add(a.multiEtablissement? 'Oui':'Non');
+            sets.multi.add(a.multiEtablissement?'Oui':'Non');
             Object.entries(a.interfaces).forEach(([k,v])=>v&&sets.interface.add(k));
           }));
         });
@@ -149,7 +189,6 @@
       }
     }
 
-    /* ---------- Rendu principal ---------- */
     function render(){
       const f={
         etab:document.getElementById('filter-etab').value,
@@ -162,7 +201,7 @@
       const cont=document.getElementById('content'); cont.innerHTML=''; domainIndex=0;
 
       fullData.etablissements.forEach(etab=>{
-        if(f.etab&&f.etab!==etab.nom) return;
+        if(f.etab && f.etab!==etab.nom) return;
         const etabDiv=document.createElement('div');
         const h2=document.createElement('h2'); h2.textContent=etab.nom; h2.style.cursor='pointer';
         const etabContent=document.createElement('div');
@@ -170,7 +209,7 @@
         etabDiv.appendChild(h2);
 
         etab.domaines.forEach(dom=>{
-          if(f.domaine&&f.domaine!==dom.nom) return;
+          if(f.domaine && f.domaine!==dom.nom) return;
           const dDiv=document.createElement('div'); dDiv.className='domain';
           dDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
 
@@ -185,12 +224,13 @@
             const appWrap=document.createElement('div'); appWrap.className='apps';
 
             proc.applications.forEach(app=>{
-              // -------- Vérification filtres -------- //
               const critOk=!f.criticite ||
-                (f.criticite==='Standard'&&!['Haute','Critique'].includes(app.criticite)) ||
-                (f.criticite==='Haute'&&['Haute','Critique'].includes(app.criticite));
-              const intOk=!f.interface||app.interfaces[f.interface];
-              const multiOk=!f.multi || (f.multi==='Oui'&&app.multiEtablissement) || (f.multi==='Non'&&!app.multiEtablissement);
+                (f.criticite==='Standard' && !['Haute','Critique'].includes(app.criticite)) ||
+                (f.criticite==='Haute' && ['Haute','Critique'].includes(app.criticite));
+              const intOk=!f.interface || app.interfaces[f.interface];
+              const multiOk=!f.multi ||
+                (f.multi==='Oui' && app.multiEtablissement) ||
+                (f.multi==='Non' && !app.multiEtablissement);
               if(!critOk || (f.heberg&&app.hebergement!==f.heberg) || !intOk || !multiOk) return;
 
               const aDiv=document.createElement('div'); aDiv.className='application';
@@ -198,31 +238,27 @@
               const h5=document.createElement('h5');
               h5.textContent=app.nom;
               if(app.multiEtablissement){
-                const s=document.createElement('span'); s.className='multi-icon'; s.textContent='🏛️'; h5.appendChild(s);
+                const s=document.createElement('span'); s.className='multi-icon'; s.textContent='🏛️';
+                h5.appendChild(s);
               }
               aDiv.appendChild(h5);
 
-              // Badge Criticité
               const cd=document.createElement('a');
-              cd.className='crit-dot';
-              cd.style.backgroundColor=criticityColor(app.criticite);
-              cd.textContent=app.criticite;
-              cd.href=app.prtg||'#'; cd.target='_blank';
-              cd.title='Ouvrir le PRTG';
-              aDiv.appendChild(cd);
+              cd.className='crit-dot'; cd.style.backgroundColor=criticityColor(app.criticite);
+              cd.textContent=app.criticite; cd.href=app.prtg||'#'; cd.target='_blank';
+              cd.title='Ouvrir le PRTG'; aDiv.appendChild(cd);
 
-              // Interfaces
               const iface=document.createElement('div');
               Object.entries(app.interfaces).forEach(([t,act])=>{
-                if(act&&interfaceColors[t]){
+                if(act && interfaceColors[t]){
                   const dot=document.createElement('span'); dot.className='iface-dot';
                   dot.style.backgroundColor=interfaceColors[t]; dot.title=t; iface.appendChild(dot);
                 }
               });
               aDiv.appendChild(iface);
 
-              // Description + hébergement
-              aDiv.innerHTML+=`<p>${app.description}</p><p style="font-style:italic;color:#666">Hébergement : ${app.hebergement}</p>`;
+              aDiv.innerHTML+=`<p>${app.description}</p><p style="font-style:italic;color:#666">
+                                Hébergement : ${app.hebergement}</p>`;
               appWrap.appendChild(aDiv);
             });
 
@@ -239,17 +275,50 @@
       });
     }
 
-    /* ---------- Chargement des données ---------- */
     async function loadData(){
       try{
         const res=await fetch('/api/landscape');
         fullData=await res.json(); createLegend(); populateDropdowns(fullData); render();
-      }catch(e){ document.getElementById('content').textContent='Erreur de chargement.'; }
+      }catch{ document.getElementById('content').textContent='Erreur de chargement.'; }
     }
 
-    // Écouteurs sur les filtres
     ['filter-etab','filter-domaine','filter-criticite','filter-heberg','filter-interface','filter-multi']
       .forEach(id=>document.getElementById(id).addEventListener('change',render));
+
+    const chatForm=document.getElementById('chat-form');
+    const chatInput=document.getElementById('chat-q');
+    const chatLog=document.getElementById('chat-log');
+
+    chatForm.addEventListener('submit', async e=>{
+      e.preventDefault();
+      const q=chatInput.value.trim();
+      if(!q) return;
+      addMsg(q,'user'); chatInput.value='';
+      try{
+        const r=await fetch('/api/chat',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({question:q})
+        });
+        const {answer}=await r.json();
+        addMsg(answer||'-- pas de réponse --','bot');
+      }catch{
+        addMsg('Erreur de communication avec le serveur.','bot');
+      }
+    });
+
+    function addMsg(txt,cls){
+      const div=document.createElement('div');
+      div.className=`chat-msg ${cls}`;
+      div.innerHTML = txt; // HTML reçu depuis le back-end (markdown transformé)
+      chatLog.appendChild(div); chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    const toggleBtn = document.getElementById('chat-toggle');
+    const chatBox = document.querySelector('.chatbox');
+    toggleBtn.addEventListener('click', () => {
+      chatBox.classList.toggle('hidden');
+    });
 
     createLegend(); loadData();
   </script>
