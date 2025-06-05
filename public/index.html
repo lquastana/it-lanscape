@@ -23,27 +23,25 @@
     }
     .legend-title{margin-bottom:16px;font-size:1.3rem;text-align:center;}
     .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:20px;}
-    .legend-item{display:inline-flex;align-items:center;font-size:0.9rem;}
+    .legend-item{display:inline-flex;align-items:center;font-size:0.9rem;white-space:nowrap;}
     .legend-color{width:14px;height:14px;border-radius:50%;margin-right:6px;border:1px solid rgba(0,0,0,0.25);}
-    .filters{text-align:center;}
-    .filters label{display:inline-block;margin:0 10px 10px;}
+    .filters{text-align:center;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+    .filters label{display:inline-block;}
     .filters select{padding:4px;}
 
     /* ---------- Cartographie ---------- */
     .domain{background:#fff;border:1px solid #555;border-radius:8px;margin-bottom:16px;padding:10px;}
     .domain h3{cursor:pointer;margin:0 0 4px 0;}
     .process{
-      border:1px solid #ccc;border-radius:8px;background:#fff;padding:10px;margin-bottom:16px;
+      border:1px solid #ccc;border-radius:8px;
+      background:rgba(255,255,255,0.25); /* 25% opaque white pour laisser transparaître la couleur du domaine */
+      padding:10px;margin-bottom:16px;
     }
     .process h4{margin:0 0 4px 0;font-weight:bold;}
     .process p:first-of-type{margin:0 0 8px 0;color:#444;}
 
-    /* --- NEW : conteneur qui porte la grille d’applications --- */
-    .apps{
-      display:flex;
-      flex-wrap:wrap;
-      gap:16px;
-    }
+    /* --- Conteneur grille d’applications --- */
+    .apps{display:flex;flex-wrap:wrap;gap:16px;}
     .apps .application{
       flex:0 0 calc(33.333% - 16px);   /* 3 par ligne */
       background:#fff;border:2px solid #999;border-radius:8px;
@@ -53,17 +51,17 @@
     @media (max-width:600px){ .apps .application{flex:0 0 100%;} }
 
     /* ---------- Détails carte application ---------- */
-    .application h5{margin:0 0 4px 0;}
+    .application h5{margin:0 0 4px 0;display:flex;align-items:center;gap:6px;}
     .crit-dot{
       position:absolute;top:4px;right:4px;
-      width:11px;height:11px;border-radius:50%;
-      border:1px solid rgba(0,0,0,0.3);
+      min-width:24px;padding:2px 4px;font-size:0.7rem;text-align:center;
+      border-radius:12px;color:#fff;cursor:pointer;text-decoration:none;
     }
     .iface-dot{
       display:inline-block;width:10px;height:10px;border-radius:50%;
       margin-right:4px;border:1px solid rgba(0,0,0,0.2);
     }
-    .multi-icon{margin-left:6px;}
+    .multi-icon{font-size:1rem;}
   </style>
 </head>
 <body>
@@ -87,6 +85,13 @@
       </label>
       <label>Hébergement : <select id="filter-heberg"><option value="">Tous</option></select></label>
       <label>Interface : <select id="filter-interface"><option value="">Toutes</option></select></label>
+      <label>Multi‑établissement :
+        <select id="filter-multi">
+          <option value="">Tous</option>
+          <option value="Oui">Oui</option>
+          <option value="Non">Non</option>
+        </select>
+      </label>
     </div>
   </section>
 
@@ -97,39 +102,46 @@
     const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',Facturation:'#f44336',Autre:'#9e9e9e'};
     const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
     let domainIndex=0, fullData=null;
-    const criticityColor=l=>['Haute','Critique'].includes(l)?'red':'gray';
+    const criticityColor=l=>['Haute','Critique'].includes(l)?'#d32f2f':'#616161';
 
     /* ---------- Légende ---------- */
     function createLegend(){
       const el=document.getElementById('legend'); el.innerHTML='';
+      // Interfaces
       Object.entries(interfaceColors).forEach(([n,c])=>{
         const i=document.createElement('div'); i.className='legend-item';
         const d=document.createElement('span'); d.className='legend-color'; d.style.backgroundColor=c;
         i.appendChild(d); i.appendChild(document.createTextNode(n)); el.appendChild(i);
       });
-      const sep=document.createElement('span'); sep.textContent=' | '; sep.style.margin='0 6px'; el.appendChild(sep);
-      [['red','Criticité haute'],['gray','Criticité standard']].forEach(([c,t])=>{
+      // Criticité
+      [['#d32f2f','Criticité haute'],['#616161','Criticité standard']].forEach(([c,t])=>{
         const i=document.createElement('div'); i.className='legend-item';
         const d=document.createElement('span'); d.className='legend-color'; d.style.backgroundColor=c;
         i.appendChild(d); i.appendChild(document.createTextNode(t)); el.appendChild(i);
       });
+      // Multi‑établissement
+      const multi=document.createElement('div'); multi.className='legend-item';
+      const icon=document.createElement('span'); icon.textContent='🏛️'; icon.className='multi-icon';
+      multi.appendChild(icon); multi.appendChild(document.createTextNode(' Multi‑établissement')); el.appendChild(multi);
     }
 
     /* ---------- Filtres ---------- */
     function populateDropdowns(data){
-      const sets={etab:new Set(),domaine:new Set(),heberg:new Set(),interface:new Set()};
+      const sets={etab:new Set(),domaine:new Set(),heberg:new Set(),interface:new Set(),multi:new Set()};
       data.etablissements.forEach(e=>{
         sets.etab.add(e.nom);
         e.domaines.forEach(d=>{
           sets.domaine.add(d.nom);
           d.processus.forEach(p=>p.applications.forEach(a=>{
             sets.heberg.add(a.hebergement);
+            sets.multi.add(a.multiEtablissement? 'Oui':'Non');
             Object.entries(a.interfaces).forEach(([k,v])=>v&&sets.interface.add(k));
           }));
         });
       });
       for(const [k,set] of Object.entries(sets)){
         const sel=document.getElementById('filter-'+k);
+        if(!sel) continue;
         sel.innerHTML='<option value="">Tous</option>';
         [...set].sort().forEach(v=>{
           const o=document.createElement('option'); o.value=v; o.textContent=v; sel.appendChild(o);
@@ -144,7 +156,8 @@
         domaine:document.getElementById('filter-domaine').value,
         criticite:document.getElementById('filter-criticite').value,
         heberg:document.getElementById('filter-heberg').value,
-        interface:document.getElementById('filter-interface').value
+        interface:document.getElementById('filter-interface').value,
+        multi:document.getElementById('filter-multi').value
       };
       const cont=document.getElementById('content'); cont.innerHTML=''; domainIndex=0;
 
@@ -169,22 +182,36 @@
             const pDiv=document.createElement('div'); pDiv.className='process';
             pDiv.innerHTML='<h4>'+proc.nom+'</h4><p>'+proc.description+'</p>';
 
-            /* NEW : conteneur .apps */
             const appWrap=document.createElement('div'); appWrap.className='apps';
 
             proc.applications.forEach(app=>{
+              // -------- Vérification filtres -------- //
               const critOk=!f.criticite ||
                 (f.criticite==='Standard'&&!['Haute','Critique'].includes(app.criticite)) ||
                 (f.criticite==='Haute'&&['Haute','Critique'].includes(app.criticite));
               const intOk=!f.interface||app.interfaces[f.interface];
-              if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk) return;
+              const multiOk=!f.multi || (f.multi==='Oui'&&app.multiEtablissement) || (f.multi==='Non'&&!app.multiEtablissement);
+              if(!critOk || (f.heberg&&app.hebergement!==f.heberg) || !intOk || !multiOk) return;
 
               const aDiv=document.createElement('div'); aDiv.className='application';
-              const h5=document.createElement('h5'); h5.textContent=app.nom;
-              if(app.multi){const s=document.createElement('span'); s.className='multi-icon'; s.textContent='🏛️'; h5.appendChild(s);}
-              aDiv.appendChild(h5);
-              const cd=document.createElement('span'); cd.className='crit-dot'; cd.style.backgroundColor=criticityColor(app.criticite); aDiv.appendChild(cd);
 
+              const h5=document.createElement('h5');
+              h5.textContent=app.nom;
+              if(app.multiEtablissement){
+                const s=document.createElement('span'); s.className='multi-icon'; s.textContent='🏛️'; h5.appendChild(s);
+              }
+              aDiv.appendChild(h5);
+
+              // Badge Criticité
+              const cd=document.createElement('a');
+              cd.className='crit-dot';
+              cd.style.backgroundColor=criticityColor(app.criticite);
+              cd.textContent=app.criticite;
+              cd.href=app.prtg||'#'; cd.target='_blank';
+              cd.title='Ouvrir le PRTG';
+              aDiv.appendChild(cd);
+
+              // Interfaces
               const iface=document.createElement('div');
               Object.entries(app.interfaces).forEach(([t,act])=>{
                 if(act&&interfaceColors[t]){
@@ -193,7 +220,9 @@
                 }
               });
               aDiv.appendChild(iface);
-              aDiv.innerHTML+=`<p>${app.description}</p><p style="font-style:italic;color:#666">Hébergement&nbsp;: ${app.hebergement}</p>`;
+
+              // Description + hébergement
+              aDiv.innerHTML+=`<p>${app.description}</p><p style="font-style:italic;color:#666">Hébergement : ${app.hebergement}</p>`;
               appWrap.appendChild(aDiv);
             });
 
@@ -218,7 +247,8 @@
       }catch(e){ document.getElementById('content').textContent='Erreur de chargement.'; }
     }
 
-    ['filter-etab','filter-domaine','filter-criticite','filter-heberg','filter-interface']
+    // Écouteurs sur les filtres
+    ['filter-etab','filter-domaine','filter-criticite','filter-heberg','filter-interface','filter-multi']
       .forEach(id=>document.getElementById(id).addEventListener('change',render));
 
     createLegend(); loadData();
