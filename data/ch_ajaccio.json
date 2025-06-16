@@ -21,7 +21,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -45,7 +44,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -69,7 +67,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -93,7 +90,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -117,7 +113,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -141,7 +136,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -165,7 +159,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -177,7 +170,6 @@
             }
           ]
         },
-
         {
           "nom": "Communication / Collaboration",
           "description": "Bureautique, intranet et partage documentaire.",
@@ -280,7 +272,6 @@
             }
           ]
         },
-
         {
           "nom": "Gestion",
           "description": "Ressources humaines, paie et finances.",
@@ -299,7 +290,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -323,7 +313,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -347,7 +336,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
@@ -371,7 +359,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -395,7 +382,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -419,7 +405,6 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30403&tabid=1",
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -431,7 +416,6 @@
             }
           ]
         },
-
         {
           "nom": "Efficience / PMSI",
           "description": "Pilotage de l’activité et du codage PMSI.",
@@ -450,7 +434,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
@@ -474,7 +457,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -516,7 +498,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -540,7 +521,6 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -552,7 +532,6 @@
             }
           ]
         },
-
         {
           "nom": "Qualité & Risques",
           "description": "Gestion de la qualité et des risques sanitaires.",
@@ -571,7 +550,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -583,7 +561,6 @@
             }
           ]
         },
-
         {
           "nom": "DP Spécialités",
           "description": "Gestion des dossiers patients pour les spécialités médicales.",
@@ -635,7 +612,7 @@
               "description": "Prise en charge des patients en situation d'urgence.",
               "applications": [
                 {
-                  "nom": "Terminal Urgences",
+                  "nom": "inal UrgencTermes",
                   "description": "Triage Urgences : dossier médical du patient.",
                   "editeur": "IES",
                   "referent": "Lisandru Benedetti",
@@ -644,7 +621,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
@@ -662,7 +638,6 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30354&tabid=1",
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -932,7 +907,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -986,7 +960,6 @@
             }
           ]
         },
-
         {
           "nom": "DP Administrative",
           "description": "Gestion administrative du parcours patient.",
@@ -1065,7 +1038,6 @@
             }
           ]
         },
-
         {
           "nom": "DP Commun",
           "description": "Applications transversales utilisées par tous les services.",
@@ -1084,7 +1056,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": true,
                     "Facturation": false,
                     "Administrative": true,
@@ -1168,7 +1139,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": true,
                     "Facturation": false,
                     "Administrative": true,
@@ -1204,7 +1174,6 @@
             }
           ]
         },
-
         {
           "nom": "Dossier médico-techniques",
           "description": "Plateaux techniques et imagerie.",
@@ -1223,7 +1192,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -1259,7 +1227,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1277,7 +1244,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1319,7 +1285,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": true,
                     "Facturation": true,
                     "Administrative": true,
@@ -1337,7 +1302,6 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=39623&tabid=1",
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1355,7 +1319,6 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=39625&tabid=1",
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1593,7 +1556,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1611,7 +1573,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1623,7 +1584,6 @@
             }
           ]
         },
-
         {
           "nom": "Échange de données",
           "description": "Messageries sécurisées et EAI.",
@@ -1642,7 +1602,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1666,7 +1625,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": true,
                     "Facturation": true,
                     "Administrative": true,
@@ -1684,7 +1642,6 @@
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34115&tabid=1",
                   "interfaces": {
-                    
                     "Planification": true,
                     "Facturation": true,
                     "Administrative": true,
@@ -1708,7 +1665,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1718,7 +1674,7 @@
                 },
                 {
                   "nom": "CIODC",
-                  "description": "Référentiel d’identités régionales.",
+                  "description": "Cadre de référence standardisé pour décrire et classifier les objets d'information en santé. Le CIODC facilite l’interopérabilité en structurant les données échangées entre applications, au service de la coordination des soins et de la cohérence du SI.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SITEC",
@@ -1726,7 +1682,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1736,7 +1691,7 @@
                 },
                 {
                   "nom": "CIODM",
-                  "description": "Référentiel médico-technique.",
+                  "description": "Le référentiel CIODM (Common Information Object Data Model) de PHAST est un modèle de données standardisé utilisé dans le domaine de la santé pour représenter et structurer les objets d'information de manière cohérente.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SITEC",
@@ -1744,7 +1699,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1756,7 +1710,6 @@
             }
           ]
         },
-
         {
           "nom": "Cyber sécurité",
           "description": "Protection, détection et sensibilisation.",
@@ -1973,7 +1926,6 @@
             }
           ]
         },
-
         {
           "nom": "Sureté",
           "description": "Sécurité physique du site.",
@@ -1992,7 +1944,6 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -2028,7 +1979,6 @@
             }
           ]
         },
-
         {
           "nom": "Outils techniques",
           "description": "Outils transverses de gestion du SI.",
@@ -2047,7 +1997,6 @@
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -2083,7 +2032,6 @@
             }
           ]
         },
-
         {
           "nom": "Annuaire & ref. internes",
           "description": "Référentiels organisation & finances.",

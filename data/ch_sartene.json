@@ -66,7 +66,6 @@
             }
           ]
         },
-
         {
           "nom": "DP Spécialités",
           "description": "Dossiers et outils spécifiques aux spécialités médicales.",
@@ -118,7 +117,6 @@
             }
           ]
         },
-
         {
           "nom": "Support",
           "description": "Applications logistiques et d’approvisionnement.",
@@ -141,7 +139,6 @@
             }
           ]
         },
-
         {
           "nom": "Dossier médico-techniques",
           "description": "Plateaux techniques et imagerie.",
@@ -182,7 +179,6 @@
             }
           ]
         },
-
         {
           "nom": "Gestion",
           "description": "Ressources humaines, paie, finances et facturation.",
@@ -221,8 +217,7 @@
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Haute",
-                  "interfaces": {
-                  }
+                  "interfaces": {}
                 }
               ]
             },
@@ -260,13 +255,12 @@
             }
           ]
         },
-
         {
           "nom": "Qualité & Risques",
           "description": "Qualité, gestion documentaire et indicateurs.",
           "processus": [
             {
-              "nom": "Qualité",
+              "nom": "Qualité / Risque",
               "description": "GED et évènements indésirables",
               "applications": [
                 {
@@ -281,7 +275,6 @@
             }
           ]
         },
-
         {
           "nom": "Efficience / PMSI",
           "description": "Requêtes décisionnelles et reporting.",
@@ -302,7 +295,6 @@
             }
           ]
         },
-
         {
           "nom": "Échange de données",
           "description": "Messagerie sécurisée et EAI.",
@@ -325,7 +317,6 @@
             }
           ]
         },
-
         {
           "nom": "Outils techniques",
           "description": "Maintenance, supervision, téléphonie.",
@@ -378,7 +369,6 @@
             }
           ]
         },
-
         {
           "nom": "Annuaire & ref. internes",
           "description": "Référentiels organisation & finances.",
