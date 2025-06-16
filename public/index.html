@@ -57,6 +57,11 @@
     #report-box{position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:auto;
                 background:#fff;z-index:9998;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);}
     #report-box.hidden{display:none;}
+    #report-box .report-section{margin-bottom:20px;}
+    #report-box .report-bar{width:100%;height:12px;background:#eee;border-radius:6px;overflow:hidden;}
+    #report-box .report-bar span{display:block;height:100%;background:#1B75BC;}
+    #report-box ul{list-style:none;padding:0;}
+    #report-box li{margin:4px 0;}
 
     /* ======== Popup chat ======== */
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
@@ -197,7 +202,15 @@
         multi:document.getElementById('filter-multi').value
       };
       const cont=document.getElementById('content');cont.innerHTML='';domainIndex=0;
-      const metrics={totalProcesses:0,processesWithApps:0,totalApps:0,filteredApps:0,multi:0,ifaceAll:new Set(),ifaceUsed:new Set()};
+      const metrics={
+        procTotal:0,
+        procWithApps:0,
+        procAppsTotal:0,
+        appShown:0,
+        multi:0,
+        ifaceTotals:{},
+        ifaceShown:{}
+      };
       fullData.etablissements.forEach(etab=>{
         if(f.etab&&f.etab!==etab.nom)return;
         const etabDiv=document.createElement('div');
@@ -216,15 +229,19 @@
           const procCont=document.createElement('div');
 
           dom.processus.forEach(proc=>{
-            metrics.totalProcesses++;
+            metrics.procTotal++;
+            metrics.procAppsTotal+=proc.applications.length;
             const pDiv=document.createElement('div');pDiv.className='process';
             pDiv.innerHTML=`<h4>${proc.nom}</h4><p>${proc.description}</p>`;
             const appWrap=document.createElement('div');appWrap.className='apps';
             let hasApp=false;
 
             proc.applications.forEach(app=>{
-              metrics.totalApps++;
-              Object.entries(app.interfaces).forEach(([t,v])=>v&&metrics.ifaceAll.add(t));
+              Object.entries(app.interfaces).forEach(([t,v])=>{
+                if(v){
+                  metrics.ifaceTotals[t]=(metrics.ifaceTotals[t]||0)+1;
+                }
+              });
               const critOk=!f.criticite||
                 (f.criticite==='Standard'&&!['Haute','Critique'].includes(app.criticite))||
                 (f.criticite==='Haute'&&['Haute','Critique'].includes(app.criticite));
@@ -232,9 +249,13 @@
               const multiOk=!f.multi||((f.multi==='Oui')===app.multiEtablissement);
               if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk||!multiOk) return;
 
-              metrics.filteredApps++;
+              metrics.appShown++;
               if(app.multiEtablissement)metrics.multi++;
-              Object.entries(app.interfaces).forEach(([t,v])=>v&&metrics.ifaceUsed.add(t));
+              Object.entries(app.interfaces).forEach(([t,v])=>{
+                if(v){
+                  metrics.ifaceShown[t]=(metrics.ifaceShown[t]||0)+1;
+                }
+              });
               hasApp=true;
 
               const aDiv=document.createElement('div');aDiv.className='application';
@@ -262,7 +283,7 @@
             });
 
             if(hasApp){
-              metrics.processesWithApps++;
+              metrics.procWithApps++;
               pDiv.appendChild(appWrap);procCont.appendChild(pDiv);
             }
           });
@@ -349,18 +370,34 @@
     }
 
     /* ---------- Rapport ---------- */
+    function bar(p){
+      return `<div class="report-bar"><span style="width:${p}%"></span></div>`;
+    }
+
     function generateReport(m){
-      const proc=(m.totalProcesses?((m.processesWithApps/m.totalProcesses)*100):0).toFixed(1);
-      const app=(m.totalApps?((m.filteredApps/m.totalApps)*100):0).toFixed(1);
-      const mut=(m.filteredApps?((m.multi/m.filteredApps)*100):0).toFixed(1);
-      const iface=(m.ifaceAll.size?((m.ifaceUsed.size/m.ifaceAll.size)*100):0).toFixed(1);
+      const proc=(m.procTotal?((m.procWithApps/m.procTotal)*100):0).toFixed(1);
+      const app=(m.procAppsTotal?((m.appShown/m.procAppsTotal)*100):0).toFixed(1);
+      const mut=(m.appShown?((m.multi/m.appShown)*100):0).toFixed(1);
+      const ifaceTypes=Object.keys(m.ifaceTotals);
+      const iface=(ifaceTypes.length?((Object.keys(m.ifaceShown).length/ifaceTypes.length)*100):0).toFixed(1);
+      const ifaceList=ifaceTypes.map(t=>{
+        const pct=m.ifaceTotals[t]?((m.ifaceShown[t]||0)/m.ifaceTotals[t]*100).toFixed(1):'0.0';
+        return `<li>${t} : ${pct}%</li>`;
+      }).join('');
       reportBox.innerHTML=
-        `<h2>Rapport</h2><ul>`+
-        `<li>Alignement processus : ${proc}%</li>`+
-        `<li>Alignement applications : ${app}%</li>`+
-        `<li>Taux de mutualisation : ${mut}%</li>`+
-        `<li>Couverture d'interfaces : ${iface}%</li>`+
-        `</ul>`;
+        `<h2>Rapport</h2>`+
+        `<section class="report-section"><h3>Alignement processus</h3>`+
+          `<p>${proc}% des processus contiennent au moins une application visible.</p>`+
+          `${bar(proc)}</section>`+
+        `<section class="report-section"><h3>Alignement applications</h3>`+
+          `<p>${app}% des applications prévues sont affichées.</p>`+
+          `${bar(app)}</section>`+
+        `<section class="report-section"><h3>Taux de mutualisation</h3>`+
+          `<p>${mut}% des applications visibles sont mutualisées.</p>`+
+          `${bar(mut)}</section>`+
+        `<section class="report-section"><h3>Couverture d'interfaces</h3>`+
+          `<p>${iface}% des types d'interfaces sont représentés.</p>`+
+          `${bar(iface)}<ul>${ifaceList}</ul></section>`;
     }
 
     /* ---------- Initialisation ---------- */

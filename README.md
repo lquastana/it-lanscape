@@ -53,4 +53,11 @@ Un exemple complet est fourni dans `data/landscape.json`.
 
 ## Rapport d'indicateurs
 
-Un bouton 🧠 en bas à droite permet d'afficher un rapport synthétique. Après avoir appliqué les filtres souhaités, cliquez dessus pour voir l'alignement processus/applications, le taux de mutualisation et la couverture d'interfaces calculés sur les données visibles.
+Un bouton 🧠 ouvre un tableau de bord résumant la situation courante. Le rapport présente quatre sections :
+
+1. **Alignement des processus** – pourcentage de processus possédant au moins une application visible.
+2. **Alignement des applications** – pourcentage moyen d'applications affichées par rapport à celles attendues sur les processus visibles.
+3. **Taux de mutualisation** – part des applications visibles utilisées dans plusieurs établissements.
+4. **Couverture d'interfaces** – représentation de chaque type d'interface.
+
+Chaque indicateur est accompagné d'une barre graphique afin de faciliter la lecture. Les pourcentages sont recalculés dès que vous modifiez les filtres puis rouvrez le rapport.
