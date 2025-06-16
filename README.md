@@ -50,3 +50,7 @@ Le fichier `data/landscape.json` suit la structure suivante :
         - **interfaces** : objet listant les types d'interfaces (Divers, Planification, Facturation, Administrative, Medicale, Autre) avec pour valeur `true` ou `false` selon la présence du type
 
 Un exemple complet est fourni dans `data/landscape.json`.
+
+## Rapport d'indicateurs
+
+Un bouton 🧠 en bas à droite permet d'afficher un rapport synthétique. Après avoir appliqué les filtres souhaités, cliquez dessus pour voir l'alignement processus/applications, le taux de mutualisation et la couverture d'interfaces calculés sur les données visibles.

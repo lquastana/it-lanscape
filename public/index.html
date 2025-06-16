@@ -45,10 +45,18 @@
                border:1px solid rgba(0,0,0,0.2);}
     .multi-icon{font-size:1rem;}
 
-    /* ======== Bouton flottant pour ouvrir le chat ======== */
+    /* ======== Boutons flottants ======== */
     #chat-toggle{position:fixed;bottom:20px;right:20px;z-index:10000;background:#1B75BC;color:#fff;
                  border:none;border-radius:50%;width:52px;height:52px;font-size:1.4rem;
                  box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer;}
+    #report-toggle{position:fixed;bottom:20px;right:80px;z-index:10000;background:#1B75BC;color:#fff;
+                   border:none;border-radius:50%;width:52px;height:52px;font-size:1.4rem;
+                   box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer;}
+
+    /* ======== Popup rapport ======== */
+    #report-box{position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:auto;
+                background:#fff;z-index:9998;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);}
+    #report-box.hidden{display:none;}
 
     /* ======== Popup chat ======== */
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
@@ -112,8 +120,12 @@
     </form>
   </section>
 
+  <!-- ======== Popup Rapport ======== -->
+  <section id="report-box" class="hidden"></section>
+
   <!-- Bouton pour ouvrir le chat -->
   <button id="chat-toggle">💬</button>
+  <button id="report-toggle">🧠</button>
 
   <script>
     /* ---------- Constantes légende / couleurs ---------- */
@@ -125,6 +137,11 @@
 
     /* ---------- threadId persistant ---------- */
     let threadId=localStorage.getItem('chat_thread_id')||null;
+
+    /* ---------- Rapport DOM ---------- */
+    const reportBox=document.getElementById('report-box');
+    const reportToggle=document.getElementById('report-toggle');
+    reportToggle.addEventListener('click',()=>{reportBox.classList.toggle('hidden');});
 
     /* ---------- Légende ---------- */
     function createLegend(){
@@ -180,6 +197,7 @@
         multi:document.getElementById('filter-multi').value
       };
       const cont=document.getElementById('content');cont.innerHTML='';domainIndex=0;
+      const metrics={totalProcesses:0,processesWithApps:0,totalApps:0,filteredApps:0,multi:0,ifaceAll:new Set(),ifaceUsed:new Set()};
       fullData.etablissements.forEach(etab=>{
         if(f.etab&&f.etab!==etab.nom)return;
         const etabDiv=document.createElement('div');
@@ -198,17 +216,26 @@
           const procCont=document.createElement('div');
 
           dom.processus.forEach(proc=>{
+            metrics.totalProcesses++;
             const pDiv=document.createElement('div');pDiv.className='process';
             pDiv.innerHTML=`<h4>${proc.nom}</h4><p>${proc.description}</p>`;
             const appWrap=document.createElement('div');appWrap.className='apps';
+            let hasApp=false;
 
             proc.applications.forEach(app=>{
+              metrics.totalApps++;
+              Object.entries(app.interfaces).forEach(([t,v])=>v&&metrics.ifaceAll.add(t));
               const critOk=!f.criticite||
                 (f.criticite==='Standard'&&!['Haute','Critique'].includes(app.criticite))||
                 (f.criticite==='Haute'&&['Haute','Critique'].includes(app.criticite));
               const intOk=!f.interface||app.interfaces[f.interface];
               const multiOk=!f.multi||((f.multi==='Oui')===app.multiEtablissement);
               if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk||!multiOk) return;
+
+              metrics.filteredApps++;
+              if(app.multiEtablissement)metrics.multi++;
+              Object.entries(app.interfaces).forEach(([t,v])=>v&&metrics.ifaceUsed.add(t));
+              hasApp=true;
 
               const aDiv=document.createElement('div');aDiv.className='application';
               const h5=document.createElement('h5');h5.textContent=app.nom;
@@ -234,7 +261,10 @@
               appWrap.appendChild(aDiv);
             });
 
-            if(appWrap.childElementCount){pDiv.appendChild(appWrap);procCont.appendChild(pDiv);}
+            if(hasApp){
+              metrics.processesWithApps++;
+              pDiv.appendChild(appWrap);procCont.appendChild(pDiv);
+            }
           });
 
           if(procCont.childElementCount){
@@ -245,6 +275,7 @@
         });
         etabDiv.appendChild(etabContent);cont.appendChild(etabDiv);
       });
+      generateReport(metrics);
     }
 
     /* ---------- Chargement JSON --------- */
@@ -315,6 +346,21 @@
       const div=document.createElement('div');
       div.className=`chat-msg ${cls}`;div.innerHTML=txt;
       chatLog.appendChild(div);chatLog.scrollTop=chatLog.scrollHeight;
+    }
+
+    /* ---------- Rapport ---------- */
+    function generateReport(m){
+      const proc=(m.totalProcesses?((m.processesWithApps/m.totalProcesses)*100):0).toFixed(1);
+      const app=(m.totalApps?((m.filteredApps/m.totalApps)*100):0).toFixed(1);
+      const mut=(m.filteredApps?((m.multi/m.filteredApps)*100):0).toFixed(1);
+      const iface=(m.ifaceAll.size?((m.ifaceUsed.size/m.ifaceAll.size)*100):0).toFixed(1);
+      reportBox.innerHTML=
+        `<h2>Rapport</h2><ul>`+
+        `<li>Alignement processus : ${proc}%</li>`+
+        `<li>Alignement applications : ${app}%</li>`+
+        `<li>Taux de mutualisation : ${mut}%</li>`+
+        `<li>Couverture d'interfaces : ${iface}%</li>`+
+        `</ul>`;
     }
 
     /* ---------- Initialisation ---------- */
