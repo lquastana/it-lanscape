@@ -40,51 +40,62 @@ app.get('/api/landscape', async (_req, res) => {
   }
 });
 
-/* ---------- /api/chat (Markdown intégré) ---------------- */
 app.post('/api/chat', async (req, res) => {
   const question = req.body.question?.trim();
+  let threadId = req.body.threadId;
+
   if (!question) return res.status(400).json({ error: 'Empty question' });
 
   console.log(`❓ Question reçue: ${question}`);
 
   try {
-    const thread = await openai.beta.threads.create();
-    console.log(`🧵 Thread: ${thread.id}`);
+    // Crée un thread si aucun ID n'est fourni
+    if (!threadId) {
+      const newThread = await openai.beta.threads.create();
+      threadId = newThread.id;
+      console.log(`🧵 Nouveau thread créé: ${threadId}`);
+    } else {
+      console.log(`🔁 Thread réutilisé: ${threadId}`);
+    }
 
-    await openai.beta.threads.messages.create(thread.id, {
+    // Ajout du message utilisateur
+    await openai.beta.threads.messages.create(threadId, {
       role: 'user',
       content: question
     });
     console.log('📩 Message ajouté');
 
-    const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: process.env.ASSISTANT_ID
+    // Lancement du run avec enrichissement
+    const run = await openai.beta.threads.runs.create(threadId, {
+      assistant_id: process.env.ASSISTANT_ID,
+      additional_instructions: "Rédige une réponse exhaustive, en plusieurs paragraphes et sections détaillées."
     });
-    console.log(`🏃‍♂️ Run: ${run.id}`);
+    console.log(`🏃‍♂️ Run lancé: ${run.id}`);
 
+    // Attente de la complétion
     let status = run.status;
     while (status !== 'completed' && status !== 'failed') {
       await new Promise((r) => setTimeout(r, 1000));
       const updatedRun = await openai.beta.threads.runs.retrieve(run.id, {
-        thread_id: thread.id,
+        thread_id: threadId,
       });
       status = updatedRun.status;
-      console.log(`⏳ Status: ${status}`);
+      console.log(`⏳ Statut: ${status}`);
     }
 
     if (status === 'failed') throw new Error('Run failed');
 
-    const messages = await openai.beta.threads.messages.list(thread.id, { limit: 1 });
+    // Récupération de la réponse
+    const messages = await openai.beta.threads.messages.list(threadId, { limit: 1 });
     const raw = messages.data[0]?.content[0]?.text?.value || 'Pas de réponse.';
     const answer = marked.parse(raw);
 
-    res.json({ answer });
+    res.json({ answer, threadId });
 
   } catch (err) {
     console.error('🔥 Erreur assistant:', err);
     res.status(500).json({ error: 'Échec de la requête assistant' });
   }
 });
-
 /* ---------- Lancement serveur ---------------------------- */
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

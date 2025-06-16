@@ -16,17 +16,17 @@
                   "description": "Gestion de stock et traçabilité des DMI.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Standard",
+                  "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -40,17 +40,17 @@
                   "description": "Approvisionnement et suivi des repas.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
-                    "Planification": true,
+                    
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -65,16 +65,16 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
-                    "Facturation": true,
-                    "Administrative": true,
+                    "Facturation": false,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -84,21 +84,21 @@
               "description": "Gestion des équipements et inventaire.",
               "applications": [
                 {
-                  "nom": "Mgp2",
+                  "nom": "Magh2",
                   "description": "Suivi des immobilisations et inventaires.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
-                    "Planification": true,
+                    
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -108,21 +108,21 @@
               "description": "Gestion et suivi des marchés publics.",
               "applications": [
                 {
-                  "nom": "Macro",
+                  "nom": "Marco",
                   "description": "Suivi contractuel des marchés.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "SAS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
-                    "Facturation": true,
-                    "Administrative": true,
+                    "Facturation": false,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -136,17 +136,17 @@
                   "description": "Traçabilité et logistique du linge.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
-                    "Planification": true,
+                    
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -160,17 +160,17 @@
                   "description": "Gestion logistique et magasin (stocks, commandes, sorties).",
                   "editeur": null,
                   "referent": "Xavier-Joseph Tavera",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
-                    "Facturation": true,
-                    "Administrative": true,
+                    "Facturation": false,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -191,15 +191,15 @@
                   "description": "Messagerie et calendriers Outlook/Exchange.",
                   "editeur": "Microsoft",
                   "referent": null,
-                  "hebergement": "CHA",
-                  "multiEtablissement": true,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
-                    "Planification": true,
+                    "Divers": false,
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -215,15 +215,15 @@
                   "description": "Hébergement du site public de l’hôpital.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHB",
+                  "hebergement": "SAS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -239,15 +239,15 @@
                   "description": "Applications intranet maison.",
                   "editeur": "Développements internes",
                   "referent": null,
-                  "hebergement": "CHEB",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
-                    "Planification": true,
+                    "Divers": false,
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -264,14 +264,14 @@
                   "editeur": "Microsoft",
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -294,17 +294,17 @@
                   "description": "Solution de paie hospitalière.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
-                  "multiEtablissement": false,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
-                    "Facturation": true,
-                    "Administrative": true,
+                    "Facturation": false,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -318,17 +318,17 @@
                   "description": "SIRH pour le suivi du personnel.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
-                    "Planification": true,
+                    
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -347,12 +347,12 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -366,17 +366,17 @@
                   "description": "Suivi des formations du personnel.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "SAS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
-                    "Planification": true,
+                    
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -390,17 +390,17 @@
                   "description": "Module planning personnel non médical.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
-                  "multiEtablissement": false,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
-                    "Planification": true,
+                    
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -414,17 +414,17 @@
                   "description": "Gestion du Temps de Travail (médical).",
                   "editeur": "MIPIH",
                   "referent": "Frédéric Paccosi",
-                  "hebergement": "CHA",
-                  "multiEtablissement": false,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30403&tabid=1",
                   "interfaces": {
-                    "Divers": false,
-                    "Planification": true,
+                    
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -446,16 +446,16 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
-                    "Medicale": true,
-                    "Autre": false
+                    "Medicale": false,
+                    "Autre": true
                   }
                 }
               ]
@@ -469,17 +469,17 @@
                   "description": "Pilotage qualité du codage PMSI.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
-                    "Autre": false
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
                   }
                 },
                 {
@@ -488,15 +488,15 @@
                   "editeur": "Gouvernement",
                   "referent": "Nina Lebeau",
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
+                    "Administrative": false,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
@@ -511,17 +511,17 @@
                   "description": "BusinessObjects – requêtes et reporting.",
                   "editeur": "SAP",
                   "referent": null,
-                  "hebergement": "CHA",
-                  "multiEtablissement": true,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
-                    "Autre": false
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
                   }
                 }
               ]
@@ -535,17 +535,17 @@
                   "description": "Suite d’outils décisionnels pour le pilotage économique.",
                   "editeur": "SIB",
                   "referent": "Nina Lebeau",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
-                    "Facturation": true,
-                    "Administrative": true,
+                    "Facturation": false,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -566,17 +566,17 @@
                   "description": "Gestion documentaire qualité.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -597,16 +597,16 @@
                   "description": "Imagerie et comptes-rendus gynécologie/obstétrique.",
                   "editeur": "GE",
                   "referent": "Chef de pôle Gynéco",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
+                    "Administrative": false,
+                    "Medicale": false,
                     "Autre": false
                   }
                 },
@@ -615,16 +615,16 @@
                   "description": "Monitorage fœtal connecté.",
                   "editeur": "Philips",
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
-                    "Medicale": true,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
@@ -635,21 +635,21 @@
               "description": "Prise en charge des patients en situation d'urgence.",
               "applications": [
                 {
-                  "nom": "TU",
+                  "nom": "Terminal Urgences",
                   "description": "Triage Urgences : dossier médical du patient.",
                   "editeur": "IES",
                   "referent": "Lisandru Benedetti",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
-                    "Planification": true,
-                    "Facturation": false,
+                    
+                    "Planification": false,
+                    "Facturation": true,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 },
                 {
@@ -658,15 +658,15 @@
                   "editeur": "ORU PACA",
                   "referent": "Lisandru Benedetti",
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30354&tabid=1",
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
-                    "Medicale": true,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
@@ -681,7 +681,7 @@
                   "description": "Dossier de réanimation.",
                   "editeur": null,
                   "referent": "Chef réanimation",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -699,7 +699,7 @@
                   "description": "Suite Philips de monitorage réanimation.",
                   "editeur": "Philips",
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -707,7 +707,7 @@
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": false,
+                    "Administrative": true,
                     "Medicale": true,
                     "Autre": false
                   }
@@ -720,17 +720,17 @@
               "applications": [
                 {
                   "nom": "Cardioreport",
-                  "description": "Application d’aide à la rédaction et à l’interprétation des comptes-rendus cardiologiques.",
+                  "description": "L'application CardioReport est une application spécialisée dans le domaine de la cardiologie, conçue pour aider les professionnels de la santé à générer et à interpréter des rapports médicaux liés aux patients atteints de maladies cardiovasculaires.",
                   "editeur": "Medireport",
                   "referent": "Julien Versini",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=37243&tabid=1",
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
-                    "Facturation": false,
+                    "Facturation": true,
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
@@ -738,10 +738,10 @@
                 },
                 {
                   "nom": "IntelliSpace",
-                  "description": "Plate-forme Philips d’imagerie cardiovasculaire et d’analytique.",
+                  "description": "IntelliSpace est une application logicielle développée par Philips dans le domaine de la santé. Elle offre une plateforme intégrée pour la gestion et l'analyse des données médicales, permettant aux professionnels de santé d'accéder, de visualiser et de collaborer efficacement dans le cadre des soins aux patients.",
                   "editeur": "Philips",
                   "referent": "Julien Versini",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -750,22 +750,22 @@
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
-                    "Medicale": true,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
               ]
             },
             {
-              "nom": "Neurologie",
+              "nom": "Edmus",
               "description": "Prise en charge des patients neurologiques.",
               "applications": [
                 {
                   "nom": "Edema",
-                  "description": "Dossier patient neurologie.",
+                  "description": "Gestion des soins intensifs néonataux, pédiatriques et adultes",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -773,17 +773,17 @@
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
+                    "Administrative": false,
+                    "Medicale": false,
                     "Autre": false
                   }
                 },
                 {
                   "nom": "Delta Med",
-                  "description": "Module complémentaire neurologie.",
+                  "description": "Gestion des électroencéphalogrammes (EEG) enregistre l'activité électrique produite par les neurones du cerveau.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA (PC)",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -792,16 +792,16 @@
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
-                    "Medicale": true,
+                    "Medicale": false,
                     "Autre": false
                   }
                 },
                 {
                   "nom": "Neurophy",
-                  "description": "Examens électrophysiologiques.",
+                  "description": "Téléexpertise des EEG",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "SAS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -810,7 +810,7 @@
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
-                    "Medicale": true,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
@@ -825,16 +825,16 @@
                   "description": "Suivi centralisé des patients vaccinés.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
-                    "Planification": true,
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
+                    "Administrative": false,
+                    "Medicale": false,
                     "Autre": false
                   }
                 },
@@ -844,15 +844,15 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
-                    "Planification": true,
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
+                    "Administrative": false,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
@@ -867,14 +867,14 @@
                   "description": "Suivi des patients insuffisants rénaux ; gestion et optimisation des séances de dialyse.",
                   "editeur": "Hemadialyse",
                   "referent": "Laurence Milani",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
-                    "Planification": true,
-                    "Facturation": false,
+                    "Planification": false,
+                    "Facturation": true,
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
@@ -891,34 +891,34 @@
                   "description": "Dossier de régulation médicale (centre 15).",
                   "editeur": "Scriptal",
                   "referent": "Andrée Mori",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=12901&tabid=1",
                   "interfaces": {
                     "Divers": false,
-                    "Planification": true,
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
+                    "Administrative": false,
+                    "Medicale": false,
                     "Autre": false
                   }
                 },
                 {
-                  "nom": "Mediq",
+                  "nom": "MediQ",
                   "description": "Centre de contacts SAMU (console d’appels).",
                   "editeur": "NXO",
                   "referent": "Andrée Mori",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Standard",
+                  "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30472&tabid=1",
                   "interfaces": {
                     "Divers": false,
-                    "Planification": true,
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
-                    "Medicale": true,
+                    "Administrative": false,
+                    "Medicale": false,
                     "Autre": false
                   }
                 },
@@ -927,16 +927,16 @@
                   "description": "Enregistrement et archivage des communications radio SAMU.",
                   "editeur": "NXO",
                   "referent": "Andrée Mori",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Standard",
+                  "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
-                    "Medicale": true,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
@@ -951,13 +951,13 @@
                   "description": "Dossier patient oncologie.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHC",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
-                    "Planification": true,
+                    "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
                     "Medicale": true,
@@ -969,7 +969,7 @@
                   "description": "Contrôle vidéo de préparation chimio.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHC",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -979,7 +979,7 @@
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -1001,7 +1001,7 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
@@ -1009,7 +1009,7 @@
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
-                    "Medicale": true,
+                    "Medicale": false,
                     "Autre": false
                   }
                 }
@@ -1032,7 +1032,7 @@
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1056,7 +1056,7 @@
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1084,12 +1084,12 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": true,
                     "Facturation": false,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 },
                 {
@@ -1107,7 +1107,7 @@
                     "Facturation": false,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -1121,7 +1121,7 @@
                   "description": "Gestion des médicaments et DMI.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -1131,7 +1131,7 @@
                     "Facturation": true,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 },
                 {
@@ -1148,8 +1148,8 @@
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
-                    "Medicale": true,
-                    "Autre": false
+                    "Medicale": false,
+                    "Autre": true
                   }
                 }
               ]
@@ -1163,17 +1163,17 @@
                   "description": "Planification et suivi des repas.",
                   "editeur": "Datameal",
                   "referent": null,
-                  "hebergement": "CHB",
+                  "hebergement": "CH Bastia",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": true,
                     "Facturation": false,
                     "Administrative": true,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -1187,7 +1187,7 @@
                   "description": "Module traçabilité DMI (Pharma).",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -1197,7 +1197,7 @@
                     "Facturation": false,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -1223,7 +1223,7 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1236,7 +1236,7 @@
                   "description": "PACS (dom. organes).",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -1259,7 +1259,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1277,7 +1277,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1296,7 +1296,7 @@
                   "description": "PACS Synapse : archivage et diffusion d’images médicales.",
                   "editeur": "Softway Medical",
                   "referent": "Julien Versini",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30502&tabid=1",
@@ -1319,7 +1319,7 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": true,
                     "Facturation": false,
                     "Administrative": true,
@@ -1332,12 +1332,12 @@
                   "description": "Gravure CD/DVD des examens d’imagerie.",
                   "editeur": "EDL",
                   "referent": "Julien Versini",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=39623&tabid=1",
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1350,12 +1350,12 @@
                   "description": "Impression de dossiers et pochettes d’imagerie.",
                   "editeur": "System X",
                   "referent": "Julien Versini",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=39625&tabid=1",
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1374,7 +1374,7 @@
                   "description": "Gestion chaîne analytique.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -1392,7 +1392,7 @@
                   "description": "Veille épidémiologique.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -1410,7 +1410,7 @@
                   "description": "Gestion dérivés sanguins.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -1428,7 +1428,7 @@
                   "description": "Suivi microbiologie / infectio.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -1446,7 +1446,7 @@
                   "description": "Middleware de gestion de la coagulation (hémostase).",
                   "editeur": "Stago",
                   "referent": "Clarisse Durand",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=46437&tabid=1",
@@ -1464,7 +1464,7 @@
                   "description": "Serveur Roche middleware.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -1488,7 +1488,7 @@
                   "description": "Gestion des examens anapath.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
@@ -1512,7 +1512,7 @@
                   "description": "Gestion et traçabilité du circuit de stérilisation.",
                   "editeur": "NEXUS",
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34947&tabid=1",
@@ -1530,7 +1530,7 @@
                   "description": "Supervision du lavage et de la stérilisation (lignes Stayinfo).",
                   "editeur": "Stayinfo",
                   "referent": "Benjamin Darmon",
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34947&tabid=1",
@@ -1572,7 +1572,7 @@
                   "description": "Suivi temps réel des interventions.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -1590,12 +1590,12 @@
                   "description": "Check-list et traçabilité bloc.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1608,12 +1608,12 @@
                   "description": "Gestion des équipements de bloc.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": true,
                     "Facturation": false,
                     "Administrative": true,
@@ -1640,16 +1640,16 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -1663,17 +1663,17 @@
                   "description": "EAI hospitalier principal.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
-                  "multiEtablissement": true,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
-                    "Planification": false,
-                    "Facturation": false,
+                    
+                    "Planification": true,
+                    "Facturation": true,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 },
                 {
@@ -1683,15 +1683,15 @@
                   "referent": "DSI AJA",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Standard",
+                  "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34115&tabid=1",
                   "interfaces": {
-                    "Divers": true,
-                    "Planification": false,
-                    "Facturation": false,
+                    
+                    "Planification": true,
+                    "Facturation": true,
                     "Administrative": true,
                     "Medicale": true,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -1710,12 +1710,12 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 },
                 {
@@ -1728,12 +1728,12 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 },
                 {
@@ -1746,12 +1746,12 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -1774,13 +1774,13 @@
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1795,10 +1795,10 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1813,10 +1813,10 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1833,11 +1833,11 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": false,
+                  "multiEtablissement": true,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1861,10 +1861,10 @@
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1879,7 +1879,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1897,7 +1897,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1921,10 +1921,10 @@
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1939,10 +1939,10 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
@@ -1959,11 +1959,11 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": false,
+                  "multiEtablissement": true,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1989,17 +1989,17 @@
                   "description": "Gestion des badges.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Haute",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -2013,17 +2013,17 @@
                   "description": "Pilotage transport pneumatique.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
-                    "Planification": true,
+                    "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -2044,17 +2044,17 @@
                   "description": "Surveillance en temps réel de l’infrastructure (Paessler PRTG).",
                   "editeur": "Paessler AG",
                   "referent": "Natale Pantalacci",
-                  "hebergement": "CHB",
+                  "hebergement": "CH Bastia",
                   "multiEtablissement": true,
                   "criticite": "Haute",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    "Divers": true,
+                    
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -2069,16 +2069,16 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
+                  "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": true,
+                    "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -2099,17 +2099,17 @@
                   "description": "Référentiel budgétaire.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
                     "Planification": false,
-                    "Facturation": true,
-                    "Administrative": true,
+                    "Facturation": false,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]
@@ -2123,7 +2123,7 @@
                   "description": "Nomenclature services et UF.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CHA",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -2131,9 +2131,9 @@
                     "Divers": false,
                     "Planification": false,
                     "Facturation": false,
-                    "Administrative": true,
+                    "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   }
                 }
               ]

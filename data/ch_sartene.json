@@ -12,7 +12,7 @@
               "description": "DxCare et modules de soins",
               "applications": [
                 {
-                  "nom": "Dx Care",
+                  "nom": "DxCare",
                   "description": "Dossier patient informatisé",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -24,7 +24,7 @@
                   }
                 },
                 {
-                  "nom": "Dx Planning",
+                  "nom": "DxPlanning",
                   "description": "Planification des ressources",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -318,7 +318,7 @@
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
-                    "Divers": true
+                    "Autre": true
                   }
                 }
               ]
@@ -341,13 +341,13 @@
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
-                    "Divers": true
+                    "Autre": true
                   }
                 },
                 {
                   "nom": "Oxygène",
                   "description": "Suivi production O₂",
-                  "hebergement": "CH Casteluccio",
+                  "hebergement": "CH Castelluccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -355,7 +355,7 @@
                 {
                   "nom": "GestSup",
                   "description": "Ticketing / GMAO",
-                  "hebergement": "CH Casteluccio",
+                  "hebergement": "CH Castelluccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
