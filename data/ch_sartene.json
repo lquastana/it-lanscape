@@ -249,7 +249,7 @@
                   "description": "Facturation et CDRI",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Standard",
+                  "criticite": "Haute",
                   "interfaces": {
                     "Administrative": true,
                     "Facturation": true,
