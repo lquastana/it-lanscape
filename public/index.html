@@ -2,75 +2,323 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Cartographie Applicative</title>
+  <title>Cartographie des Hôpitaux Publics de Corse</title>
+
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h2 { margin-top: 1em; }
-    .domain, .process, .application { margin-left: 20px; }
+    /* ======== Styles généraux ======== */
+    *,*::before,*::after{box-sizing:border-box;}
+    body{font-family:Arial,sans-serif;margin:0;padding:0;background:#fafafa;color:#222;}
+
+    /* ----- Bandeau héro ----- */
+    .hero{background:#1B75BC;color:#fff;padding:40px 24px 32px;text-align:center;
+          border-bottom-left-radius:20px;border-bottom-right-radius:20px;}
+    .hero h1{margin:0;font-size:2.2rem;}
+    .hero p{margin-top:10px;max-width:680px;margin:0 auto;}
+
+    /* ----- Légende & filtres ----- */
+    .legend-wrapper{background:#fff;padding:16px 24px;border-radius:12px;
+                    box-shadow:0 2px 6px rgba(0,0,0,0.08);width:fit-content;margin:24px auto;}
+    .legend-title{margin-bottom:16px;font-size:1.3rem;text-align:center;}
+    .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:20px;}
+    .legend-item{display:inline-flex;align-items:center;font-size:0.9rem;white-space:nowrap;}
+    .legend-color{width:14px;height:14px;border-radius:50%;margin-right:6px;border:1px solid rgba(0,0,0,0.25);}
+    .filters{text-align:center;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+    .filters label{display:inline-block;}
+    .filters select{padding:4px;}
+
+    /* ----- Cartographie ----- */
+    .domain{background:#fff;border:1px solid #555;border-radius:8px;margin-bottom:16px;padding:10px;}
+    .domain h3{cursor:pointer;margin:0 0 4px 0;}
+    .process{border:1px solid #ccc;border-radius:8px;background:rgba(255,255,255,0.25);
+             padding:10px;margin-bottom:16px;}
+    .process h4{margin:0 0 4px 0;font-weight:bold;}
+    .process p:first-of-type{margin:0 0 8px 0;color:#444;}
+    .apps{display:flex;flex-wrap:wrap;gap:16px;}
+    .apps .application{flex:0 0 calc(33.333% - 16px);background:#fff;border:2px solid #999;
+                       border-radius:8px;position:relative;padding:10px;margin:0;}
+    @media (max-width:900px){.apps .application{flex:0 0 calc(50% - 16px);} }
+    @media (max-width:600px){.apps .application{flex:0 0 100%;} }
+    .application h5{margin:0 0 4px 0;display:flex;align-items:center;gap:6px;}
+    .crit-dot{position:absolute;top:4px;right:4px;min-width:24px;padding:2px 4px;font-size:0.7rem;
+              text-align:center;border-radius:12px;color:#fff;cursor:pointer;text-decoration:none;}
+    .iface-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;
+               border:1px solid rgba(0,0,0,0.2);}
+    .multi-icon{font-size:1rem;}
+
+    /* ======== Bouton flottant pour ouvrir le chat ======== */
+    #chat-toggle{position:fixed;bottom:20px;right:20px;z-index:10000;background:#1B75BC;color:#fff;
+                 border:none;border-radius:50%;width:52px;height:52px;font-size:1.4rem;
+                 box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer;}
+
+    /* ======== Popup chat ======== */
+    .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
+             background:#fff;z-index:9999;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);
+             transition:all .3s ease;border-radius:0;}
+    .chatbox.minimized{width:460px;height:420px;bottom:84px;right:20px;top:auto;left:auto;
+                       border-radius:12px;resize:both;overflow:auto;}
+    .chatbox.hidden{display:none;}
+
+    .chatbox-toggle-size{position:absolute;top:12px;right:68px;background:#1B75BC;color:#fff;
+                         border:none;border-radius:8px;padding:4px 8px;cursor:pointer;}
+    .chatbox-reset{position:absolute;top:12px;right:12px;background:#ff5252;color:#fff;
+                   border:none;border-radius:8px;padding:4px 8px;cursor:pointer;}
+
+    #chat-log{flex:1;overflow-y:auto;margin-bottom:12px;}
+    .chat-msg{margin:30px 0;padding:8px 10px;border-radius:8px;white-space:pre-wrap;}
+    .user{background:#1B75BC;color:#fff;text-align:right;}
+    .bot{background:#eee;}
+    #chat-form{display:flex;gap:6px;}
+    #chat-q{flex:1;padding:8px;border-radius:8px;border:1px solid #ccc;}
   </style>
 </head>
+
 <body>
-  <h1>Cartographie Applicative</h1>
-  <div id="content">Chargement...</div>
+  <!-- ======== Bandeau héro ======== -->
+  <header class="hero">
+    <h1>Cartographie des Hôpitaux Publics de Corse</h1>
+    <p>Explorez les domaines, processus et applications.</p>
+  </header>
+
+  <!-- ======== Légende & filtres ======== -->
+  <section class="legend-wrapper">
+    <h2 class="legend-title">Légende &amp; Filtres</h2>
+    <div class="legend" id="legend"></div>
+
+    <div class="filters">
+      <label>Établissement : <select id="filter-etab"><option value="">Tous</option></select></label>
+      <label>Domaine : <select id="filter-domaine"><option value="">Tous</option></select></label>
+      <label>Criticité : <select id="filter-criticite"><option value="">Tous</option>
+                         <option value="Standard">Standard</option><option value="Haute">Haute</option></select></label>
+      <label>Hébergement : <select id="filter-heberg"><option value="">Tous</option></select></label>
+      <label>Interface : <select id="filter-interface"><option value="">Toutes</option></select></label>
+      <label>Multi-établissement : <select id="filter-multi"><option value="">Tous</option>
+                         <option value="Oui">Oui</option><option value="Non">Non</option></select></label>
+    </div>
+  </section>
+
+  <!-- ======== Cartographie ======== -->
+  <main style="padding:0 20px 40px;" id="content">Chargement...</main>
+
+  <!-- ======== Popup Chat ======== -->
+  <section class="chatbox hidden" id="chatbox">
+    <button class="chatbox-toggle-size" id="chat-size-toggle">🔽 Réduire</button>
+    <button class="chatbox-reset" id="chat-reset">🔁</button>
+
+    <div id="chat-log"></div>
+
+    <form id="chat-form">
+      <input id="chat-q" placeholder="Posez votre question…" autocomplete="off" required />
+      <button type="submit">Envoyer</button>
+    </form>
+  </section>
+
+  <!-- Bouton pour ouvrir le chat -->
+  <button id="chat-toggle">💬</button>
+
   <script>
-    async function loadData() {
-      try {
-        const res = await fetch('/api/landscape');
-        const data = await res.json();
-        const container = document.getElementById('content');
-        container.innerHTML = '';
-        data.etablissements.forEach(etab => {
-          const etabDiv = document.createElement('div');
-          etabDiv.innerHTML = `<h2>${etab.nom}</h2>`;
-          etab.domaines.forEach(domain => {
-            const domainDiv = document.createElement('div');
-            domainDiv.className = 'domain';
-            domainDiv.innerHTML = `<h3>${domain.nom}</h3><p>${domain.description}</p>`;
-            domain.processus.forEach(proc => {
-              const procDiv = document.createElement('div');
-              procDiv.className = 'process';
-              procDiv.innerHTML = `<h4>${proc.nom}</h4><p>${proc.description}</p>`;
-              proc.applications.forEach(app => {
-                const appDiv = document.createElement('div');
-                appDiv.className = 'application';
-                appDiv.innerHTML = `
-                  <h5>${app.nom}</h5>
-                  <p>${app.description}</p>
-                  <ul>
-                    <li><strong>Éditeur:</strong> ${app.editeur}</li>
-                    <li><strong>Référent:</strong> ${app.referent}</li>
-                    <li><strong>Hébergement:</strong> ${app.hebergement}</li>
-                    <li><strong>Multi-établissement:</strong> ${app.multiEtablissement ? 'Oui' : 'Non'}</li>
-                    <li><strong>Criticité:</strong> ${app.criticite}</li>
-                    <li><strong>Lien PRTG:</strong> <a href="${app.lienPRTG}">${app.lienPRTG}</a></li>
-                  </ul>
-                `;
-                const interfaceList = document.createElement('ul');
-                Object.entries(app.interfaces).forEach(([type, ifaces]) => {
-                  if (ifaces.length > 0) {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${type}:</strong> ${ifaces.join(', ')}`;
-                    interfaceList.appendChild(li);
-                  }
-                });
-                if (interfaceList.children.length > 0) {
-                  appDiv.appendChild(interfaceList);
-                }
-                procDiv.appendChild(appDiv);
-              });
-              domainDiv.appendChild(procDiv);
-            });
-            etabDiv.appendChild(domainDiv);
-          });
-          container.appendChild(etabDiv);
+    /* ---------- Constantes légende / couleurs ---------- */
+    const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',
+                           Facturation:'#f44336',Autre:'#9e9e9e'};
+    const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
+    const criticityColor=l=>['Haute','Critique'].includes(l)?'#d32f2f':'#616161';
+    let domainIndex=0,fullData=null;
+
+    /* ---------- threadId persistant ---------- */
+    let threadId=localStorage.getItem('chat_thread_id')||null;
+
+    /* ---------- Légende ---------- */
+    function createLegend(){
+      const el=document.getElementById('legend');el.innerHTML='';
+      Object.entries(interfaceColors).forEach(([n,c])=>{
+        const wrap=document.createElement('div');wrap.className='legend-item';
+        const dot=document.createElement('span');dot.className='legend-color';dot.style.backgroundColor=c;
+        wrap.appendChild(dot);wrap.appendChild(document.createTextNode(n));el.appendChild(wrap);
+      });
+      [['#d32f2f','Criticité haute'],['#616161','Criticité standard']].forEach(([c,t])=>{
+        const wrap=document.createElement('div');wrap.className='legend-item';
+        const dot=document.createElement('span');dot.className='legend-color';dot.style.backgroundColor=c;
+        wrap.appendChild(dot);wrap.appendChild(document.createTextNode(t));el.appendChild(wrap);
+      });
+      const multi=document.createElement('div');multi.className='legend-item';
+      const icon=document.createElement('span');icon.textContent='🏛️';icon.className='multi-icon';
+      multi.appendChild(icon);multi.appendChild(document.createTextNode(' Multi-établissement'));
+      el.appendChild(multi);
+    }
+
+    /* ---------- Dropdowns ---------- */
+    function populateDropdowns(data){
+      const sets={etab:new Set(),domaine:new Set(),heberg:new Set(),interface:new Set(),multi:new Set()};
+      data.etablissements.forEach(e=>{
+        sets.etab.add(e.nom);
+        e.domaines.forEach(d=>{
+          sets.domaine.add(d.nom);
+          d.processus.forEach(p=>p.applications.forEach(a=>{
+            sets.heberg.add(a.hebergement);
+            sets.multi.add(a.multiEtablissement?'Oui':'Non');
+            Object.entries(a.interfaces).forEach(([k,v])=>v&&sets.interface.add(k));
+          }));
         });
-      } catch (err) {
-        document.getElementById('content').textContent = 'Erreur lors du chargement des données';
+      });
+      for(const [k,set] of Object.entries(sets)){
+        const sel=document.getElementById('filter-'+k);
+        if(!sel)continue;
+        sel.innerHTML='<option value="">Tous</option>';
+        [...set].sort().forEach(v=>{
+          const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);
+        });
       }
     }
 
-    loadData();
+    /* ---------- Rendu cartographie ---------- */
+    function render(){
+      const f={
+        etab:document.getElementById('filter-etab').value,
+        domaine:document.getElementById('filter-domaine').value,
+        criticite:document.getElementById('filter-criticite').value,
+        heberg:document.getElementById('filter-heberg').value,
+        interface:document.getElementById('filter-interface').value,
+        multi:document.getElementById('filter-multi').value
+      };
+      const cont=document.getElementById('content');cont.innerHTML='';domainIndex=0;
+      fullData.etablissements.forEach(etab=>{
+        if(f.etab&&f.etab!==etab.nom)return;
+        const etabDiv=document.createElement('div');
+        const h2=document.createElement('h2');h2.textContent=etab.nom;h2.style.cursor='pointer';
+        const etabContent=document.createElement('div');
+        h2.onclick=()=>etabContent.style.display=etabContent.style.display==='none'?'':'none';
+        etabDiv.appendChild(h2);
+
+        etab.domaines.forEach(dom=>{
+          if(f.domaine&&f.domaine!==dom.nom)return;
+          const dDiv=document.createElement('div');dDiv.className='domain';
+          dDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
+
+          const h3=document.createElement('h3');h3.textContent=dom.nom;
+          const dDesc=document.createElement('p');dDesc.textContent=dom.description;
+          const procCont=document.createElement('div');
+
+          dom.processus.forEach(proc=>{
+            const pDiv=document.createElement('div');pDiv.className='process';
+            pDiv.innerHTML=`<h4>${proc.nom}</h4><p>${proc.description}</p>`;
+            const appWrap=document.createElement('div');appWrap.className='apps';
+
+            proc.applications.forEach(app=>{
+              const critOk=!f.criticite||
+                (f.criticite==='Standard'&&!['Haute','Critique'].includes(app.criticite))||
+                (f.criticite==='Haute'&&['Haute','Critique'].includes(app.criticite));
+              const intOk=!f.interface||app.interfaces[f.interface];
+              const multiOk=!f.multi||((f.multi==='Oui')===app.multiEtablissement);
+              if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk||!multiOk) return;
+
+              const aDiv=document.createElement('div');aDiv.className='application';
+              const h5=document.createElement('h5');h5.textContent=app.nom;
+              if(app.multiEtablissement){const ico=document.createElement('span');ico.textContent='🏛️';
+                ico.className='multi-icon';h5.appendChild(ico);}
+              aDiv.appendChild(h5);
+
+              const cd=document.createElement('a');cd.className='crit-dot';
+              cd.style.backgroundColor=criticityColor(app.criticite);
+              cd.textContent=app.criticite;cd.href=app.prtg||'#';cd.target='_blank';
+              cd.title='Ouvrir le PRTG';aDiv.appendChild(cd);
+
+              const iface=document.createElement('div');
+              Object.entries(app.interfaces).forEach(([t,act])=>{
+                if(act&&interfaceColors[t]){
+                  const dot=document.createElement('span');dot.className='iface-dot';
+                  dot.style.backgroundColor=interfaceColors[t];dot.title=t;iface.appendChild(dot);
+                }
+              });
+              aDiv.appendChild(iface);
+              aDiv.innerHTML+=`<p>${app.description}</p><p style="font-style:italic;color:#666">
+                                Hébergement : ${app.hebergement}</p>`;
+              appWrap.appendChild(aDiv);
+            });
+
+            if(appWrap.childElementCount){pDiv.appendChild(appWrap);procCont.appendChild(pDiv);}
+          });
+
+          if(procCont.childElementCount){
+            h3.style.cursor='pointer';let open=true;
+            h3.onclick=()=>{open=!open;procCont.style.display=open?'':'none';dDesc.style.display=open?'':'none';};
+            dDiv.appendChild(h3);dDiv.appendChild(dDesc);dDiv.appendChild(procCont);etabContent.appendChild(dDiv);
+          }
+        });
+        etabDiv.appendChild(etabContent);cont.appendChild(etabDiv);
+      });
+    }
+
+    /* ---------- Chargement JSON --------- */
+    async function loadData(){
+      try{
+        const res=await fetch('/api/landscape');
+        fullData=await res.json();
+        createLegend();populateDropdowns(fullData);render();
+      }catch{document.getElementById('content').textContent='Erreur de chargement.';}
+    }
+
+    /* Écouteurs filtres */
+    ['filter-etab','filter-domaine','filter-criticite','filter-heberg','filter-interface','filter-multi']
+      .forEach(id=>document.getElementById(id).addEventListener('change',render));
+
+    /* ---------- Chat : DOM ---------- */
+    const chatBox=document.getElementById('chatbox');
+    const toggleBtn=document.getElementById('chat-toggle');
+    const sizeToggle=document.getElementById('chat-size-toggle');
+    const resetBtn=document.getElementById('chat-reset');
+    const chatForm=document.getElementById('chat-form');
+    const chatInput=document.getElementById('chat-q');
+    const chatLog=document.getElementById('chat-log');
+
+    /* Ouvrir / fermer popup */
+    toggleBtn.addEventListener('click',()=>{
+      chatBox.classList.toggle('hidden');
+      chatBox.classList.remove('minimized');
+      sizeToggle.textContent='🔽 Réduire';
+    });
+
+    /* Réduire / agrandir */
+    sizeToggle.addEventListener('click',()=>{
+      const min=chatBox.classList.toggle('minimized');
+      sizeToggle.textContent=min?'🔼 Agrandir':'🔽 Réduire';
+    });
+
+    /* Reset thread */
+    resetBtn.addEventListener('click',resetThread);
+    function resetThread(){
+      localStorage.removeItem('chat_thread_id');
+      threadId=null;
+      addMsg('🧹 Nouvelle conversation démarrée.','bot');
+    }
+
+    /* Envoi message */
+    chatForm.addEventListener('submit',async e=>{
+      e.preventDefault();
+      const q=chatInput.value.trim();
+      if(!q)return;
+      addMsg(q,'user');chatInput.value='';
+      try{
+        const r=await fetch('/api/chat',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({question:q,threadId})
+        });
+        const {answer,threadId:ret}=await r.json();
+        if(ret&&ret!==threadId){
+          threadId=ret;localStorage.setItem('chat_thread_id',threadId);
+        }
+        addMsg(answer||'-- pas de réponse --','bot');
+      }catch{addMsg('Erreur de communication avec le serveur.','bot');}
+    });
+
+    /* Append message au log */
+    function addMsg(txt,cls){
+      const div=document.createElement('div');
+      div.className=`chat-msg ${cls}`;div.innerHTML=txt;
+      chatLog.appendChild(div);chatLog.scrollTop=chatLog.scrollHeight;
+    }
+
+    /* ---------- Initialisation ---------- */
+    createLegend();loadData();
   </script>
 </body>
 </html>
-
