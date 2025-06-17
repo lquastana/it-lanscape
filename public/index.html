@@ -83,7 +83,7 @@
     #chat-form{display:flex;gap:6px;}
     #chat-q{flex:1;padding:8px;border-radius:8px;border:1px solid #ccc;}
   </style>
-  <script src="vendor/chart.umd.js"></script>
+  <script src="vendor/echarts.min.js"></script>
 </head>
 
 <body>
@@ -412,50 +412,70 @@
       const complPct=m.fieldsTotal?((m.fieldsFilled/m.fieldsTotal)*100).toFixed(1):'0.0';
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
-        `<section class="report-section"><h3>⚙️ Alignement processus</h3><div class="chart-container"><canvas id="chart-proc"></canvas></div></section>`+
-        `<section class="report-section"><h3>🖥️ Alignement applications</h3><div class="chart-container"><canvas id="chart-align"></canvas></div></section>`+
-        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3><div class="chart-container"><canvas id="chart-mut"></canvas></div></section>`+
-        `<section class="report-section"><h3>🔥 Répartition par criticité</h3><div class="chart-container"><canvas id="chart-crit"></canvas></div></section>`+
-        `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><div class="chart-container"><canvas id="chart-heberg"></canvas></div></section>`+
-        `<section class="report-section"><h3>📑 Complétude des données</h3><div class="chart-container"><canvas id="chart-compl"></canvas></div></section>`+
-        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><div class="chart-container"><canvas id="chart-iface"></canvas></div></section>`;
+        `<section class="report-section"><h3>⚙️ Alignement processus</h3><div class="chart-container"><div id="chart-proc" style="height:260px;"></div></div></section>`+
+        `<section class="report-section"><h3>🖥️ Alignement applications</h3><div class="chart-container"><div id="chart-align" style="height:260px;"></div></div></section>`+
+        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3><div class="chart-container"><div id="chart-mut" style="height:260px;"></div></div></section>`+
+        `<section class="report-section"><h3>🔥 Répartition par criticité</h3><div class="chart-container"><div id="chart-crit" style="height:260px;"></div></div></section>`+
+        `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><div class="chart-container"><div id="chart-heberg" style="height:260px;"></div></div></section>`+
+        `<section class="report-section"><h3>📑 Complétude des données</h3><div class="chart-container"><div id="chart-compl" style="height:260px;"></div></div></section>`+
+        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><div class="chart-container"><div id="chart-iface" style="height:260px;"></div></div></section>`;
 
-      new Chart(document.getElementById('chart-proc'),{
-        type:'doughnut',
-        data:{labels:['Couvert','Manquant'],datasets:[{data:[m.procWithApps,m.procTotal-m.procWithApps],backgroundColor:['#1B75BC','#e0e0e0']} ]},
-        options:{plugins:{tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed} (${((c.parsed/m.procTotal)*100).toFixed(1)}%)`}},legend:{display:false}}}
+      const chartProc = echarts.init(document.getElementById('chart-proc'));
+      chartProc.setOption({
+        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
+        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
+                data:[{value:m.procWithApps,name:'Couvert'},{value:m.procTotal-m.procWithApps,name:'Manquant'}],
+                color:['#1B75BC','#e0e0e0']}]
       });
-      new Chart(document.getElementById('chart-align'),{
-        type:'doughnut',
-        data:{labels:['Aligné','Non aligné'],datasets:[{data:[m.alignOk,m.alignTotal-m.alignOk],backgroundColor:['#1B75BC','#e0e0e0']} ]},
-        options:{plugins:{tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed} (${((c.parsed/m.alignTotal)*100).toFixed(1)}%)`}},legend:{display:false}}}
+
+      const chartAlign = echarts.init(document.getElementById('chart-align'));
+      chartAlign.setOption({
+        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
+        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
+                data:[{value:m.alignOk,name:'Aligné'},{value:m.alignTotal-m.alignOk,name:'Non aligné'}],
+                color:['#1B75BC','#e0e0e0']}]
       });
-      new Chart(document.getElementById('chart-mut'),{
-        type:'doughnut',
-        data:{labels:['Mutualisée','Spécifique'],datasets:[{data:[m.multi,m.appShown-m.multi],backgroundColor:['#ff9800','#e0e0e0']} ]},
-        options:{plugins:{tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed} (${((c.parsed/m.appShown)*100).toFixed(1)}%)`}},legend:{display:false}}}
+
+      const chartMut = echarts.init(document.getElementById('chart-mut'));
+      chartMut.setOption({
+        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
+        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
+                data:[{value:m.multi,name:'Mutualisée'},{value:m.appShown-m.multi,name:'Spécifique'}],
+                color:['#ff9800','#e0e0e0']}]
       });
-      new Chart(document.getElementById('chart-compl'),{
-        type:'doughnut',
-        data:{labels:['Renseigné','Manquant'],datasets:[{data:[m.fieldsFilled,m.fieldsTotal-m.fieldsFilled],backgroundColor:['#1B75BC','#e0e0e0']} ]},
-        options:{plugins:{tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed} (${((c.parsed/m.fieldsTotal)*100).toFixed(1)}%)`}},legend:{display:false}}}
+
+      const chartCompl = echarts.init(document.getElementById('chart-compl'));
+      chartCompl.setOption({
+        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
+        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
+                data:[{value:m.fieldsFilled,name:'Renseigné'},{value:m.fieldsTotal-m.fieldsFilled,name:'Manquant'}],
+                color:['#1B75BC','#e0e0e0']}]
       });
-      new Chart(document.getElementById('chart-crit'),{
-        type:'pie',
-        data:{labels:['Standard','Haute','Critique'],datasets:[{data:[m.critStandard,m.critHaute,m.critCritique],backgroundColor:['#4caf50','#ff9800','#d32f2f']} ]},
-        options:{plugins:{tooltip:{callbacks:{label:c=>`${c.label}: ${c.parsed} (${((c.parsed/critTotal)*100).toFixed(1)}%)`}},legend:{position:'bottom'}}}
+
+      const chartCrit = echarts.init(document.getElementById('chart-crit'));
+      chartCrit.setOption({
+        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
+        legend:{bottom:0},
+        series:[{type:'pie',radius:'70%',
+                data:[{value:m.critStandard,name:'Standard'},{value:m.critHaute,name:'Haute'},{value:m.critCritique,name:'Critique'}],
+                color:['#4caf50','#ff9800','#d32f2f']}]
       });
-      const heLabels=Object.keys(m.hebergCounts);
-      new Chart(document.getElementById('chart-heberg'),{
-        type:'bar',
-        data:{labels:heLabels,datasets:[{label:'Applications',data:heLabels.map(h=>m.hebergCounts[h]),backgroundColor:'#1B75BC'}]},
-        options:{indexAxis:'y',plugins:{tooltip:{callbacks:{label:c=>`${c.parsed} (${((c.parsed/hebergTotal)*100).toFixed(1)}%)`}}}}
+
+      const heLabels = Object.keys(m.hebergCounts);
+      const chartHeberg = echarts.init(document.getElementById('chart-heberg'));
+      chartHeberg.setOption({
+        tooltip:{formatter:p=>`${p.name}: ${p.value} (${((p.value/hebergTotal)*100).toFixed(1)}%)`},
+        xAxis:{type:'value'},
+        yAxis:{type:'category',data:heLabels},
+        series:[{type:'bar',data:heLabels.map(h=>m.hebergCounts[h]),itemStyle:{color:'#1B75BC'}}]
       });
-      const ifaceLabels=Object.keys(interfaceColors);
-      new Chart(document.getElementById('chart-iface'),{
-        type:'radar',
-        data:{labels:ifaceLabels,datasets:[{label:'Couverture %',data:ifaceLabels.map(t=>m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):0),backgroundColor:'rgba(33,150,243,0.2)',borderColor:'#2196f3'}]},
-        options:{scales:{r:{beginAtZero:true,max:100}},plugins:{tooltip:{callbacks:{label:c=>`${c.formattedValue}%`}},legend:{display:false}}}
+
+      const ifaceLabels = Object.keys(interfaceColors);
+      const chartIface = echarts.init(document.getElementById('chart-iface'));
+      chartIface.setOption({
+        tooltip:{formatter:p=>`${p.value}%`},
+        radar:{indicator:ifaceLabels.map(n=>({name:n,max:100}))},
+        series:[{type:'radar',data:[{value:ifaceLabels.map(t=>m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):0),name:'Couverture'}],areaStyle:{color:'rgba(33,150,243,0.2)'},lineStyle:{color:'#2196f3'}}]
       });
     }
 
