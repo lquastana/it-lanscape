@@ -60,8 +60,8 @@
     #report-box .report-section{margin-bottom:20px;}
     #report-box ul{list-style:none;padding:0;}
     #report-box li{margin:4px 0;}
-    #report-box canvas{max-width:320px;margin:12px auto;display:block;}
-    .chart-container{position:relative;height:260px;width:100%;max-width:380px;margin:0 auto;}
+    .bar{background:#eee;border-radius:10px;overflow:hidden;height:20px;}
+    .bar-fill{height:100%;color:#fff;font-size:0.8rem;text-align:center;line-height:20px;}
 
     /* ======== Popup chat ======== */
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
@@ -83,7 +83,6 @@
     #chat-form{display:flex;gap:6px;}
     #chat-q{flex:1;padding:8px;border-radius:8px;border:1px solid #ccc;}
   </style>
-  <script src="vendor/echarts.min.js"></script>
 </head>
 
 <body>
@@ -410,73 +409,38 @@
       const critTotal=m.critHaute+m.critStandard+m.critCritique;
       const hebergTotal=Object.values(m.hebergCounts).reduce((a,b)=>a+b,0);
       const complPct=m.fieldsTotal?((m.fieldsFilled/m.fieldsTotal)*100).toFixed(1):'0.0';
+
+      const bar=(pct,color)=>`<div class="bar"><div class="bar-fill" style="width:${pct}%;background:${color}">${pct}%</div></div>`;
+
+      let critHTML='';
+      const cs=critTotal?((m.critStandard/critTotal)*100).toFixed(1):'0.0';
+      const ch=critTotal?((m.critHaute/critTotal)*100).toFixed(1):'0.0';
+      const cc=critTotal?((m.critCritique/critTotal)*100).toFixed(1):'0.0';
+      critHTML+=`<li>Standard : ${m.critStandard} (${cs}%) ${bar(cs,'#4caf50')}</li>`;
+      critHTML+=`<li>Haute : ${m.critHaute} (${ch}%) ${bar(ch,'#ff9800')}</li>`;
+      critHTML+=`<li>Critique : ${m.critCritique} (${cc}%) ${bar(cc,'#d32f2f')}</li>`;
+
+      let hebergHTML='';
+      for(const [h,c] of Object.entries(m.hebergCounts)){
+        const p=hebergTotal?((c/hebergTotal)*100).toFixed(1):'0.0';
+        hebergHTML+=`<li>${h} : ${c} (${p}%) ${bar(p,'#1B75BC')}</li>`;
+      }
+
+      let ifaceHTML='';
+      for(const [t,col] of Object.entries(interfaceColors)){
+        const p=m.dpAppTotal?(((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1)):0;
+        ifaceHTML+=`<li>${t} : ${p}% ${bar(p,col)}</li>`;
+      }
+
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
-        `<section class="report-section"><h3>⚙️ Alignement processus</h3><div class="chart-container"><div id="chart-proc" style="height:260px;"></div></div></section>`+
-        `<section class="report-section"><h3>🖥️ Alignement applications</h3><div class="chart-container"><div id="chart-align" style="height:260px;"></div></div></section>`+
-        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3><div class="chart-container"><div id="chart-mut" style="height:260px;"></div></div></section>`+
-        `<section class="report-section"><h3>🔥 Répartition par criticité</h3><div class="chart-container"><div id="chart-crit" style="height:260px;"></div></div></section>`+
-        `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><div class="chart-container"><div id="chart-heberg" style="height:260px;"></div></div></section>`+
-        `<section class="report-section"><h3>📑 Complétude des données</h3><div class="chart-container"><div id="chart-compl" style="height:260px;"></div></div></section>`+
-        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><div class="chart-container"><div id="chart-iface" style="height:260px;"></div></div></section>`;
-
-      const chartProc = echarts.init(document.getElementById('chart-proc'));
-      chartProc.setOption({
-        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
-        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
-                data:[{value:m.procWithApps,name:'Couvert'},{value:m.procTotal-m.procWithApps,name:'Manquant'}],
-                color:['#1B75BC','#e0e0e0']}]
-      });
-
-      const chartAlign = echarts.init(document.getElementById('chart-align'));
-      chartAlign.setOption({
-        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
-        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
-                data:[{value:m.alignOk,name:'Aligné'},{value:m.alignTotal-m.alignOk,name:'Non aligné'}],
-                color:['#1B75BC','#e0e0e0']}]
-      });
-
-      const chartMut = echarts.init(document.getElementById('chart-mut'));
-      chartMut.setOption({
-        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
-        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
-                data:[{value:m.multi,name:'Mutualisée'},{value:m.appShown-m.multi,name:'Spécifique'}],
-                color:['#ff9800','#e0e0e0']}]
-      });
-
-      const chartCompl = echarts.init(document.getElementById('chart-compl'));
-      chartCompl.setOption({
-        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
-        series:[{type:'pie',radius:['50%','70%'],label:{show:false},
-                data:[{value:m.fieldsFilled,name:'Renseigné'},{value:m.fieldsTotal-m.fieldsFilled,name:'Manquant'}],
-                color:['#1B75BC','#e0e0e0']}]
-      });
-
-      const chartCrit = echarts.init(document.getElementById('chart-crit'));
-      chartCrit.setOption({
-        tooltip:{formatter:p=>`${p.name}: ${p.value} (${p.percent.toFixed(1)}%)`},
-        legend:{bottom:0},
-        series:[{type:'pie',radius:'70%',
-                data:[{value:m.critStandard,name:'Standard'},{value:m.critHaute,name:'Haute'},{value:m.critCritique,name:'Critique'}],
-                color:['#4caf50','#ff9800','#d32f2f']}]
-      });
-
-      const heLabels = Object.keys(m.hebergCounts);
-      const chartHeberg = echarts.init(document.getElementById('chart-heberg'));
-      chartHeberg.setOption({
-        tooltip:{formatter:p=>`${p.name}: ${p.value} (${((p.value/hebergTotal)*100).toFixed(1)}%)`},
-        xAxis:{type:'value'},
-        yAxis:{type:'category',data:heLabels},
-        series:[{type:'bar',data:heLabels.map(h=>m.hebergCounts[h]),itemStyle:{color:'#1B75BC'}}]
-      });
-
-      const ifaceLabels = Object.keys(interfaceColors);
-      const chartIface = echarts.init(document.getElementById('chart-iface'));
-      chartIface.setOption({
-        tooltip:{formatter:p=>`${p.value}%`},
-        radar:{indicator:ifaceLabels.map(n=>({name:n,max:100}))},
-        series:[{type:'radar',data:[{value:ifaceLabels.map(t=>m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):0),name:'Couverture'}],areaStyle:{color:'rgba(33,150,243,0.2)'},lineStyle:{color:'#2196f3'}}]
-      });
+        `<section class="report-section"><h3>⚙️ Alignement processus</h3>${bar(proc,'#1B75BC')}</section>`+
+        `<section class="report-section"><h3>🖥️ Alignement applications</h3>${bar(appAlign,'#1B75BC')}</section>`+
+        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3>${bar(mut,'#ff9800')}</section>`+
+        `<section class="report-section"><h3>🔥 Répartition par criticité</h3><ul>${critHTML}</ul></section>`+
+        `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><ul>${hebergHTML}</ul></section>`+
+        `<section class="report-section"><h3>📑 Complétude des données</h3>${bar(complPct,'#1B75BC')}</section>`+
+        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><ul>${ifaceHTML}</ul></section>`;
     }
 
     /* ---------- Initialisation ---------- */
