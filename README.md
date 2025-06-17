@@ -73,6 +73,9 @@ AZURE_TENANT_ID="votre_tenant_id"
 AZURE_CLIENT_SECRET="votre_secret"
 AZURE_REDIRECT_URI="http://localhost:3000/auth/redirect"
 ALLOWED_USER="laurent.quastana@gcs-sirsco.fr"
+# Pour désactiver temporairement l'authentification
+# (mode développement uniquement)
+DISABLE_AUTH="true"
 
 Une fois authentifié, l'adresse e-mail est sauvegardée en session et l'accès est accordé uniquement si elle correspond à `ALLOWED_USER`.
   -H 'Content-Type: application/json' \

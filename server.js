@@ -15,6 +15,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const authDisabled = process.env.DISABLE_AUTH === 'true';
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
   defaultHeaders: {
@@ -23,19 +25,21 @@ const openai = new OpenAI({
 });
 
 app.use(express.json());
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'change_me',
-  resave: false,
-  saveUninitialized: false
-}));
+if (!authDisabled) {
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'change_me',
+    resave: false,
+    saveUninitialized: false
+  }));
 
-const openPaths = ['/auth/login','/auth/redirect','/login.html'];
-app.use((req, res, next) => {
-  if (openPaths.includes(req.path)) return next();
-  if (req.session && req.session.user) return next();
-  if (req.method === 'GET') return res.redirect('/login.html');
-  return res.status(401).json({ error: 'Not authenticated' });
-});
+  const openPaths = ['/auth/login','/auth/redirect','/login.html'];
+  app.use((req, res, next) => {
+    if (openPaths.includes(req.path)) return next();
+    if (req.session && req.session.user) return next();
+    if (req.method === 'GET') return res.redirect('/login.html');
+    return res.status(401).json({ error: 'Not authenticated' });
+  });
+}
 
 app.use(express.static(path.join(__dirname, 'public')));
 
