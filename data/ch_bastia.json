@@ -692,7 +692,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1405,7 +1405,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1423,7 +1423,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1441,7 +1441,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1465,7 +1465,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1489,7 +1489,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1507,7 +1507,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1525,7 +1525,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1549,7 +1549,7 @@
                   "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1567,7 +1567,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1591,7 +1591,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,

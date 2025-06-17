@@ -188,7 +188,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -212,7 +212,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -236,7 +236,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -260,7 +260,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -474,7 +474,7 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -579,7 +579,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -597,7 +597,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -661,7 +661,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -679,7 +679,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -703,7 +703,7 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=37243&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
@@ -721,7 +721,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -745,7 +745,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -763,7 +763,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -781,7 +781,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -805,7 +805,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -823,7 +823,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -847,7 +847,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
@@ -871,7 +871,7 @@
                   "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=12901&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -889,7 +889,7 @@
                   "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30472&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -930,7 +930,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -948,7 +948,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -978,7 +978,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
@@ -1002,7 +1002,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1026,7 +1026,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1073,7 +1073,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": true,
                     "Facturation": false,
                     "Administrative": true,
@@ -1097,7 +1097,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": true,
                     "Administrative": true,
@@ -1115,7 +1115,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1162,7 +1162,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -1209,7 +1209,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1267,7 +1267,7 @@
                   "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30502&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -1359,7 +1359,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1377,7 +1377,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1395,7 +1395,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1413,7 +1413,7 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=46437&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1431,7 +1431,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1478,7 +1478,7 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34947&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": true,
@@ -1496,7 +1496,7 @@
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34947&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1520,7 +1520,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1538,7 +1538,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1728,7 +1728,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1746,7 +1746,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1764,7 +1764,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1788,7 +1788,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1812,7 +1812,7 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1830,7 +1830,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1848,7 +1848,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1872,7 +1872,7 @@
                   "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1890,7 +1890,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1914,7 +1914,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1967,7 +1967,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -2020,7 +2020,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -2050,7 +2050,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -2074,7 +2074,7 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    "Divers": false,
+                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
