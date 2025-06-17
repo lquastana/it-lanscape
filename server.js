@@ -9,7 +9,7 @@ import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
 import { marked } from 'marked';
-import ldap from 'ldapjs';
+import { ConfidentialClientApplication } from "@azure/msal-node";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -29,7 +29,7 @@ app.use(session({
   saveUninitialized: false
 }));
 
-const openPaths = ['/api/login', '/login.html'];
+const openPaths = ['/auth/login','/auth/redirect','/login.html'];
 app.use((req, res, next) => {
   if (openPaths.includes(req.path)) return next();
   if (req.session && req.session.user) return next();
@@ -39,62 +39,49 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* ---------- /api/login (LDAP) -------------------------- */
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body || {};
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Missing credentials' });
+
+
+const msalConfig = {
+  auth: {
+    clientId: process.env.AZURE_CLIENT_ID,
+    authority: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}`,
+    clientSecret: process.env.AZURE_CLIENT_SECRET
   }
-  if (!process.env.LDAP_URI || !process.env.NEXT_PUBLIC_LDAP_USER_DN) {
-    return res.status(500).json({ error: 'LDAP not configured' });
-  }
+};
+const cca = new ConfidentialClientApplication(msalConfig);
 
-  const client = ldap.createClient({ url: process.env.LDAP_URI });
-  const dn = `chg-aj\\${username}`;
-
-  client.bind(dn, password, (err) => {
-    if (err) {
-      client.unbind();
-      return res.status(401).json({ error: 'Authentication failed' });
-    }
-
-    const opts = {
-      scope: 'sub',
-      filter: `(sAMAccountName=${username})`
-    };
-
-    client.search(process.env.NEXT_PUBLIC_LDAP_USER_DN, opts, (searchErr, search) => {
-      if (searchErr) {
-        client.unbind();
-        return res.status(500).json({ error: 'Search error' });
-      }
-      let sent = false;
-      search.on('searchEntry', (entry) => {
-        const memberAttr = entry.attributes.find((a) => a.type === 'memberOf');
-        const groups = memberAttr ? memberAttr.vals : [];
-        const allowed = groups.some((g) =>
-          g.includes(process.env.NEXT_PUBLIC_TARGET_GROUP_PHARMACIE) ||
-          g.includes(process.env.NEXT_PUBLIC_TARGET_GROUP_DSI)
-        );
-        if (allowed) {
-          sent = true;
-          req.session.user = { username, groups };
-          res.json({ username, groups });
-          client.unbind();
-        }
-      });
-      search.on('error', () => {
-        if (!sent) res.status(401).json({ error: 'Authentication failed' });
-        client.unbind();
-      });
-      search.on('end', () => {
-        if (!sent) {
-          res.status(401).json({ error: 'Authentication failed' });
-          client.unbind();
-        }
-      });
+app.get('/auth/login', async (_req, res) => {
+  try {
+    const url = await cca.getAuthCodeUrl({
+      scopes: ['User.Read'],
+      redirectUri: process.env.AZURE_REDIRECT_URI
     });
-  });
+    res.redirect(url);
+  } catch {
+    res.status(500).send('Failed to generate auth URL');
+  }
+});
+
+app.get('/auth/redirect', async (req, res) => {
+  try {
+    const result = await cca.acquireTokenByCode({
+      code: req.query.code,
+      scopes: ['User.Read'],
+      redirectUri: process.env.AZURE_REDIRECT_URI
+    });
+    const email = result.account.username;
+    if (
+      process.env.ALLOWED_USER &&
+      email.toLowerCase() !== process.env.ALLOWED_USER.toLowerCase()
+    ) {
+      return res.status(403).send('User not allowed');
+    }
+    req.session.user = { email };
+    res.redirect('/');
+  } catch (err) {
+    console.error('Auth error', err);
+    res.status(500).send('Authentication error');
+  }
 });
 
 /* ---------- /api/landscape (inchangé) ------------------- */

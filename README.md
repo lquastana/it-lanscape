@@ -65,25 +65,16 @@ docker-compose build
 docker-compose up
 ```
 
-SESSION_SECRET="un_secret_change_me"
-Toutes les routes ainsi que les fichiers statiques sont protégés. Un utilisateur non authentifié est redirigé vers `/login.html` où un formulaire permet de saisir ses identifiants.
+### 🛂 Authentification Office 365
+La page `/login.html` redirige vers Microsoft pour se connecter. Configurez les variables d'environnement suivantes :
 
-<<<<<<< 68ckm4-codex/ajouter-déploiement-docker-avec-nginx
-### 🛂 Authentification LDAP
+AZURE_CLIENT_ID="votre_client_id"
+AZURE_TENANT_ID="votre_tenant_id"
+AZURE_CLIENT_SECRET="votre_secret"
+AZURE_REDIRECT_URI="http://localhost:3000/auth/redirect"
+ALLOWED_USER="laurent.quastana@gcs-sirsco.fr"
 
-La route `/api/login` permet de valider les identifiants Windows d'un utilisateur via LDAP. Configurez les variables d'environnement suivantes :
-
-```bash
-LDAP_URI="ldap://srv-dc01.chg-aj.local:389"
-NEXT_PUBLIC_LDAP_USER_DN="OU=CHG,DC=CHG-AJ,DC=local"
-NEXT_PUBLIC_TARGET_GROUP_PHARMACIE="Pharmacien"
-NEXT_PUBLIC_TARGET_GROUP_DSI="GU-BALP-SERVICE INFORMATIQUE"
-```
-
-Une requête de connexion peut être envoyée ainsi :
-
-```bash
-curl -X POST http://localhost:3000/api/login \
+Une fois authentifié, l'adresse e-mail est sauvegardée en session et l'accès est accordé uniquement si elle correspond à `ALLOWED_USER`.
   -H 'Content-Type: application/json' \
   -d '{"username":"user","password":"pass"}'
 ```
