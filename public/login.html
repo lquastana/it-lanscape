@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion</title>
+</head>
+<body>
+  <h1>Authentification</h1>
+  <form id="loginForm">
+    <input name="username" placeholder="Utilisateur" required />
+    <input type="password" name="password" placeholder="Mot de passe" required />
+    <button type="submit">Se connecter</button>
+  </form>
+  <p id="error" style="color:red"></p>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const resp = await fetch('/api/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      if (resp.ok) {
+        location.href = '/';
+      } else {
+        document.getElementById('error').textContent = 'Echec de connexion';
+      }
+    });
+  </script>
+</body>
+</html>

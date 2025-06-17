@@ -65,6 +65,9 @@ docker-compose build
 docker-compose up
 ```
 
+SESSION_SECRET="un_secret_change_me"
+Toutes les routes ainsi que les fichiers statiques sont protégés. Un utilisateur non authentifié est redirigé vers `/login.html` où un formulaire permet de saisir ses identifiants.
+
 <<<<<<< 68ckm4-codex/ajouter-déploiement-docker-avec-nginx
 ### 🛂 Authentification LDAP
 

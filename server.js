@@ -3,6 +3,7 @@
 ---------------------------------------------------------*/
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
@@ -21,8 +22,22 @@ const openai = new OpenAI({
   }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'change_me',
+  resave: false,
+  saveUninitialized: false
+}));
+
+const openPaths = ['/api/login', '/login.html'];
+app.use((req, res, next) => {
+  if (openPaths.includes(req.path)) return next();
+  if (req.session && req.session.user) return next();
+  if (req.method === 'GET') return res.redirect('/login.html');
+  return res.status(401).json({ error: 'Not authenticated' });
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 /* ---------- /api/login (LDAP) -------------------------- */
 app.post('/api/login', (req, res) => {
@@ -63,6 +78,7 @@ app.post('/api/login', (req, res) => {
         );
         if (allowed) {
           sent = true;
+          req.session.user = { username, groups };
           res.json({ username, groups });
           client.unbind();
         }
