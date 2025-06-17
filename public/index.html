@@ -211,7 +211,11 @@
         multi:0,
         procAppsMap:{},
         dpAppTotal:0,
-        ifaceCoverage:{}
+        ifaceCoverage:{},
+        critHaute:0,
+        critStandard:0,
+        critCritique:0,
+        hebergCounts:{}
       };
       fullData.etablissements.forEach(etab=>{
         if(f.etab&&f.etab!==etab.nom)return;
@@ -255,6 +259,10 @@
               if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk||!multiOk) return;
 
               metrics.appShown++;
+              if(app.criticite==='Haute') metrics.critHaute++;
+              else if(app.criticite==='Critique') metrics.critCritique++;
+              else metrics.critStandard++;
+              metrics.hebergCounts[app.hebergement]=(metrics.hebergCounts[app.hebergement]||0)+1;
               if(app.multiEtablissement)metrics.multi++;
               const key=`${dom.nom}::${proc.nom}`;
               metrics.procAppsMap[key]=metrics.procAppsMap[key]||{};
@@ -391,10 +399,24 @@
       const proc=(m.procTotal?((m.procWithApps/m.procTotal)*100):0).toFixed(1);
       const appAlign=m.alignPct||'0.0';
       const mut=(m.appShown?((m.multi/m.appShown)*100):0).toFixed(1);
+      const critTotal=m.critHaute+m.critStandard+m.critCritique;
+      const critHaute=critTotal?((m.critHaute/critTotal)*100).toFixed(1):'0.0';
+      const critStandard=critTotal?((m.critStandard/critTotal)*100).toFixed(1):'0.0';
+      const critCritique=critTotal?((m.critCritique/critTotal)*100).toFixed(1):'0.0';
+      const hebergTotal=Object.values(m.hebergCounts).reduce((a,b)=>a+b,0);
       const ifaceList=Object.keys(interfaceColors).map(t=>{
         const pct=m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):'0.0';
         return `<li>${t} : ${pct}% ${bar(pct)}</li>`;
       }).join('');
+      const hebergList=Object.keys(m.hebergCounts).map(h=>{
+        const pct=hebergTotal?((m.hebergCounts[h]/hebergTotal)*100).toFixed(1):'0.0';
+        return `<li>${h} : ${pct}% ${bar(pct)}</li>`;
+      }).join('');
+      const critList=`<ul>`+
+        `<li>Haute : ${critHaute}% ${bar(critHaute)}</li>`+
+        `<li>Standard : ${critStandard}% ${bar(critStandard)}</li>`+
+        `<li>Critique : ${critCritique}% ${bar(critCritique)}</li>`+
+        `</ul>`;
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
         `<section class="report-section"><h3>Alignement processus</h3>`+
@@ -406,6 +428,10 @@
         `<section class="report-section"><h3>Taux de mutualisation</h3>`+
           `<p>${mut}% des applications visibles sont mutualisées.</p>`+
           `${bar(mut)}</section>`+
+        `<section class="report-section"><h3>Répartition par criticité</h3>`+
+          `${critList}</section>`+
+        `<section class="report-section"><h3>Répartition de l'hébergement</h3>`+
+          `<ul>${hebergList}</ul></section>`+
         `<section class="report-section"><h3>Couverture d'interfaces</h3>`+
           `<p>Calcul sur les applications des domaines liés à la santé (Spécialités, Administrative, Commun, Dossier médico-techniques).</p>`+
           `<ul>${ifaceList}</ul></section>`;
