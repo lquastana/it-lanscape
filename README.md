@@ -62,8 +62,8 @@ Un bouton 🧠 ouvre un tableau de bord résumant la situation courante. Le rapp
 5. **🏢 Répartition de l'hébergement** – nombre et pourcentage d'applications visibles selon leur lieu d'hébergement (établissement, SAS, etc.).
 6. **📑 Complétude des données** – part des champs éditeur, référent et lien PRTG renseignés dans les applications visibles.
 7. **🧩 Couverture d'interfaces** – pourcentage d'applications des domaines DPI (Spécialités, Administrative, Commun, Dossier médico‑techniques) disposant de chaque type d'interface. Ce pourcentage est calculé uniquement sur les applications de ces domaines : pour chaque type, on rapporte le nombre d'applications possédant l'interface au total d'applications recensées dans ces domaines.
-
 Les graphiques sont rendus avec **Chart.js** : donuts pour les trois KPIs globaux et la complétude des données, camembert pour la criticité, barres horizontales empilées pour l'hébergement et radar pour la couverture d'interfaces. Les couleurs suivent la convention bleu (alignement), orange (mutualisation), rouge (critique) et vert (standard). Les pourcentages sont recalculés dès que vous modifiez les filtres puis rouvrez le rapport. Chart.js est livré directement dans `public/vendor/chart.umd.js`, ce qui évite toute erreur de type MIME.
+Le script est inclus via un chemin relatif `vendor/chart.umd.js` pour fonctionner même lorsque la page est ouverte localement.
 
 ### Exemple d'analyse
 
