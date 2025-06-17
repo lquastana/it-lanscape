@@ -137,6 +137,7 @@
     const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',
                            Facturation:'#f44336',Autre:'#9e9e9e'};
     const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
+    const dpDomains=['DP Spécialités','DP Administrative','DP Commun','Dossier médico-techniques'];
     const criticityColor=l=>['Haute','Critique'].includes(l)?'#d32f2f':'#616161';
     let domainIndex=0,fullData=null;
 
@@ -208,8 +209,9 @@
         procAppsTotal:0,
         appShown:0,
         multi:0,
-        ifaceTotals:{},
-        ifaceShown:{}
+        procAppsMap:{},
+        dpAppTotal:0,
+        ifaceCoverage:{}
       };
       fullData.etablissements.forEach(etab=>{
         if(f.etab&&f.etab!==etab.nom)return;
@@ -220,6 +222,14 @@
         etabDiv.appendChild(h2);
 
         etab.domaines.forEach(dom=>{
+          if(dpDomains.includes(dom.nom)){
+            dom.processus.forEach(p=>p.applications.forEach(a=>{
+              metrics.dpAppTotal++;
+              Object.entries(a.interfaces).forEach(([t,v])=>{
+                if(v)metrics.ifaceCoverage[t]=(metrics.ifaceCoverage[t]||0)+1;
+              });
+            }));
+          }
           if(f.domaine&&f.domaine!==dom.nom)return;
           const dDiv=document.createElement('div');dDiv.className='domain';
           dDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
@@ -237,11 +247,6 @@
             let hasApp=false;
 
             proc.applications.forEach(app=>{
-              Object.entries(app.interfaces).forEach(([t,v])=>{
-                if(v){
-                  metrics.ifaceTotals[t]=(metrics.ifaceTotals[t]||0)+1;
-                }
-              });
               const critOk=!f.criticite||
                 (f.criticite==='Standard'&&!['Haute','Critique'].includes(app.criticite))||
                 (f.criticite==='Haute'&&['Haute','Critique'].includes(app.criticite));
@@ -251,11 +256,10 @@
 
               metrics.appShown++;
               if(app.multiEtablissement)metrics.multi++;
-              Object.entries(app.interfaces).forEach(([t,v])=>{
-                if(v){
-                  metrics.ifaceShown[t]=(metrics.ifaceShown[t]||0)+1;
-                }
-              });
+              const key=`${dom.nom}::${proc.nom}`;
+              metrics.procAppsMap[key]=metrics.procAppsMap[key]||{};
+              metrics.procAppsMap[key][etab.nom]=metrics.procAppsMap[key][etab.nom]||new Set();
+              metrics.procAppsMap[key][etab.nom].add(app.nom);
               hasApp=true;
 
               const aDiv=document.createElement('div');aDiv.className='application';
@@ -296,6 +300,15 @@
         });
         etabDiv.appendChild(etabContent);cont.appendChild(etabDiv);
       });
+      let alignTotal=0,alignOk=0;
+      Object.values(metrics.procAppsMap).forEach(map=>{
+        const sets=Object.values(map).map(s=>[...s].sort().join('|'));
+        if(sets.length>1){
+          alignTotal++;
+          if(new Set(sets).size===1)alignOk++;
+        }
+      });
+      metrics.alignPct=alignTotal?((alignOk/alignTotal)*100).toFixed(1):'0.0';
       generateReport(metrics);
     }
 
@@ -376,28 +389,25 @@
 
     function generateReport(m){
       const proc=(m.procTotal?((m.procWithApps/m.procTotal)*100):0).toFixed(1);
-      const app=(m.procAppsTotal?((m.appShown/m.procAppsTotal)*100):0).toFixed(1);
+      const appAlign=m.alignPct||'0.0';
       const mut=(m.appShown?((m.multi/m.appShown)*100):0).toFixed(1);
-      const ifaceTypes=Object.keys(m.ifaceTotals);
-      const iface=(ifaceTypes.length?((Object.keys(m.ifaceShown).length/ifaceTypes.length)*100):0).toFixed(1);
-      const ifaceList=ifaceTypes.map(t=>{
-        const pct=m.ifaceTotals[t]?((m.ifaceShown[t]||0)/m.ifaceTotals[t]*100).toFixed(1):'0.0';
-        return `<li>${t} : ${pct}%</li>`;
+      const ifaceList=Object.keys(interfaceColors).map(t=>{
+        const pct=m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):'0.0';
+        return `<li>${t} : ${pct}% ${bar(pct)}</li>`;
       }).join('');
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
         `<section class="report-section"><h3>Alignement processus</h3>`+
-          `<p>${proc}% des processus contiennent au moins une application visible.</p>`+
+          `<p>${proc}% des processus possèdent au moins une application visible.</p>`+
           `${bar(proc)}</section>`+
         `<section class="report-section"><h3>Alignement applications</h3>`+
-          `<p>${app}% des applications prévues sont affichées.</p>`+
-          `${bar(app)}</section>`+
+          `<p>${appAlign}% des processus utilisent les mêmes applications dans tous les établissements.</p>`+
+          `${bar(appAlign)}</section>`+
         `<section class="report-section"><h3>Taux de mutualisation</h3>`+
           `<p>${mut}% des applications visibles sont mutualisées.</p>`+
           `${bar(mut)}</section>`+
         `<section class="report-section"><h3>Couverture d'interfaces</h3>`+
-          `<p>${iface}% des types d'interfaces sont représentés.</p>`+
-          `${bar(iface)}<ul>${ifaceList}</ul></section>`;
+          `<ul>${ifaceList}</ul></section>`;
     }
 
     /* ---------- Initialisation ---------- */
