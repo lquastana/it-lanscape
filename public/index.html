@@ -45,10 +45,23 @@
                border:1px solid rgba(0,0,0,0.2);}
     .multi-icon{font-size:1rem;}
 
-    /* ======== Bouton flottant pour ouvrir le chat ======== */
+    /* ======== Boutons flottants ======== */
     #chat-toggle{position:fixed;bottom:20px;right:20px;z-index:10000;background:#1B75BC;color:#fff;
                  border:none;border-radius:50%;width:52px;height:52px;font-size:1.4rem;
                  box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer;}
+    #report-toggle{position:fixed;bottom:20px;right:80px;z-index:10000;background:#1B75BC;color:#fff;
+                   border:none;border-radius:50%;width:52px;height:52px;font-size:1.4rem;
+                   box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer;}
+
+    /* ======== Popup rapport ======== */
+    #report-box{position:fixed;top:0;left:0;width:100vw;height:100vh;overflow:auto;
+                background:#fff;z-index:9998;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);}
+    #report-box.hidden{display:none;}
+    #report-box .report-section{margin-bottom:20px;}
+    #report-box .report-bar{width:100%;height:12px;background:#eee;border-radius:6px;overflow:hidden;}
+    #report-box .report-bar span{display:block;height:100%;background:#1B75BC;}
+    #report-box ul{list-style:none;padding:0;}
+    #report-box li{margin:4px 0;}
 
     /* ======== Popup chat ======== */
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
@@ -112,19 +125,29 @@
     </form>
   </section>
 
+  <!-- ======== Popup Rapport ======== -->
+  <section id="report-box" class="hidden"></section>
+
   <!-- Bouton pour ouvrir le chat -->
   <button id="chat-toggle">💬</button>
+  <button id="report-toggle">🧠</button>
 
   <script>
     /* ---------- Constantes légende / couleurs ---------- */
     const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',
                            Facturation:'#f44336',Autre:'#9e9e9e'};
     const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
+    const dpDomains=['DP Spécialités','DP Administrative','DP Commun','Dossier médico-techniques'];
     const criticityColor=l=>['Haute','Critique'].includes(l)?'#d32f2f':'#616161';
     let domainIndex=0,fullData=null;
 
     /* ---------- threadId persistant ---------- */
     let threadId=localStorage.getItem('chat_thread_id')||null;
+
+    /* ---------- Rapport DOM ---------- */
+    const reportBox=document.getElementById('report-box');
+    const reportToggle=document.getElementById('report-toggle');
+    reportToggle.addEventListener('click',()=>{reportBox.classList.toggle('hidden');});
 
     /* ---------- Légende ---------- */
     function createLegend(){
@@ -180,6 +203,16 @@
         multi:document.getElementById('filter-multi').value
       };
       const cont=document.getElementById('content');cont.innerHTML='';domainIndex=0;
+      const metrics={
+        procTotal:0,
+        procWithApps:0,
+        procAppsTotal:0,
+        appShown:0,
+        multi:0,
+        procAppsMap:{},
+        dpAppTotal:0,
+        ifaceCoverage:{}
+      };
       fullData.etablissements.forEach(etab=>{
         if(f.etab&&f.etab!==etab.nom)return;
         const etabDiv=document.createElement('div');
@@ -189,6 +222,14 @@
         etabDiv.appendChild(h2);
 
         etab.domaines.forEach(dom=>{
+          if(dpDomains.includes(dom.nom)){
+            dom.processus.forEach(p=>p.applications.forEach(a=>{
+              metrics.dpAppTotal++;
+              Object.entries(a.interfaces).forEach(([t,v])=>{
+                if(v)metrics.ifaceCoverage[t]=(metrics.ifaceCoverage[t]||0)+1;
+              });
+            }));
+          }
           if(f.domaine&&f.domaine!==dom.nom)return;
           const dDiv=document.createElement('div');dDiv.className='domain';
           dDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
@@ -198,9 +239,12 @@
           const procCont=document.createElement('div');
 
           dom.processus.forEach(proc=>{
+            metrics.procTotal++;
+            metrics.procAppsTotal+=proc.applications.length;
             const pDiv=document.createElement('div');pDiv.className='process';
             pDiv.innerHTML=`<h4>${proc.nom}</h4><p>${proc.description}</p>`;
             const appWrap=document.createElement('div');appWrap.className='apps';
+            let hasApp=false;
 
             proc.applications.forEach(app=>{
               const critOk=!f.criticite||
@@ -209,6 +253,14 @@
               const intOk=!f.interface||app.interfaces[f.interface];
               const multiOk=!f.multi||((f.multi==='Oui')===app.multiEtablissement);
               if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk||!multiOk) return;
+
+              metrics.appShown++;
+              if(app.multiEtablissement)metrics.multi++;
+              const key=`${dom.nom}::${proc.nom}`;
+              metrics.procAppsMap[key]=metrics.procAppsMap[key]||{};
+              metrics.procAppsMap[key][etab.nom]=metrics.procAppsMap[key][etab.nom]||new Set();
+              metrics.procAppsMap[key][etab.nom].add(app.nom);
+              hasApp=true;
 
               const aDiv=document.createElement('div');aDiv.className='application';
               const h5=document.createElement('h5');h5.textContent=app.nom;
@@ -234,7 +286,10 @@
               appWrap.appendChild(aDiv);
             });
 
-            if(appWrap.childElementCount){pDiv.appendChild(appWrap);procCont.appendChild(pDiv);}
+            if(hasApp){
+              metrics.procWithApps++;
+              pDiv.appendChild(appWrap);procCont.appendChild(pDiv);
+            }
           });
 
           if(procCont.childElementCount){
@@ -245,6 +300,16 @@
         });
         etabDiv.appendChild(etabContent);cont.appendChild(etabDiv);
       });
+      let alignTotal=0,alignOk=0;
+      Object.values(metrics.procAppsMap).forEach(map=>{
+        const sets=Object.values(map).map(s=>[...s].sort().join('|'));
+        if(sets.length>1){
+          alignTotal++;
+          if(new Set(sets).size===1)alignOk++;
+        }
+      });
+      metrics.alignPct=alignTotal?((alignOk/alignTotal)*100).toFixed(1):'0.0';
+      generateReport(metrics);
     }
 
     /* ---------- Chargement JSON --------- */
@@ -315,6 +380,35 @@
       const div=document.createElement('div');
       div.className=`chat-msg ${cls}`;div.innerHTML=txt;
       chatLog.appendChild(div);chatLog.scrollTop=chatLog.scrollHeight;
+    }
+
+    /* ---------- Rapport ---------- */
+    function bar(p){
+      return `<div class="report-bar"><span style="width:${p}%"></span></div>`;
+    }
+
+    function generateReport(m){
+      const proc=(m.procTotal?((m.procWithApps/m.procTotal)*100):0).toFixed(1);
+      const appAlign=m.alignPct||'0.0';
+      const mut=(m.appShown?((m.multi/m.appShown)*100):0).toFixed(1);
+      const ifaceList=Object.keys(interfaceColors).map(t=>{
+        const pct=m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):'0.0';
+        return `<li>${t} : ${pct}% ${bar(pct)}</li>`;
+      }).join('');
+      reportBox.innerHTML=
+        `<h2>Rapport</h2>`+
+        `<section class="report-section"><h3>Alignement processus</h3>`+
+          `<p>${proc}% des processus possèdent au moins une application visible.</p>`+
+          `${bar(proc)}</section>`+
+        `<section class="report-section"><h3>Alignement applications</h3>`+
+          `<p>${appAlign}% des processus utilisent les mêmes applications dans tous les établissements.</p>`+
+          `${bar(appAlign)}</section>`+
+        `<section class="report-section"><h3>Taux de mutualisation</h3>`+
+          `<p>${mut}% des applications visibles sont mutualisées.</p>`+
+          `${bar(mut)}</section>`+
+        `<section class="report-section"><h3>Couverture d'interfaces</h3>`+
+          `<p>Calcul sur les applications des domaines liés à la santé (Spécialités, Administrative, Commun, Dossier médico-techniques).</p>`+
+          `<ul>${ifaceList}</ul></section>`;
     }
 
     /* ---------- Initialisation ---------- */
