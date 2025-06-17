@@ -58,6 +58,6 @@ Un bouton 🧠 ouvre un tableau de bord résumant la situation courante. Le rapp
 1. **Alignement des processus** – pourcentage de processus possédant au moins une application visible.
 2. **Alignement des applications** – part des processus où les établissements utilisent exactement les mêmes applications.
 3. **Taux de mutualisation** – part des applications visibles utilisées dans plusieurs établissements.
-4. **Couverture d'interfaces** – pourcentage d'applications des domaines DPI (Spécialités, Administrative, Commun, Dossier médico‑techniques) disposant de chaque type d'interface.
+4. **Couverture d'interfaces** – pourcentage d'applications des domaines DPI (Spécialités, Administrative, Commun, Dossier médico‑techniques) disposant de chaque type d'interface. Ce pourcentage est calculé uniquement sur les applications de ces domaines : pour chaque type, on rapporte le nombre d'applications possédant l'interface au total d'applications recensées dans ces domaines.
 
 Chaque indicateur est accompagné d'une barre graphique afin de faciliter la lecture. Les pourcentages sont recalculés dès que vous modifiez les filtres puis rouvrez le rapport.
