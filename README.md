@@ -65,6 +65,7 @@ docker-compose build
 docker-compose up
 ```
 
+<<<<<<< 68ckm4-codex/ajouter-déploiement-docker-avec-nginx
 ### 🛂 Authentification LDAP
 
 La route `/api/login` permet de valider les identifiants Windows d'un utilisateur via LDAP. Configurez les variables d'environnement suivantes :
@@ -86,6 +87,8 @@ curl -X POST http://localhost:3000/api/login \
 
 Si l'utilisateur appartient à l'un des groupes autorisés, la réponse contient la liste de ses groupes.
 
+=======
+>>>>>>> main
 ---
 
 ## 🧪 Tests

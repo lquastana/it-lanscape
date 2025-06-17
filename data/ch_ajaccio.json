@@ -18,7 +18,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -185,7 +185,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -257,7 +257,7 @@
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -287,7 +287,7 @@
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -333,7 +333,7 @@
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -431,7 +431,7 @@
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -618,7 +618,7 @@
                   "referent": "Lisandru Benedetti",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -658,7 +658,7 @@
                   "referent": "Chef réanimation",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -676,7 +676,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -718,7 +718,7 @@
                   "referent": "Julien Versini",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -844,7 +844,7 @@
                   "referent": "Laurence Milani",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -868,7 +868,7 @@
                   "referent": "Andrée Mori",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=12901&tabid=1",
                   "interfaces": {
                     "Divers": false,
@@ -886,7 +886,7 @@
                   "referent": "Andrée Mori",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30472&tabid=1",
                   "interfaces": {
                     "Divers": false,
@@ -904,7 +904,7 @@
                   "referent": "Andrée Mori",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -927,7 +927,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -945,7 +945,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -975,7 +975,7 @@
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1053,7 +1053,7 @@
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": true,
@@ -1070,7 +1070,7 @@
                   "referent": "Isabelle Re",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1094,7 +1094,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1112,7 +1112,7 @@
                   "referent": "Benjamin Darmon",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1159,7 +1159,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1189,7 +1189,7 @@
                   "referent": "Julien Versini",
                   "hebergement": "SAS",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -1264,7 +1264,7 @@
                   "referent": "Julien Versini",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30502&tabid=1",
                   "interfaces": {
                     "Divers": false,
@@ -1282,7 +1282,7 @@
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": true,
@@ -1339,7 +1339,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -1452,7 +1452,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -1517,7 +1517,7 @@
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1622,7 +1622,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": true,
@@ -1639,7 +1639,7 @@
                   "referent": "DSI AJA",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34115&tabid=1",
                   "interfaces": {
                     "Planification": true,
@@ -1743,7 +1743,7 @@
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1809,7 +1809,7 @@
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1869,7 +1869,7 @@
                   "referent": "David Lecerf",
                   "hebergement": "SAS",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Divers": false,
@@ -1941,7 +1941,7 @@
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -1994,7 +1994,7 @@
                   "referent": "Natale Pantalacci",
                   "hebergement": "CH Bastia",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Planification": false,
