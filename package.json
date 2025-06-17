@@ -7,6 +7,7 @@
     "test": "node test/check-data.cjs"
   },
   "dependencies": {
+    "chart.js": "^4.5.0",
     "dotenv": "^16.3.2",
     "express": "^4.19.2",
     "marked": "^15.0.12",
