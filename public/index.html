@@ -62,6 +62,8 @@
     #report-box li{margin:4px 0;}
     .bar{background:#eee;border-radius:10px;overflow:hidden;height:20px;}
     .bar-fill{height:100%;color:#fff;font-size:0.8rem;text-align:center;line-height:20px;}
+    .donut{--pct:0;--clr:#1B75BC;width:80px;height:80px;border-radius:50%;background:conic-gradient(var(--clr) calc(var(--pct)*1%),#eee 0);position:relative;display:inline-block;margin-right:6px;}
+    .donut::after{content:attr(data-pct) "%";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.8rem;font-weight:bold;color:#333;}
 
     /* ======== Popup chat ======== */
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
@@ -411,6 +413,7 @@
       const complPct=m.fieldsTotal?((m.fieldsFilled/m.fieldsTotal)*100).toFixed(1):'0.0';
 
       const bar=(pct,color)=>`<div class="bar"><div class="bar-fill" style="width:${pct}%;background:${color}">${pct}%</div></div>`;
+      const donut=(pct,color)=>`<span class="donut" data-pct="${pct}" style="--pct:${pct};--clr:${color}"></span>`;
 
       let critHTML='';
       const cs=critTotal?((m.critStandard/critTotal)*100).toFixed(1):'0.0';
@@ -434,12 +437,12 @@
 
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
-        `<section class="report-section"><h3>⚙️ Alignement processus</h3>${bar(proc,'#1B75BC')}</section>`+
-        `<section class="report-section"><h3>🖥️ Alignement applications</h3>${bar(appAlign,'#1B75BC')}</section>`+
-        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3>${bar(mut,'#ff9800')}</section>`+
+        `<section class="report-section"><h3>⚙️ Alignement processus</h3>${donut(proc,'#1B75BC')}</section>`+
+        `<section class="report-section"><h3>🖥️ Alignement applications</h3>${donut(appAlign,'#1B75BC')}</section>`+
+        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3>${donut(mut,'#ff9800')}</section>`+
         `<section class="report-section"><h3>🔥 Répartition par criticité</h3><ul>${critHTML}</ul></section>`+
         `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><ul>${hebergHTML}</ul></section>`+
-        `<section class="report-section"><h3>📑 Complétude des données</h3>${bar(complPct,'#1B75BC')}</section>`+
+        `<section class="report-section"><h3>📑 Complétude des données</h3>${donut(complPct,'#1B75BC')}</section>`+
         `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><ul>${ifaceHTML}</ul></section>`;
     }
 
