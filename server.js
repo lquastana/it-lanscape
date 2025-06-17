@@ -8,6 +8,7 @@ import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
 import { marked } from 'marked';
+import ldap from 'ldapjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -22,6 +23,63 @@ const openai = new OpenAI({
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+
+/* ---------- /api/login (LDAP) -------------------------- */
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Missing credentials' });
+  }
+  if (!process.env.LDAP_URI || !process.env.NEXT_PUBLIC_LDAP_USER_DN) {
+    return res.status(500).json({ error: 'LDAP not configured' });
+  }
+
+  const client = ldap.createClient({ url: process.env.LDAP_URI });
+  const dn = `chg-aj\\${username}`;
+
+  client.bind(dn, password, (err) => {
+    if (err) {
+      client.unbind();
+      return res.status(401).json({ error: 'Authentication failed' });
+    }
+
+    const opts = {
+      scope: 'sub',
+      filter: `(sAMAccountName=${username})`
+    };
+
+    client.search(process.env.NEXT_PUBLIC_LDAP_USER_DN, opts, (searchErr, search) => {
+      if (searchErr) {
+        client.unbind();
+        return res.status(500).json({ error: 'Search error' });
+      }
+      let sent = false;
+      search.on('searchEntry', (entry) => {
+        const memberAttr = entry.attributes.find((a) => a.type === 'memberOf');
+        const groups = memberAttr ? memberAttr.vals : [];
+        const allowed = groups.some((g) =>
+          g.includes(process.env.NEXT_PUBLIC_TARGET_GROUP_PHARMACIE) ||
+          g.includes(process.env.NEXT_PUBLIC_TARGET_GROUP_DSI)
+        );
+        if (allowed) {
+          sent = true;
+          res.json({ username, groups });
+          client.unbind();
+        }
+      });
+      search.on('error', () => {
+        if (!sent) res.status(401).json({ error: 'Authentication failed' });
+        client.unbind();
+      });
+      search.on('end', () => {
+        if (!sent) {
+          res.status(401).json({ error: 'Authentication failed' });
+          client.unbind();
+        }
+      });
+    });
+  });
+});
 
 /* ---------- /api/landscape (inchangé) ------------------- */
 app.get('/api/landscape', async (_req, res) => {

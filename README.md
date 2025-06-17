@@ -53,6 +53,39 @@ npm start
 
 Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
 
+### 🐳 Déploiement Docker avec Nginx
+
+Un fichier `docker-compose.yml` est fourni pour exécuter l'application derrière
+un serveur **Nginx**. Par défaut, seule l'adresse IP `185.15.24.118` est autorisée.
+Pour ajouter d'autres adresses, éditez `nginx.conf` et rajoutez des lignes
+`allow` supplémentaires.
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+### 🛂 Authentification LDAP
+
+La route `/api/login` permet de valider les identifiants Windows d'un utilisateur via LDAP. Configurez les variables d'environnement suivantes :
+
+```bash
+LDAP_URI="ldap://srv-dc01.chg-aj.local:389"
+NEXT_PUBLIC_LDAP_USER_DN="OU=CHG,DC=CHG-AJ,DC=local"
+NEXT_PUBLIC_TARGET_GROUP_PHARMACIE="Pharmacien"
+NEXT_PUBLIC_TARGET_GROUP_DSI="GU-BALP-SERVICE INFORMATIQUE"
+```
+
+Une requête de connexion peut être envoyée ainsi :
+
+```bash
+curl -X POST http://localhost:3000/api/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"user","password":"pass"}'
+```
+
+Si l'utilisateur appartient à l'un des groupes autorisés, la réponse contient la liste de ses groupes.
+
 ---
 
 ## 🧪 Tests
