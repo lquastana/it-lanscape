@@ -21,7 +21,6 @@ const openai = new OpenAI({
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/vendor', express.static(path.join(__dirname, 'node_modules', 'chart.js', 'dist')));
 app.use(express.json());
 
 /* ---------- /api/landscape (inchangé) ------------------- */
