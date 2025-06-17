@@ -58,21 +58,23 @@
                 background:#fff;z-index:9998;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);}
     #report-box.hidden{display:none;}
     #report-box .report-section{margin-bottom:20px;}
-    #report-box .report-bar{width:100%;height:12px;background:#eee;border-radius:6px;overflow:hidden;}
-    #report-box .report-bar span{display:block;height:100%;background:#1B75BC;}
+    .kpi-row{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-around;}
+    .kpi-row .report-section{flex:1;text-align:center;min-width:140px;}
     #report-box ul{list-style:none;padding:0;}
     #report-box li{margin:4px 0;}
+    .bar{background:#eee;border-radius:10px;overflow:hidden;height:20px;}
+    .bar-fill{height:100%;color:#fff;font-size:0.8rem;text-align:center;line-height:20px;}
+    .donut{--pct:0;--clr:#1B75BC;width:80px;height:80px;border-radius:50%;background:conic-gradient(var(--clr) calc(var(--pct)*1%),#eee 0);position:relative;display:inline-block;margin-right:6px;}
+    .donut::after{content:attr(data-pct) "%";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.8rem;font-weight:bold;color:#333;}
 
     /* ======== Popup chat ======== */
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
              background:#fff;z-index:9999;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);
              transition:all .3s ease;border-radius:0;}
-    .chatbox.minimized{width:460px;height:420px;bottom:84px;right:20px;top:auto;left:auto;
-                       border-radius:12px;resize:both;overflow:auto;}
+    .chatbox.minimized{width:50vw;height:60vh;bottom:84px;right:20px;top:auto;left:auto;
+                       border-radius:12px;overflow:auto;}
     .chatbox.hidden{display:none;}
 
-    .chatbox-toggle-size{position:absolute;top:12px;right:68px;background:#1B75BC;color:#fff;
-                         border:none;border-radius:8px;padding:4px 8px;cursor:pointer;}
     .chatbox-reset{position:absolute;top:12px;right:12px;background:#ff5252;color:#fff;
                    border:none;border-radius:8px;padding:4px 8px;cursor:pointer;}
 
@@ -114,7 +116,6 @@
 
   <!-- ======== Popup Chat ======== -->
   <section class="chatbox hidden" id="chatbox">
-    <button class="chatbox-toggle-size" id="chat-size-toggle">🔽 Réduire</button>
     <button class="chatbox-reset" id="chat-reset">🔁</button>
 
     <div id="chat-log"></div>
@@ -211,7 +212,15 @@
         multi:0,
         procAppsMap:{},
         dpAppTotal:0,
-        ifaceCoverage:{}
+        ifaceCoverage:{},
+        critHaute:0,
+        critStandard:0,
+        critCritique:0,
+        hebergCounts:{},
+        fieldsFilled:0,
+        fieldsTotal:0,
+        alignTotal:0,
+        alignOk:0
       };
       fullData.etablissements.forEach(etab=>{
         if(f.etab&&f.etab!==etab.nom)return;
@@ -255,6 +264,14 @@
               if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk||!multiOk) return;
 
               metrics.appShown++;
+              if(app.criticite==='Haute') metrics.critHaute++;
+              else if(app.criticite==='Critique') metrics.critCritique++;
+              else metrics.critStandard++;
+              metrics.hebergCounts[app.hebergement]=(metrics.hebergCounts[app.hebergement]||0)+1;
+              metrics.fieldsTotal+=3;
+              if(app.editeur)metrics.fieldsFilled++;
+              if(app.referent)metrics.fieldsFilled++;
+              if(app.lienPRTG)metrics.fieldsFilled++;
               if(app.multiEtablissement)metrics.multi++;
               const key=`${dom.nom}::${proc.nom}`;
               metrics.procAppsMap[key]=metrics.procAppsMap[key]||{};
@@ -308,6 +325,8 @@
           if(new Set(sets).size===1)alignOk++;
         }
       });
+      metrics.alignTotal=alignTotal;
+      metrics.alignOk=alignOk;
       metrics.alignPct=alignTotal?((alignOk/alignTotal)*100).toFixed(1):'0.0';
       generateReport(metrics);
     }
@@ -328,23 +347,22 @@
     /* ---------- Chat : DOM ---------- */
     const chatBox=document.getElementById('chatbox');
     const toggleBtn=document.getElementById('chat-toggle');
-    const sizeToggle=document.getElementById('chat-size-toggle');
     const resetBtn=document.getElementById('chat-reset');
     const chatForm=document.getElementById('chat-form');
     const chatInput=document.getElementById('chat-q');
     const chatLog=document.getElementById('chat-log');
 
     /* Ouvrir / fermer popup */
+    let toggleCount=0;
     toggleBtn.addEventListener('click',()=>{
-      chatBox.classList.toggle('hidden');
-      chatBox.classList.remove('minimized');
-      sizeToggle.textContent='🔽 Réduire';
-    });
-
-    /* Réduire / agrandir */
-    sizeToggle.addEventListener('click',()=>{
-      const min=chatBox.classList.toggle('minimized');
-      sizeToggle.textContent=min?'🔼 Agrandir':'🔽 Réduire';
+      toggleCount++;
+      if(toggleCount>=10){
+        chatBox.classList.remove('hidden');
+        chatBox.classList.add('minimized');
+        return;
+      }
+      const hidden=chatBox.classList.toggle('hidden');
+      if(!hidden) chatBox.classList.add('minimized');
     });
 
     /* Reset thread */
@@ -383,32 +401,50 @@
     }
 
     /* ---------- Rapport ---------- */
-    function bar(p){
-      return `<div class="report-bar"><span style="width:${p}%"></span></div>`;
-    }
 
     function generateReport(m){
       const proc=(m.procTotal?((m.procWithApps/m.procTotal)*100):0).toFixed(1);
       const appAlign=m.alignPct||'0.0';
       const mut=(m.appShown?((m.multi/m.appShown)*100):0).toFixed(1);
-      const ifaceList=Object.keys(interfaceColors).map(t=>{
-        const pct=m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):'0.0';
-        return `<li>${t} : ${pct}% ${bar(pct)}</li>`;
-      }).join('');
+      const critTotal=m.critHaute+m.critStandard+m.critCritique;
+      const hebergTotal=Object.values(m.hebergCounts).reduce((a,b)=>a+b,0);
+      const complPct=m.fieldsTotal?((m.fieldsFilled/m.fieldsTotal)*100).toFixed(1):'0.0';
+
+      const bar=(pct,color)=>`<div class="bar"><div class="bar-fill" style="width:${pct}%;background:${color}">${pct}%</div></div>`;
+      const donut=(pct,color)=>`<span class="donut" data-pct="${pct}" style="--pct:${pct};--clr:${color}"></span>`;
+
+      let critHTML='';
+      const cs=critTotal?((m.critStandard/critTotal)*100).toFixed(1):'0.0';
+      const ch=critTotal?((m.critHaute/critTotal)*100).toFixed(1):'0.0';
+      const cc=critTotal?((m.critCritique/critTotal)*100).toFixed(1):'0.0';
+      critHTML+=`<li>Standard : ${m.critStandard} (${cs}%) ${bar(cs,'#4caf50')}</li>`;
+      critHTML+=`<li>Haute : ${m.critHaute} (${ch}%) ${bar(ch,'#ff9800')}</li>`;
+      critHTML+=`<li>Critique : ${m.critCritique} (${cc}%) ${bar(cc,'#d32f2f')}</li>`;
+
+      let hebergHTML='';
+      for(const [h,c] of Object.entries(m.hebergCounts)){
+        const p=hebergTotal?((c/hebergTotal)*100).toFixed(1):'0.0';
+        hebergHTML+=`<li>${h} : ${c} (${p}%) ${bar(p,'#1B75BC')}</li>`;
+      }
+
+      let ifaceHTML='';
+      for(const [t,col] of Object.entries(interfaceColors)){
+        const p=m.dpAppTotal?(((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1)):0;
+        ifaceHTML+=`<li>${t} : ${p}% ${bar(p,col)}</li>`;
+      }
+
       reportBox.innerHTML=
-        `<h2>Rapport</h2>`+
-        `<section class="report-section"><h3>Alignement processus</h3>`+
-          `<p>${proc}% des processus possèdent au moins une application visible.</p>`+
-          `${bar(proc)}</section>`+
-        `<section class="report-section"><h3>Alignement applications</h3>`+
-          `<p>${appAlign}% des processus utilisent les mêmes applications dans tous les établissements.</p>`+
-          `${bar(appAlign)}</section>`+
-        `<section class="report-section"><h3>Taux de mutualisation</h3>`+
-          `<p>${mut}% des applications visibles sont mutualisées.</p>`+
-          `${bar(mut)}</section>`+
-        `<section class="report-section"><h3>Couverture d'interfaces</h3>`+
-          `<p>Calcul sur les applications des domaines liés à la santé (Spécialités, Administrative, Commun, Dossier médico-techniques).</p>`+
-          `<ul>${ifaceList}</ul></section>`;
+        `<h2>Rapport: Indicateurs de convergence SI</h2>`+
+        `<p style="margin-top: 0; font-style: italic; color: #666;"> Synthèse des principaux indicateurs d’alignement, de mutualisation et de couverture SI sur l’ensemble des entités évaluées.</p>`+
+        `<div class="kpi-row">`+
+          `<section class="report-section"><h3>⚙️ Alignement processus</h3>${donut(proc,'#1B75BC')}</section>`+
+          `<section class="report-section"><h3>🖥️ Alignement applications</h3>${donut(appAlign,'#1B75BC')}</section>`+
+          `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3>${donut(mut,'#ff9800')}</section>`+
+          `<section class="report-section"><h3>📑 Complétude des données</h3>${donut(complPct,'#1B75BC')}</section>`+
+        `</div>`+
+        `<section class="report-section"><h3>🔥 Répartition par criticité</h3><ul>${critHTML}</ul></section>`+
+        `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><ul>${hebergHTML}</ul></section>`+
+        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><ul>${ifaceHTML}</ul></section>`;
     }
 
     /* ---------- Initialisation ---------- */
