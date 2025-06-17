@@ -62,7 +62,7 @@ Un bouton 🧠 ouvre un tableau de bord résumant la situation courante. Le rapp
 5. **🏢 Répartition de l'hébergement** – nombre et pourcentage d'applications visibles selon leur lieu d'hébergement (établissement, SAS, etc.).
 6. **📑 Complétude des données** – part des champs éditeur, référent et lien PRTG renseignés dans les applications visibles.
 7. **🧩 Couverture d'interfaces** – pourcentage d'applications des domaines DPI (Spécialités, Administrative, Commun, Dossier médico‑techniques) disposant de chaque type d'interface. Ce pourcentage est calculé uniquement sur les applications de ces domaines : pour chaque type, on rapporte le nombre d'applications possédant l'interface au total d'applications recensées dans ces domaines.
-Les indicateurs utilisent uniquement du CSS : les KPI globaux sont représentés avec des donuts, les autres avec des barres de progression. Aucune bibliothèque graphique n'est nécessaire.
+Les indicateurs utilisent uniquement du CSS : les KPI globaux sont représentés avec des donuts, les autres avec des barres de progression. Les quatre premiers KPIs sont affichés côte à côte pour un aperçu rapide. Aucune bibliothèque graphique n'est nécessaire.
 
 ### Exemple d'analyse
 

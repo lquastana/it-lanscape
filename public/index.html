@@ -58,6 +58,8 @@
                 background:#fff;z-index:9998;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);}
     #report-box.hidden{display:none;}
     #report-box .report-section{margin-bottom:20px;}
+    .kpi-row{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-around;}
+    .kpi-row .report-section{flex:1;text-align:center;min-width:140px;}
     #report-box ul{list-style:none;padding:0;}
     #report-box li{margin:4px 0;}
     .bar{background:#eee;border-radius:10px;overflow:hidden;height:20px;}
@@ -437,12 +439,14 @@
 
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
-        `<section class="report-section"><h3>⚙️ Alignement processus</h3>${donut(proc,'#1B75BC')}</section>`+
-        `<section class="report-section"><h3>🖥️ Alignement applications</h3>${donut(appAlign,'#1B75BC')}</section>`+
-        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3>${donut(mut,'#ff9800')}</section>`+
+        `<div class="kpi-row">`+
+          `<section class="report-section"><h3>⚙️ Alignement processus</h3>${donut(proc,'#1B75BC')}</section>`+
+          `<section class="report-section"><h3>🖥️ Alignement applications</h3>${donut(appAlign,'#1B75BC')}</section>`+
+          `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3>${donut(mut,'#ff9800')}</section>`+
+          `<section class="report-section"><h3>📑 Complétude des données</h3>${donut(complPct,'#1B75BC')}</section>`+
+        `</div>`+
         `<section class="report-section"><h3>🔥 Répartition par criticité</h3><ul>${critHTML}</ul></section>`+
         `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><ul>${hebergHTML}</ul></section>`+
-        `<section class="report-section"><h3>📑 Complétude des données</h3>${donut(complPct,'#1B75BC')}</section>`+
         `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><ul>${ifaceHTML}</ul></section>`;
     }
 
