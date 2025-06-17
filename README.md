@@ -53,6 +53,18 @@ npm start
 
 Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
 
+### 🐳 Déploiement Docker avec Nginx
+
+Un fichier `docker-compose.yml` est fourni pour exécuter l'application derrière
+un serveur **Nginx**. Par défaut, seule l'adresse IP `185.15.24.118` est autorisée.
+Pour ajouter d'autres adresses, éditez `nginx.conf` et rajoutez des lignes
+`allow` supplémentaires.
+
+```bash
+docker-compose build
+docker-compose up
+```
+
 ---
 
 ## 🧪 Tests
