@@ -215,7 +215,9 @@
         critHaute:0,
         critStandard:0,
         critCritique:0,
-        hebergCounts:{}
+        hebergCounts:{},
+        fieldsFilled:0,
+        fieldsTotal:0
       };
       fullData.etablissements.forEach(etab=>{
         if(f.etab&&f.etab!==etab.nom)return;
@@ -263,6 +265,10 @@
               else if(app.criticite==='Critique') metrics.critCritique++;
               else metrics.critStandard++;
               metrics.hebergCounts[app.hebergement]=(metrics.hebergCounts[app.hebergement]||0)+1;
+              metrics.fieldsTotal+=3;
+              if(app.editeur)metrics.fieldsFilled++;
+              if(app.referent)metrics.fieldsFilled++;
+              if(app.lienPRTG)metrics.fieldsFilled++;
               if(app.multiEtablissement)metrics.multi++;
               const key=`${dom.nom}::${proc.nom}`;
               metrics.procAppsMap[key]=metrics.procAppsMap[key]||{};
@@ -404,6 +410,7 @@
       const critStandard=critTotal?((m.critStandard/critTotal)*100).toFixed(1):'0.0';
       const critCritique=critTotal?((m.critCritique/critTotal)*100).toFixed(1):'0.0';
       const hebergTotal=Object.values(m.hebergCounts).reduce((a,b)=>a+b,0);
+      const complPct=m.fieldsTotal?((m.fieldsFilled/m.fieldsTotal)*100).toFixed(1):'0.0';
       const ifaceList=Object.keys(interfaceColors).map(t=>{
         const pct=m.dpAppTotal?((m.ifaceCoverage[t]||0)/m.dpAppTotal*100).toFixed(1):'0.0';
         return `<li>${t} : ${pct}% ${bar(pct)}</li>`;
@@ -433,6 +440,9 @@
           `${critList}</section>`+
         `<section class="report-section"><h3>Répartition de l'hébergement</h3>`+
           `<ul>${hebergList}</ul></section>`+
+        `<section class="report-section"><h3>Complétude des données</h3>`+
+          `<p>${complPct}% des champs éditeur, référent et lien PRTG sont renseignés.</p>`+
+          `${bar(complPct)}</section>`+
         `<section class="report-section"><h3>Couverture d'interfaces</h3>`+
           `<p>Calcul sur les applications des domaines liés à la santé (Spécialités, Administrative, Commun, Dossier médico-techniques).</p>`+
           `<ul>${ifaceList}</ul></section>`;
