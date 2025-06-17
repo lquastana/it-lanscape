@@ -26,6 +26,13 @@ L'exécution de `npm test` vérifie simplement que le fichier JSON respecte la s
 npm test
 ```
 
+## Chat intégré
+
+Un bouton 💬 ouvre un petit chat assisté par IA. Au premier clic, la fenêtre
+s'affiche en mode réduit sur la moitié de l'écran. Les boutons d'agrandissement
+et de réduction ont été retirés : le même bouton sert désormais à masquer ou
+réafficher le chat. Après dix ouvertures, le chat reste toujours visible.
+
 ## Structure des données
 
 Le fichier `data/landscape.json` suit la structure suivante :

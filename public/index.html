@@ -71,12 +71,10 @@
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
              background:#fff;z-index:9999;padding:24px;box-shadow:0 0 12px rgba(0,0,0,0.3);
              transition:all .3s ease;border-radius:0;}
-    .chatbox.minimized{width:460px;height:420px;bottom:84px;right:20px;top:auto;left:auto;
-                       border-radius:12px;resize:both;overflow:auto;}
+    .chatbox.minimized{width:50vw;height:60vh;bottom:84px;right:20px;top:auto;left:auto;
+                       border-radius:12px;overflow:auto;}
     .chatbox.hidden{display:none;}
 
-    .chatbox-toggle-size{position:absolute;top:12px;right:68px;background:#1B75BC;color:#fff;
-                         border:none;border-radius:8px;padding:4px 8px;cursor:pointer;}
     .chatbox-reset{position:absolute;top:12px;right:12px;background:#ff5252;color:#fff;
                    border:none;border-radius:8px;padding:4px 8px;cursor:pointer;}
 
@@ -118,7 +116,6 @@
 
   <!-- ======== Popup Chat ======== -->
   <section class="chatbox hidden" id="chatbox">
-    <button class="chatbox-toggle-size" id="chat-size-toggle">🔽 Réduire</button>
     <button class="chatbox-reset" id="chat-reset">🔁</button>
 
     <div id="chat-log"></div>
@@ -350,23 +347,22 @@
     /* ---------- Chat : DOM ---------- */
     const chatBox=document.getElementById('chatbox');
     const toggleBtn=document.getElementById('chat-toggle');
-    const sizeToggle=document.getElementById('chat-size-toggle');
     const resetBtn=document.getElementById('chat-reset');
     const chatForm=document.getElementById('chat-form');
     const chatInput=document.getElementById('chat-q');
     const chatLog=document.getElementById('chat-log');
 
     /* Ouvrir / fermer popup */
+    let toggleCount=0;
     toggleBtn.addEventListener('click',()=>{
-      chatBox.classList.toggle('hidden');
-      chatBox.classList.remove('minimized');
-      sizeToggle.textContent='🔽 Réduire';
-    });
-
-    /* Réduire / agrandir */
-    sizeToggle.addEventListener('click',()=>{
-      const min=chatBox.classList.toggle('minimized');
-      sizeToggle.textContent=min?'🔼 Agrandir':'🔽 Réduire';
+      toggleCount++;
+      if(toggleCount>=10){
+        chatBox.classList.remove('hidden');
+        chatBox.classList.add('minimized');
+        return;
+      }
+      const hidden=chatBox.classList.toggle('hidden');
+      if(!hidden) chatBox.classList.add('minimized');
     });
 
     /* Reset thread */
