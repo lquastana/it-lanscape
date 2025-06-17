@@ -7,8 +7,11 @@
     "test": "node test/check-data.cjs"
   },
   "dependencies": {
+    "@azure/msal-node": "^3.6.0",
     "dotenv": "^16.3.2",
     "express": "^4.19.2",
+    "express-session": "^1.17.3",
+    "ldapjs": "^3.0.7",
     "marked": "^15.0.12",
     "openai": "^5.1.0"
   }

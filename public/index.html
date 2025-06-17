@@ -103,7 +103,7 @@
       <label>Établissement : <select id="filter-etab"><option value="">Tous</option></select></label>
       <label>Domaine : <select id="filter-domaine"><option value="">Tous</option></select></label>
       <label>Criticité : <select id="filter-criticite"><option value="">Tous</option>
-                         <option value="Standard">Standard</option><option value="Haute">Critique</option></select></label>
+                         <option value="Standard">Standard</option><option value="Critique">Critique</option></select></label>
       <label>Hébergement : <select id="filter-heberg"><option value="">Tous</option></select></label>
       <label>Interface : <select id="filter-interface"><option value="">Toutes</option></select></label>
       <label>Multi-établissement : <select id="filter-multi"><option value="">Tous</option>
@@ -418,7 +418,6 @@
       const ch=critTotal?((m.critHaute/critTotal)*100).toFixed(1):'0.0';
       const cc=critTotal?((m.critCritique/critTotal)*100).toFixed(1):'0.0';
       critHTML+=`<li>Standard : ${m.critStandard} (${cs}%) ${bar(cs,'#4caf50')}</li>`;
-      critHTML+=`<li>Haute : ${m.critHaute} (${ch}%) ${bar(ch,'#ff9800')}</li>`;
       critHTML+=`<li>Critique : ${m.critCritique} (${cc}%) ${bar(cc,'#d32f2f')}</li>`;
 
       let hebergHTML='';

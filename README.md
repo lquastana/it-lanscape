@@ -65,6 +65,27 @@ docker-compose build
 docker-compose up
 ```
 
+### 🛂 Authentification Office 365
+La page `/login.html` redirige vers Microsoft pour se connecter. Configurez les variables d'environnement suivantes :
+
+AZURE_CLIENT_ID="votre_client_id"
+AZURE_TENANT_ID="votre_tenant_id"
+AZURE_CLIENT_SECRET="votre_secret"
+AZURE_REDIRECT_URI="http://localhost:3000/auth/redirect"
+ALLOWED_USER="laurent.quastana@gcs-sirsco.fr"
+# Pour désactiver temporairement l'authentification
+# (mode développement uniquement)
+DISABLE_AUTH="true"
+
+Une fois authentifié, l'adresse e-mail est sauvegardée en session et l'accès est accordé uniquement si elle correspond à `ALLOWED_USER`.
+  -H 'Content-Type: application/json' \
+  -d '{"username":"user","password":"pass"}'
+```
+
+Si l'utilisateur appartient à l'un des groupes autorisés, la réponse contient la liste de ses groupes.
+
+=======
+>>>>>>> main
 ---
 
 ## 🧪 Tests

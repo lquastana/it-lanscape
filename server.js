@@ -3,15 +3,19 @@
 ---------------------------------------------------------*/
 import 'dotenv/config';
 import express from 'express';
+import session from 'express-session';
 import path from 'path';
 import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
 import { marked } from 'marked';
+import { ConfidentialClientApplication } from "@azure/msal-node";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const authDisabled = process.env.DISABLE_AUTH === 'true';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -20,8 +24,69 @@ const openai = new OpenAI({
   }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+if (!authDisabled) {
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'change_me',
+    resave: false,
+    saveUninitialized: false
+  }));
+
+  const openPaths = ['/auth/login','/auth/redirect','/login.html'];
+  app.use((req, res, next) => {
+    if (openPaths.includes(req.path)) return next();
+    if (req.session && req.session.user) return next();
+    if (req.method === 'GET') return res.redirect('/login.html');
+    return res.status(401).json({ error: 'Not authenticated' });
+  });
+}
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+
+const msalConfig = {
+  auth: {
+    clientId: process.env.AZURE_CLIENT_ID,
+    authority: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}`,
+    clientSecret: process.env.AZURE_CLIENT_SECRET
+  }
+};
+const cca = new ConfidentialClientApplication(msalConfig);
+
+app.get('/auth/login', async (_req, res) => {
+  try {
+    const url = await cca.getAuthCodeUrl({
+      scopes: ['User.Read'],
+      redirectUri: process.env.AZURE_REDIRECT_URI
+    });
+    res.redirect(url);
+  } catch {
+    res.status(500).send('Failed to generate auth URL');
+  }
+});
+
+app.get('/auth/redirect', async (req, res) => {
+  try {
+    const result = await cca.acquireTokenByCode({
+      code: req.query.code,
+      scopes: ['User.Read'],
+      redirectUri: process.env.AZURE_REDIRECT_URI
+    });
+    const email = result.account.username;
+    if (
+      process.env.ALLOWED_USER &&
+      email.toLowerCase() !== process.env.ALLOWED_USER.toLowerCase()
+    ) {
+      return res.status(403).send('User not allowed');
+    }
+    req.session.user = { email };
+    res.redirect('/');
+  } catch (err) {
+    console.error('Auth error', err);
+    res.status(500).send('Authentication error');
+  }
+});
 
 /* ---------- /api/landscape (inchangé) ------------------- */
 app.get('/api/landscape', async (_req, res) => {
