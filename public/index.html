@@ -409,13 +409,14 @@
         return `<li>${t} : ${pct}% ${bar(pct)}</li>`;
       }).join('');
       const hebergList=Object.keys(m.hebergCounts).map(h=>{
-        const pct=hebergTotal?((m.hebergCounts[h]/hebergTotal)*100).toFixed(1):'0.0';
-        return `<li>${h} : ${pct}% ${bar(pct)}</li>`;
+        const count=m.hebergCounts[h];
+        const pct=hebergTotal?((count/hebergTotal)*100).toFixed(1):'0.0';
+        return `<li>${h} : ${count} (${pct}%) ${bar(pct)}</li>`;
       }).join('');
       const critList=`<ul>`+
-        `<li>Haute : ${critHaute}% ${bar(critHaute)}</li>`+
-        `<li>Standard : ${critStandard}% ${bar(critStandard)}</li>`+
-        `<li>Critique : ${critCritique}% ${bar(critCritique)}</li>`+
+        `<li>Haute : ${m.critHaute} (${critHaute}%) ${bar(critHaute)}</li>`+
+        `<li>Standard : ${m.critStandard} (${critStandard}%) ${bar(critStandard)}</li>`+
+        `<li>Critique : ${m.critCritique} (${critCritique}%) ${bar(critCritique)}</li>`+
         `</ul>`;
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
