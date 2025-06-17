@@ -427,23 +427,23 @@
         `</ul>`;
       reportBox.innerHTML=
         `<h2>Rapport</h2>`+
-        `<section class="report-section"><h3>Alignement processus</h3>`+
+        `<section class="report-section"><h3>⚙️ Alignement processus</h3>`+
           `<p>${proc}% des processus possèdent au moins une application visible.</p>`+
           `${bar(proc)}</section>`+
-        `<section class="report-section"><h3>Alignement applications</h3>`+
+        `<section class="report-section"><h3>🖥️ Alignement applications</h3>`+
           `<p>${appAlign}% des processus utilisent les mêmes applications dans tous les établissements.</p>`+
           `${bar(appAlign)}</section>`+
-        `<section class="report-section"><h3>Taux de mutualisation</h3>`+
+        `<section class="report-section"><h3>🏗️ Taux de mutualisation</h3>`+
           `<p>${mut}% des applications visibles sont mutualisées.</p>`+
           `${bar(mut)}</section>`+
-        `<section class="report-section"><h3>Répartition par criticité</h3>`+
+        `<section class="report-section"><h3>🔥 Répartition par criticité</h3>`+
           `${critList}</section>`+
-        `<section class="report-section"><h3>Répartition de l'hébergement</h3>`+
+        `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3>`+
           `<ul>${hebergList}</ul></section>`+
-        `<section class="report-section"><h3>Complétude des données</h3>`+
+        `<section class="report-section"><h3>📑 Complétude des données</h3>`+
           `<p>${complPct}% des champs éditeur, référent et lien PRTG sont renseignés.</p>`+
           `${bar(complPct)}</section>`+
-        `<section class="report-section"><h3>Couverture d'interfaces</h3>`+
+        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3>`+
           `<p>Calcul sur les applications des domaines liés à la santé (Spécialités, Administrative, Commun, Dossier médico-techniques).</p>`+
           `<ul>${ifaceList}</ul></section>`;
     }

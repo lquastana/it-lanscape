@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node test/check-data.cjs"
   },
   "dependencies": {
     "dotenv": "^16.3.2",
