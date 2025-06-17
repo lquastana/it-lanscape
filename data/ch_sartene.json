@@ -16,7 +16,7 @@
                   "description": "Dossier patient informatisé",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "interfaces": {
                     "Medicale": true,
                     "Administrative": true,
@@ -79,7 +79,7 @@
                   "description": "Dossier médical Urgences",
                   "hebergement": "CH Castelluccio",
                   "multiEtablissement": false,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "interfaces": {
                     "Medicale": true,
                     "Administrative": true,
@@ -169,7 +169,7 @@
                   "description": "Plate-forme de télé-imagerie",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "interfaces": {
                     "Medicale": true,
                     "Autre": true
@@ -216,7 +216,7 @@
                   "description": "Solution de paie hospitalière.",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "interfaces": {}
                 }
               ]
@@ -244,7 +244,7 @@
                   "description": "Facturation et CDRI",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "interfaces": {
                     "Administrative": true,
                     "Facturation": true,

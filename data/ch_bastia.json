@@ -689,7 +689,7 @@
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1420,7 +1420,7 @@
                   "referent": null,
                   "hebergement": "SAS",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1486,7 +1486,7 @@
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Divers": false,
@@ -1546,7 +1546,7 @@
                   "referent": "David Lecerf",
                   "hebergement": "SAS",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
                     "Divers": false,
@@ -1647,7 +1647,7 @@
                   "referent": null,
                   "hebergement": "CH Bastia",
                   "multiEtablissement": true,
-                  "criticite": "Haute",
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
