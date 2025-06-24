@@ -165,13 +165,13 @@
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
-                  "multiEtablissement": true,
-                  "criticite": "Critique",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
-                    "Facturation": true,
-                    "Administrative": true,
+                    "Facturation": false,
+                    "Administrative": false,
                     "Medicale": false,
                     "Autre": false
                   }
