@@ -124,6 +124,86 @@
           ]
         },
         {
+          "nom": "DP Administrative",
+          "description": "Gestion administrative du parcours patient.",
+          "processus": [
+            {
+              "nom": "Dépôt de valeurs",
+              "description": "Gestion du dépôt et stockage sécurisé des valeurs des patients.",
+              "applications": []
+            },
+            {
+              "nom": "GAP",
+              "description": "Gestion Administrative du Patient (admissions, identités, mouvements).",
+              "applications": [
+                {
+                  "nom": "Trakcare",
+                  "description": "Gestion administrative du patient, suivi administratif et gestion des mouvements.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Droits",
+              "description": "Gestion des droits administratifs et des couvertures sociales des patients.",
+              "applications": [
+                {
+                  "nom": "CDRi",
+                  "description": "Gestion des droits administratifs, couverture sociale et facturation patient.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Tutelles / Curatelles",
+              "description": "Suivi des mesures de protection juridique.",
+              "applications": [
+                {
+                  "nom": "Élap TUTELLE",
+                  "description": "Gestion des tutelles et curatelles.",
+                  "editeur": "Médiane",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
           "nom": "DP Spécialités",
           "description": "Dossiers et outils spécifiques aux spécialités médicales.",
           "processus": [
