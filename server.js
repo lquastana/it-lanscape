@@ -33,6 +33,9 @@ if (process.env.OPENAI_API_KEY) {
 if (!process.env.ASSISTANT_ID) {
   console.warn('ASSISTANT_ID not set, /api/chat disabled');
 }
+if (!process.env.ASSISTANT_ID) {
+  console.warn('ASSISTANT_ID not set, /api/chat disabled');
+}
 
 let users = [];
 if (!authDisabled) {
