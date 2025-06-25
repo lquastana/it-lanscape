@@ -1,7 +1,7 @@
 {
   "etablissements": [
     {
-      "nom": "CH La Sainte Patiente",
+      "nom": "CH Cydra",
       "domaines": [
         {
           "nom": "DP Commun",
@@ -26,7 +26,7 @@
                 {
                   "nom": "DpiPlus",
                   "description": "Module de gestion dpi automatisé.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
@@ -43,7 +43,7 @@
                 {
                   "nom": "PharTrack",
                   "description": "Module de suivi pharmacie sécurisé.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -53,7 +53,7 @@
                 {
                   "nom": "PharZen",
                   "description": "Module de planification pharmacie automatisé.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -96,7 +96,7 @@
                 {
                   "nom": "HospBox",
                   "description": "Module de pilotage hospitalisation à domicile connecté.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -106,7 +106,7 @@
                 {
                   "nom": "Hosp360",
                   "description": "Module de suivi hospitalisation à domicile connecté.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -128,7 +128,7 @@
                 {
                   "nom": "Gef Track",
                   "description": "Module de gestion gef / inventaire intuitif.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -150,7 +150,7 @@
                 {
                   "nom": "ImagNet",
                   "description": "Module de pilotage imagerie intuitif.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
@@ -167,7 +167,7 @@
                 {
                   "nom": "TéléSoft",
                   "description": "Module de gestion télémédecine automatisé.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": true,
                   "criticite": "Critique",
                   "interfaces": {
@@ -190,7 +190,7 @@
                 {
                   "nom": "RhSoft",
                   "description": "Module de analyse rh intuitif.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
@@ -200,7 +200,7 @@
                 {
                   "nom": "RhNet",
                   "description": "Module de pilotage rh rapide.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -228,7 +228,7 @@
                 {
                   "nom": "Fina360",
                   "description": "Module de planification finances / budget performant.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -242,7 +242,7 @@
                 {
                   "nom": "FactBox",
                   "description": "Module de pilotage facturation intuitif.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": true,
                   "criticite": "Critique",
                   "interfaces": {
@@ -286,7 +286,7 @@
                 {
                   "nom": "RequPlus",
                   "description": "Module de gestion requêteur rapide.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -306,7 +306,7 @@
                 {
                   "nom": "MssNet",
                   "description": "Module de traitement mss performant.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
@@ -328,7 +328,7 @@
                 {
                   "nom": "SupeSys",
                   "description": "Module de suivi supervision si automatisé.",
-                  "hebergement": "Herbergeur de santé mutualisé",
+                  "hebergement": "Herbergeur HDS",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
@@ -338,7 +338,7 @@
                 {
                   "nom": "SupeBox",
                   "description": "Module de planification supervision si rapide.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -360,7 +360,7 @@
                 {
                   "nom": "TéléBox",
                   "description": "Module de pilotage téléphonie rapide.",
-                  "hebergement": "CH La Sainte Patiente",
+                  "hebergement": "CH Cydra",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
