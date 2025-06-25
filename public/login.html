@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#f2f2f2;margin:0;display:flex;justify-content:center;align-items:center;height:100vh;}
+    .login-box{background:#fff;padding:24px 32px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.2);width:320px;}
+    h1{text-align:center;margin-top:0;}
+    label{display:block;margin-bottom:4px;font-weight:bold;}
+    input{width:100%;padding:8px;margin-bottom:12px;border:1px solid #ccc;border-radius:4px;}
+    button{width:100%;padding:10px;border:none;border-radius:4px;background:#1B75BC;color:#fff;font-size:1rem;cursor:pointer;}
+    .error{color:#d32f2f;margin-bottom:12px;text-align:center;}
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>Authentification</h1>
+    <div id="error" class="error" style="display:none;">Échec de la connexion</div>
+    <form action="/auth/login" method="post">
+      <label for="username">Utilisateur</label>
+      <input type="text" id="username" name="username" required>
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" name="password" required>
+      <button type="submit">Se connecter</button>
+    </form>
+  </div>
+  <script>
+    const params=new URLSearchParams(window.location.search);
+    if(params.get('error')) document.getElementById('error').style.display='block';
+  </script>
+</body>
+</html>

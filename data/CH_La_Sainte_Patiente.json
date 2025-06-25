@@ -1,0 +1,397 @@
+{
+  "etablissements": [
+    {
+      "nom": "CH La Sainte Patiente",
+      "domaines": [
+        {
+          "nom": "DP Commun",
+          "description": "Applications transversales DPI, pharmacie.",
+          "processus": [
+            {
+              "nom": "DPI",
+              "description": "DxCare et modules de soins",
+              "applications": [
+                {
+                  "nom": "DpiPlus",
+                  "description": "Module de pilotage dpi moderne.",
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "interfaces": {
+                    "Medicale": true,
+                    "Administrative": true,
+                    "Planification": true
+                  }
+                },
+                {
+                  "nom": "DpiPlus",
+                  "description": "Module de gestion dpi automatisé.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Planification": true,
+                    "Administrative": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Pharmacie",
+              "description": "Dispensation & traçabilité",
+              "applications": [
+                {
+                  "nom": "PharTrack",
+                  "description": "Module de suivi pharmacie sécurisé.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Administrative": true
+                  }
+                },
+                {
+                  "nom": "PharZen",
+                  "description": "Module de planification pharmacie automatisé.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Administrative": true,
+                    "Facturation": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Spécialités",
+          "description": "Dossiers et outils spécifiques aux spécialités médicales.",
+          "processus": [
+            {
+              "nom": "Urgences",
+              "description": "Prise en charge des passages aux urgences",
+              "applications": [
+                {
+                  "nom": "UrgePlus",
+                  "description": "Module de gestion urgences performant.",
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "interfaces": {
+                    "Medicale": true,
+                    "Administrative": true,
+                    "Facturation": true,
+                    "Planification": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Hospitalisation à domicile",
+              "description": "Suivi des patients en HAD",
+              "applications": [
+                {
+                  "nom": "HospBox",
+                  "description": "Module de pilotage hospitalisation à domicile connecté.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Administrative": true
+                  }
+                },
+                {
+                  "nom": "Hosp360",
+                  "description": "Module de suivi hospitalisation à domicile connecté.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Administrative": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Support",
+          "description": "Applications logistiques et d’approvisionnement.",
+          "processus": [
+            {
+              "nom": "GEF / Inventaire",
+              "description": "Gestion des équipements et inventaire",
+              "applications": [
+                {
+                  "nom": "Gef Track",
+                  "description": "Module de gestion gef / inventaire intuitif.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Dossier médico-techniques",
+          "description": "Plateaux techniques et imagerie.",
+          "processus": [
+            {
+              "nom": "Imagerie",
+              "description": "RIS et gravure médias",
+              "applications": [
+                {
+                  "nom": "ImagNet",
+                  "description": "Module de pilotage imagerie intuitif.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Medicale": true,
+                    "Administrative": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Télémédecine",
+              "description": "Télé-imagerie et téléconsultation",
+              "applications": [
+                {
+                  "nom": "TéléSoft",
+                  "description": "Module de gestion télémédecine automatisé.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "interfaces": {
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Gestion",
+          "description": "Ressources humaines, paie, finances et facturation.",
+          "processus": [
+            {
+              "nom": "RH",
+              "description": "SIRH & planning",
+              "applications": [
+                {
+                  "nom": "RhSoft",
+                  "description": "Module de analyse rh intuitif.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Administrative": true
+                  }
+                },
+                {
+                  "nom": "RhNet",
+                  "description": "Module de pilotage rh rapide.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {}
+                }
+              ]
+            },
+            {
+              "nom": "Paie",
+              "description": "Gestion de la paie",
+              "applications": [
+                {
+                  "nom": "PaieSoft",
+                  "description": "Module de planification paie moderne.",
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "interfaces": {}
+                }
+              ]
+            },
+            {
+              "nom": "Finances / Budget",
+              "description": "Pilotage économique",
+              "applications": [
+                {
+                  "nom": "Fina360",
+                  "description": "Module de planification finances / budget performant.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {}
+                }
+              ]
+            },
+            {
+              "nom": "Facturation",
+              "description": "Facturation patient",
+              "applications": [
+                {
+                  "nom": "FactBox",
+                  "description": "Module de pilotage facturation intuitif.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "interfaces": {
+                    "Administrative": true,
+                    "Facturation": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Qualité & Risques",
+          "description": "Qualité, gestion documentaire et indicateurs.",
+          "processus": [
+            {
+              "nom": "Qualité / Risque",
+              "description": "GED et évènements indésirables",
+              "applications": [
+                {
+                  "nom": "QualSys",
+                  "description": "Module de pilotage qualité / risque performant.",
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {}
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Efficience / PMSI",
+          "description": "Requêtes décisionnelles et reporting.",
+          "processus": [
+            {
+              "nom": "Requêteur",
+              "description": "Business Intelligence",
+              "applications": [
+                {
+                  "nom": "RequPlus",
+                  "description": "Module de gestion requêteur rapide.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "interfaces": {}
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Échange de données",
+          "description": "Messagerie sécurisée et EAI.",
+          "processus": [
+            {
+              "nom": "MSS",
+              "description": "Messagerie Sécurisée de Santé",
+              "applications": [
+                {
+                  "nom": "MssNet",
+                  "description": "Module de traitement mss performant.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Outils techniques",
+          "description": "Maintenance, supervision, téléphonie.",
+          "processus": [
+            {
+              "nom": "Supervision SI",
+              "description": "Monitoring & GMAO",
+              "applications": [
+                {
+                  "nom": "SupeSys",
+                  "description": "Module de suivi supervision si automatisé.",
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "SupeBox",
+                  "description": "Module de planification supervision si rapide.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {}
+                },
+                {
+                  "nom": "SupeTrack",
+                  "description": "Module de traitement supervision si automatisé.",
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {}
+                }
+              ]
+            },
+            {
+              "nom": "Téléphonie",
+              "description": "Téléphonie fixe",
+              "applications": [
+                {
+                  "nom": "TéléBox",
+                  "description": "Module de pilotage téléphonie rapide.",
+                  "hebergement": "CH La Sainte Patiente",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {}
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Annuaire & ref. internes",
+          "description": "Référentiels organisation & finances.",
+          "processus": [
+            {
+              "nom": "Comptes budgétaires",
+              "description": "Plan comptable interne",
+              "applications": [
+                {
+                  "nom": "CompSoft",
+                  "description": "Module de suivi comptes budgétaires moderne.",
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

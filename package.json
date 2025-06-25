@@ -1,0 +1,20 @@
+{
+  "name": "it-landscape",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/check-data.cjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.2",
+    "express": "^4.19.2",
+    "express-session": "^1.17.3",
+    "ldapjs": "^3.0.7",
+    "marked": "^15.0.12",
+    "openai": "^5.1.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "bcrypt": "^5.1.1"
+  }
+}

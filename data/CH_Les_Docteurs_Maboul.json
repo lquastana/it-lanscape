@@ -1,0 +1,1733 @@
+{
+  "etablissements": [
+    {
+      "nom": "CH Les Docteurs Maboul",
+      "domaines": [
+        {
+          "nom": "Support",
+          "description": "Applications logistiques et d'approvisionnement.",
+          "processus": [
+            {
+              "nom": "DMI",
+              "description": "Gestion des dispositifs médicaux implantables.",
+              "applications": [
+                {
+                  "nom": "DmiTrack",
+                  "description": "Module de suivi dmi sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Repas personnel",
+              "description": "Gestion des repas du personnel.",
+              "applications": [
+                {
+                  "nom": "RepaSys",
+                  "description": "Module de traitement repas personnel performant.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Portail achat PUI",
+              "description": "Portail d'achats pharmacie à usage intérieur.",
+              "applications": [
+                {
+                  "nom": "PortFlow",
+                  "description": "Module de traitement portail achat pui connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GEF / Inventaire",
+              "description": "Gestion des équipements et inventaire.",
+              "applications": [
+                {
+                  "nom": "Gef 360",
+                  "description": "Module de pilotage gef / inventaire connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Marché",
+              "description": "Gestion et suivi des marchés publics.",
+              "applications": []
+            },
+            {
+              "nom": "Lingerie",
+              "description": "Gestion du linge hospitalier.",
+              "applications": []
+            }
+          ]
+        },
+        {
+          "nom": "Communication / Collaboration",
+          "description": "Bureautique, intranet et partage documentaire.",
+          "processus": [
+            {
+              "nom": "Bureautique",
+              "description": "Outils bureautiques collaboratifs.",
+              "applications": [
+                {
+                  "nom": "BureNet",
+                  "description": "Module de suivi bureautique sécurisé.",
+                  "editeur": "Microsoft",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Portail web externe",
+              "description": "Site internet institutionnel.",
+              "applications": [
+                {
+                  "nom": "PortSoft",
+                  "description": "Module de gestion portail web externe performant.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Intranet",
+              "description": "Portail interne et applications maison.",
+              "applications": [
+                {
+                  "nom": "IntrOpti",
+                  "description": "Module de gestion intranet rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GED",
+              "description": "Gestion électronique des documents.",
+              "applications": [
+                {
+                  "nom": "GedZen",
+                  "description": "Module de gestion ged rapide.",
+                  "editeur": "Microsoft",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Visioconférence",
+              "description": "Solutions de communication vidéo et audio à distance.",
+              "applications": [
+                {
+                  "nom": "VisiOpti",
+                  "description": "Module de gestion visioconférence rapide.",
+                  "editeur": "Microsoft",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Gestion",
+          "description": "Ressources humaines, paie, finances et gestion du personnel.",
+          "processus": [
+            {
+              "nom": "Paie",
+              "description": "Gestion de la paie du personnel hospitalier.",
+              "applications": [
+                {
+                  "nom": "PaieSys",
+                  "description": "Module de analyse paie rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "RH",
+              "description": "Gestion des ressources humaines.",
+              "applications": [
+                {
+                  "nom": "RhTrack",
+                  "description": "Module de planification rh connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Facturation",
+              "description": "Facturation des soins et actes médicaux.",
+              "applications": [
+                {
+                  "nom": "FactTrack",
+                  "description": "Module de analyse facturation moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Formation GPMC",
+              "description": "Gestion prévisionnelle des emplois et compétences.",
+              "applications": [
+                {
+                  "nom": "FormSys",
+                  "description": "Module de traitement formation gpmc intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Temps non médical",
+              "description": "Gestion du temps de travail du personnel non médical.",
+              "applications": [
+                {
+                  "nom": "TempFlow",
+                  "description": "Module de traitement temps non médical connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Temps médical",
+              "description": "Gestion du temps de travail des praticiens.",
+              "applications": [
+                {
+                  "nom": "TempNet",
+                  "description": "Module de analyse temps médical connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Efficience / PMSI",
+          "description": "Pilotage de l’activité, codage PMSI et optimisation médico-économique.",
+          "processus": [
+            {
+              "nom": "Actes, diag. RSS",
+              "description": "Saisie et contrôle des actes, diagnostics et Résumés de Sortie Standardisés (RSS).",
+              "applications": [
+                {
+                  "nom": "ActeOpti",
+                  "description": "Module de traitement actes, diag. rss automatisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Qualité optimisation",
+              "description": "Optimisation du codage PMSI et suivi qualité.",
+              "applications": [
+                {
+                  "nom": "Qual360",
+                  "description": "Module de gestion qualité optimisation moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "QualTrack",
+                  "description": "Module de traitement qualité optimisation sécurisé.",
+                  "editeur": "ATIH",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Requeteur",
+              "description": "Outils décisionnels et reporting d'activité.",
+              "applications": [
+                {
+                  "nom": "RequTrack",
+                  "description": "Module de pilotage requeteur sécurisé.",
+                  "editeur": "SAP",
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Optimisation codage",
+              "description": "Optimisation du codage et gestion documentaire associée.",
+              "applications": [
+                {
+                  "nom": "OptiNet",
+                  "description": "Module de pilotage optimisation codage moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Contrôle de Gestion",
+              "description": "Pilotage budgétaire et financier de l’établissement.",
+              "applications": [
+                {
+                  "nom": "ContPlus",
+                  "description": "Module de gestion contrôle de gestion connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "ContZen",
+                  "description": "Module de planification contrôle de gestion connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Qualité & Risques",
+          "description": "Gestion de la qualité et des risques sanitaires.",
+          "processus": [
+            {
+              "nom": "Qualité / Risque",
+              "description": "Gestion documentaire qualité et suivi des indicateurs.",
+              "applications": [
+                {
+                  "nom": "QualPlus",
+                  "description": "Module de analyse qualité / risque intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Plan Blanc",
+              "description": "Gestion des situations d'urgence sanitaire et crise.",
+              "applications": []
+            },
+            {
+              "nom": "Enquêtes",
+              "description": "Gestion et suivi des enquêtes internes et externes.",
+              "applications": [
+                {
+                  "nom": "EnquPlus",
+                  "description": "Module de suivi enquêtes moderne.",
+                  "editeur": "Microsoft",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Spécialités",
+          "description": "Applications de dossier patient propres à certaines spécialités médicales.",
+          "processus": [
+            {
+              "nom": "Dialyse",
+              "description": "Suivi des séances de dialyse et de l’état du patient.",
+              "applications": [
+                {
+                  "nom": "DialSys",
+                  "description": "Module de suivi dialyse connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Urgences",
+              "description": "Prise en charge et dossier des patients aux urgences.",
+              "applications": [
+                {
+                  "nom": "UrgeZen",
+                  "description": "Module de pilotage urgences sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Cardio",
+              "description": "Suivi cardiologique et comptes rendus.",
+              "applications": [
+                {
+                  "nom": "CardSoft",
+                  "description": "Module de gestion cardio automatisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Chimiotherapie",
+              "description": "Prescription et suivi des traitements de chimiothérapie.",
+              "applications": [
+                {
+                  "nom": "ChimZen",
+                  "description": "Module de planification chimiotherapie sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "ChimNet",
+                  "description": "Module de traitement chimiotherapie connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Ephad",
+              "description": "Suivi médico-administratif en établissement d’hébergement.",
+              "applications": [
+                {
+                  "nom": "EphaSys",
+                  "description": "Module de pilotage ephad sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "SAMU",
+              "description": "Régulation des appels et interventions des équipes SMUR.",
+              "applications": [
+                {
+                  "nom": "SamuSys",
+                  "description": "Module de planification samu performant.",
+                  "editeur": "Exos",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Réanimation",
+              "description": "Dossier patient pour soins intensifs et réanimation.",
+              "applications": [
+                {
+                  "nom": "RéanSoft",
+                  "description": "Module de gestion réanimation moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Administrative",
+          "description": "Gestion administrative du parcours patient.",
+          "processus": [
+            {
+              "nom": "Dépôt de valeurs",
+              "description": "Gestion du dépôt et stockage sécurisé des valeurs des patients.",
+              "applications": []
+            },
+            {
+              "nom": "GAP",
+              "description": "Gestion Administrative du Patient (admissions, identités, mouvements).",
+              "applications": [
+                {
+                  "nom": "GapSoft",
+                  "description": "Module de suivi gap sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Droits",
+              "description": "Gestion des droits administratifs et des couvertures sociales des patients.",
+              "applications": [
+                {
+                  "nom": "DroiZen",
+                  "description": "Module de planification droits moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Tutelles / Curatelles",
+              "description": "Gestion administrative des tutelles et curatelles des patients.",
+              "applications": []
+            },
+            {
+              "nom": "Brancardage",
+              "description": "Gestion et suivi administratif des transports internes par brancardage.",
+              "applications": [
+                {
+                  "nom": "BranSys",
+                  "description": "Module de planification brancardage rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Commun",
+          "description": "Applications transversales utilisées par tous les services.",
+          "processus": [
+            {
+              "nom": "DPI",
+              "description": "Dossier Patient Informatisé.",
+              "applications": [
+                {
+                  "nom": "DpiBox",
+                  "description": "Module de suivi dpi intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "DpiSoft",
+                  "description": "Module de suivi dpi connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Pharmacie",
+              "description": "Gestion de la pharmacie, prescription et sécurisation des médicaments.",
+              "applications": [
+                {
+                  "nom": "PharOpti",
+                  "description": "Module de analyse pharmacie performant.",
+                  "editeur": "Vidal",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "PharFlow",
+                  "description": "Module de planification pharmacie automatisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "PharZen",
+                  "description": "Module de analyse pharmacie intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "PharPlus",
+                  "description": "Module de analyse pharmacie connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Repas",
+              "description": "Gestion et suivi des repas patients.",
+              "applications": [
+                {
+                  "nom": "RepaSys",
+                  "description": "Module de suivi repas sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Reco. vocale",
+              "description": "Solutions de reconnaissance vocale utilisées dans la rédaction de documents médicaux.",
+              "applications": [
+                {
+                  "nom": "RecoZen",
+                  "description": "Module de analyse reco. vocale connecté.",
+                  "editeur": "Nuance Communications",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Dossier médico-techniques",
+          "description": "Plateaux techniques : imagerie, laboratoire, bloc, anapath, télémédecine.",
+          "processus": [
+            {
+              "nom": "Dossier transfusionnel",
+              "description": "Suivi des produits sanguins labiles et des actes transfusionnels.",
+              "applications": []
+            },
+            {
+              "nom": "Imagerie",
+              "description": "Systèmes RIS, PACS et archivage d’imagerie médicale.",
+              "applications": [
+                {
+                  "nom": "ImagBox",
+                  "description": "Module de suivi imagerie performant.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "ImagSoft",
+                  "description": "Module de analyse imagerie automatisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "ImagOpti",
+                  "description": "Module de planification imagerie rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Laboratoire",
+              "description": "Gestion des analyses de biologie médicale.",
+              "applications": [
+                {
+                  "nom": "LaboSys",
+                  "description": "Module de traitement laboratoire performant.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Labo360",
+                  "description": "Module de analyse laboratoire intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Bloc",
+              "description": "Gestion du planning opératoire et suivi des interventions.",
+              "applications": [
+                {
+                  "nom": "BlocZen",
+                  "description": "Module de suivi bloc rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Echographie",
+              "description": "Gestion des examens d’échographie et comptes rendus.",
+              "applications": [
+                {
+                  "nom": "EchoSys",
+                  "description": "Module de traitement echographie rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Anapath",
+              "description": "Dossier d’anatomopathologie.",
+              "applications": [
+                {
+                  "nom": "AnapSoft",
+                  "description": "Module de analyse anapath moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Télémédecine",
+              "description": "Applications de téléconsultation et de RCP à distance.",
+              "applications": [
+                {
+                  "nom": "TéléPlus",
+                  "description": "Module de suivi télémédecine rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "TéléSys",
+                  "description": "Module de pilotage télémédecine rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "TéléBox",
+                  "description": "Module de traitement télémédecine intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Échange de données",
+          "description": "Messageries sécurisées et interopérabilité des systèmes.",
+          "processus": [
+            {
+              "nom": "MSS",
+              "description": "Messagerie Sécurisée de Santé pour échanges externes sécurisés.",
+              "applications": [
+                {
+                  "nom": "MssOpti",
+                  "description": "Module de analyse mss connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "EAI",
+              "description": "Middleware d'interopérabilité et échanges inter-applicatifs.",
+              "applications": [
+                {
+                  "nom": "EaiFlow",
+                  "description": "Module de pilotage eai intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "EaiBox",
+                  "description": "Module de analyse eai moderne.",
+                  "editeur": "Enovacom",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Référentiels",
+              "description": "Gestion des référentiels régionaux et nationaux.",
+              "applications": [
+                {
+                  "nom": "RéféOpti",
+                  "description": "Module de traitement référentiels connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "RéféSoft",
+                  "description": "Module de traitement référentiels performant.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "RéféZen",
+                  "description": "Module de traitement référentiels sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Cyber sécurité",
+          "description": "Protection, détection et sensibilisation.",
+          "processus": [
+            {
+              "nom": "Gestion des accès",
+              "description": "Accès distants et bastions.",
+              "applications": [
+                {
+                  "nom": "Gest360",
+                  "description": "Module de suivi gestion des accès connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "GestTrack",
+                  "description": "Module de planification gestion des accès connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "GestTrack",
+                  "description": "Module de suivi gestion des accès sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Audit",
+              "description": "Contrôle de la posture sécurité.",
+              "applications": [
+                {
+                  "nom": "AudiOpti",
+                  "description": "Module de suivi audit rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Prévention des intrusions",
+              "description": "Pare-feu, antivirus, filtrage.",
+              "applications": [
+                {
+                  "nom": "PrévNet",
+                  "description": "Module de planification prévention des intrusions moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "PrévSoft",
+                  "description": "Module de suivi prévention des intrusions connecté.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "PrévNet",
+                  "description": "Module de traitement prévention des intrusions rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Supervision des menaces",
+              "description": "SOC et veille CTI.",
+              "applications": [
+                {
+                  "nom": "SupePlus",
+                  "description": "Module de pilotage supervision des menaces connecté.",
+                  "editeur": "Orange Cyberdefense",
+                  "referent": "David Lecerf",
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "SupePlus",
+                  "description": "Module de traitement supervision des menaces moderne.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Sensibilisation",
+              "description": "Formation utilisateurs.",
+              "applications": [
+                {
+                  "nom": "SensFlow",
+                  "description": "Module de gestion sensibilisation intuitif.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Sureté",
+          "description": "Sécurité physique du site.",
+          "processus": [
+            {
+              "nom": "Contrôle des accès",
+              "description": "Gestion des accès physiques et contrôle des entrées.",
+              "applications": [
+                {
+                  "nom": "ContFlow",
+                  "description": "Module de pilotage contrôle des accès rapide.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Outils techniques",
+          "description": "Outils transverses de gestion du SI.",
+          "processus": [
+            {
+              "nom": "Supervision SI",
+              "description": "Monitoring applicatif et réseau.",
+              "applications": [
+                {
+                  "nom": "SupeTrack",
+                  "description": "Module de pilotage supervision si rapide.",
+                  "editeur": "Paessler AG",
+                  "referent": null,
+                  "hebergement": "Herbergeur de santé mutualisé",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GLPI",
+              "description": "Gestion de parc et support.",
+              "applications": [
+                {
+                  "nom": "GlpiZen",
+                  "description": "Module de planification glpi rapide.",
+                  "editeur": "Clarilog",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GTC",
+              "description": "Gestion Technique Centralisée pour les bâtiments et infrastructures.",
+              "applications": [
+                {
+                  "nom": "GtcNet",
+                  "description": "Module de pilotage gtc sécurisé.",
+                  "editeur": "Sauter",
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Annuaire & ref. internes",
+          "description": "Référentiels organisation & finances.",
+          "processus": [
+            {
+              "nom": "Comptes budgétaires",
+              "description": "Plan comptable interne et gestion budgétaire.",
+              "applications": [
+                {
+                  "nom": "CompOpti",
+                  "description": "Module de planification comptes budgétaires performant.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Les Docteurs Maboul",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Structures & nomenclatures",
+              "description": "Gestion et organisation des structures internes et nomenclatures hospitalières.",
+              "applications": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
