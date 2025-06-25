@@ -1822,7 +1822,7 @@
                 },
                 {
                   "nom": "Vade m365 mail",
-                  "description": "Antispam pour la messagerie cloud.",
+                  "description": "Antispam Office 365.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
