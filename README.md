@@ -56,36 +56,33 @@ Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
 ### 🐳 Déploiement Docker avec Nginx
 
 Un fichier `docker-compose.yml` est fourni pour exécuter l'application derrière
-un serveur **Nginx**. Par défaut, seule l'adresse IP `185.15.24.118` est autorisée.
-Pour ajouter d'autres adresses, éditez `nginx.conf` et rajoutez des lignes
-`allow` supplémentaires.
+un serveur **Nginx**. Les adresses autorisées sont définies via la variable
+`ALLOWED_IPS` dans `.env` (voir le fichier exemple `.env.local.example`).
+Nginx génère sa configuration au démarrage en utilisant cette valeur et expose
+également un accès **HTTPS** : placez vos certificats dans `./certs/cert.pem` et
+`./certs/key.pem` pour activer la connexion sécurisée sur le port `443`.
 
 ```bash
 docker-compose build
 docker-compose up
 ```
 
-### 🛂 Authentification Office 365
-La page `/login.html` redirige vers Microsoft pour se connecter. Configurez les variables d'environnement suivantes :
+### 🛂 Authentification locale (Passport.js)
+Le formulaire `/login.html` utilise la stratégie `passport-local`.
+Les comptes sont définis dans `data/users.json` avec des mots de passe hachés via `bcrypt`.
 
-AZURE_CLIENT_ID="votre_client_id"
-AZURE_TENANT_ID="votre_tenant_id"
-AZURE_CLIENT_SECRET="votre_secret"
-AZURE_REDIRECT_URI="http://localhost:3000/auth/redirect"
-ALLOWED_USER="laurent.quastana@gcs-sirsco.fr"
-# Pour désactiver temporairement l'authentification
-# (mode développement uniquement)
-DISABLE_AUTH="true"
+Variables d'environnement utiles :
 
-Une fois authentifié, l'adresse e-mail est sauvegardée en session et l'accès est accordé uniquement si elle correspond à `ALLOWED_USER`.
-  -H 'Content-Type: application/json' \
-  -d '{"username":"user","password":"pass"}'
+```
+SESSION_SECRET="votre_secret"
+# Pour désactiver l'authentification (mode développement uniquement)
+# La valeur par défaut est "false" pour activer la connexion
+DISABLE_AUTH="false"
+# Liste des IP autorisées (exemple)
+ALLOWED_IPS="allow 185.15.24.118; allow 172.18.0.1;"
 ```
 
-Si l'utilisateur appartient à l'un des groupes autorisés, la réponse contient la liste de ses groupes.
-
-=======
->>>>>>> main
+Les données (y compris les comptes) sont persistées dans le volume `data` défini dans `docker-compose.yml`.
 ---
 
 ## 🧪 Tests

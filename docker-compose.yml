@@ -4,11 +4,21 @@ services:
     build: .
     expose:
       - "3000"
+    volumes:
+      - data:/app/data
   nginx:
     image: nginx:alpine
+    env_file:
+      - .env
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.template:/etc/nginx/nginx.template:ro
+      - ./nginx-entrypoint.sh:/usr/local/bin/nginx-entrypoint.sh:ro
+      - ./certs:/etc/nginx/certs:ro
     depends_on:
       - web
+    command: /usr/local/bin/nginx-entrypoint.sh
+volumes:
+  data:
