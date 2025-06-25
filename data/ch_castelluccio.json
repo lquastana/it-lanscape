@@ -356,6 +356,86 @@
           ]
         },
         {
+          "nom": "Communication / Collaboration",
+          "description": "Outils de messagerie, d\u2019acc\u00e8s web et de partage documentaire.",
+          "processus": [
+            {
+              "nom": "Bureautique",
+              "description": "Messagerie et agenda interne",
+              "applications": [
+                {
+                  "nom": "Exchange",
+                  "description": "Serveur de messagerie professionnelle Microsoft Exchange pour les emails et calendriers internes.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Portail web externe",
+              "description": "Portail web personnalis\u00e9 pour la communication externe",
+              "applications": [
+                {
+                  "nom": "Dev. sp\u00e9cifique",
+                  "description": "Acc\u00e8s web d\u00e9di\u00e9 aux patients et partenaires.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Intranet",
+              "description": "Espace collaboratif interne",
+              "applications": []
+            },
+            {
+              "nom": "GED",
+              "description": "Gestion \u00c9lectronique de Documents",
+              "applications": [
+                {
+                  "nom": "FileNet",
+                  "description": "Plateforme GED IBM pour l\u2019archivage et la tra\u00e7abilit\u00e9 documentaire.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
           "nom": "Dossier médico-techniques",
           "description": "Plateaux techniques et imagerie.",
           "processus": [
