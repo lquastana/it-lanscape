@@ -216,6 +216,52 @@
               "nom": "Hospitalisation à domicile",
               "description": "Suivi des patients en HAD",
               "applications": []
+            },
+            {
+              "nom": "Spy",
+              "description": "Suivi psychiatrique",
+              "applications": [
+                {
+                  "nom": "Cora",
+                  "description": "Gestion des dossiers en psychiatrie",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Addicto",
+              "description": "Suivi des patients en addictologie",
+              "applications": [
+                {
+                  "nom": "éO Addictions",
+                  "description": "Gestion des prises en charge addictologiques",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
             }
           ]
         },
