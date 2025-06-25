@@ -357,7 +357,7 @@
         },
         {
           "nom": "Communication / Collaboration",
-          "description": "Outils de messagerie, d\u2019acc\u00e8s web et de partage documentaire.",
+          "description": "Outils de messagerie, d’accès web et de partage documentaire.",
           "processus": [
             {
               "nom": "Bureautique",
@@ -384,11 +384,11 @@
             },
             {
               "nom": "Portail web externe",
-              "description": "Portail web personnalis\u00e9 pour la communication externe",
+              "description": "Portail web personnalisé pour la communication externe",
               "applications": [
                 {
-                  "nom": "Dev. sp\u00e9cifique",
-                  "description": "Acc\u00e8s web d\u00e9di\u00e9 aux patients et partenaires.",
+                  "nom": "Dev. spécifique",
+                  "description": "Accès web dédié aux patients et partenaires.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
@@ -412,11 +412,11 @@
             },
             {
               "nom": "GED",
-              "description": "Gestion \u00c9lectronique de Documents",
+              "description": "Gestion Électronique de Documents",
               "applications": [
                 {
                   "nom": "FileNet",
-                  "description": "Plateforme GED IBM pour l\u2019archivage et la tra\u00e7abilit\u00e9 documentaire.",
+                  "description": "Plateforme GED IBM pour l’archivage et la traçabilité documentaire.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "CH Castelluccio",
@@ -1140,13 +1140,83 @@
           ]
         },
         {
+          "nom": "Sûreté",
+          "description": "Protection physique des locaux et contrôle d’accès.",
+          "processus": [
+            {
+              "nom": "Contrôle des clés",
+              "description": "Gestion centralisée des clés et autorisations d’accès aux locaux sensibles.",
+              "applications": [
+                {
+                  "nom": "SIP",
+                  "description": "Application de gestion des clés et serrures, permettant de tracer les détenteurs et les droits d’accès.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CHC",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
           "nom": "Annuaire & ref. internes",
           "description": "Référentiels organisation & finances.",
           "processus": [
             {
               "nom": "Comptes budgétaires",
-              "description": "Plan comptable interne",
-              "applications": []
+              "description": "Ce processus vise à référencer et structurer les comptes budgétaires utilisés pour le suivi financier, les engagements comptables, et les analyses économiques internes.",
+              "applications": [
+                {
+                  "nom": "Magh2",
+                  "description": "Outil de gestion économique et financière incluant la gestion budgétaire, les imputations analytiques, et l’inventaire.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Structures & nomenclatures",
+              "description": "Ce processus permet de gérer les référentiels internes (unités fonctionnelles, services, structures organisationnelles) nécessaires à l’interopérabilité des outils SI.",
+              "applications": [
+                {
+                  "nom": "Convergence",
+                  "description": "Référentiel organisationnel utilisé pour structurer les nomenclatures internes, interfacé avec d’autres outils SI pour assurer la cohérence des données.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
             }
           ]
         }
