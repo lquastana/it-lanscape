@@ -16,6 +16,7 @@ import bcrypt from 'bcryptjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
+const APP_TITLE = process.env.APP_TITLE || 'Cartographie hospitalière';
 
 const authDisabled = process.env.DISABLE_AUTH === 'true';
 
@@ -63,6 +64,23 @@ if (!authDisabled) {
     return res.status(401).json({ error: 'Not authenticated' });
   });
 }
+
+app.get('/', async (_req, res) => {
+  try {
+    const html = await fs.readFile(path.join(__dirname, 'public', 'index.html'), 'utf-8');
+    res.send(html.replace(/{{APP_TITLE}}/g, APP_TITLE));
+  } catch {
+    res.status(500).send('Index not found');
+  }
+});
+app.get('/index.html', async (_req, res) => {
+  try {
+    const html = await fs.readFile(path.join(__dirname, 'public', 'index.html'), 'utf-8');
+    res.send(html.replace(/{{APP_TITLE}}/g, APP_TITLE));
+  } catch {
+    res.status(500).send('Index not found');
+  }
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -90,6 +90,8 @@ Variables d'environnement utiles :
 
 ```
 SESSION_SECRET="votre_secret"
+# Titre affiché sur la page principale
+APP_TITLE="Cartographie hospitalière"
 # Pour désactiver l'authentification (mode développement uniquement)
 # La valeur par défaut est "false" pour activer la connexion
 DISABLE_AUTH="false"
