@@ -729,12 +729,127 @@
         },
         {
           "nom": "Échange de données",
-          "description": "Messagerie sécurisée et EAI.",
+          "description": "Ce domaine regroupe les solutions assurant l’intégration, l’interopérabilité et la diffusion des données entre les systèmes d’information de santé.",
           "processus": [
             {
               "nom": "MSS",
               "description": "Messagerie Sécurisée de Santé",
-              "applications": []
+              "applications": [
+                {
+                  "nom": "Medimail",
+                  "description": "Application de messagerie sécurisée utilisée pour l’échange de données de santé entre professionnels.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "EAI",
+              "description": "Échange et Partage de Données via Bus d’intégration",
+              "applications": [
+                {
+                  "nom": "Enovacom",
+                  "description": "Plateforme d’interopérabilité multi-établissements.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "Antares",
+                  "description": "Bus d’intégration dédié aux applications locales.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Référentiels",
+              "description": "Référentiels partagés pour l’identification des ressources et structures.",
+              "applications": [
+                {
+                  "nom": "ROR",
+                  "description": "Répertoire Opérationnel des Ressources.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "CIODC",
+                  "description": "Référentiel d’identité et structures sanitaires.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "CIODM",
+                  "description": "Référentiel de données commun.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
             }
           ]
         },
