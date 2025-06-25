@@ -311,8 +311,72 @@
           "processus": [
             {
               "nom": "Supervision SI",
-              "description": "Monitoring & GMAO",
-              "applications": []
+              "description": "Monitoring applicatif et réseau.",
+              "applications": [
+                {
+                  "nom": "PRTG",
+                  "description": "Surveillance en temps réel de l'infrastructure.",
+                  "editeur": "Paessler AG",
+                  "referent": null,
+                  "hebergement": "CH Bastia",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GLPI",
+              "description": "Gestion de parc et support.",
+              "applications": [
+                {
+                  "nom": "Gestup",
+                  "description": "Inventaire matériel et gestion des demandes de support.",
+                  "editeur": "Gestup",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GTC",
+              "description": "Gestion Technique Centralisée pour les bâtiments et infrastructures.",
+              "applications": [
+                {
+                  "nom": "WIT",
+                  "description": "Contrôle et automatisation technique des bâtiments.",
+                  "editeur": "TECLIB",
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
             },
             {
               "nom": "Téléphonie",
