@@ -120,7 +120,7 @@
               "description": "Outils bureautiques collaboratifs.",
               "applications": [
                 {
-                  "nom": "Suite Collaborative",
+                  "nom": "Office 365",
                   "description": "Suite bureautique collaborative.",
                   "editeur": "Microsoft",
                   "referent": null,
@@ -568,7 +568,7 @@
               "description": "Gestion et suivi des enquêtes internes et externes.",
               "applications": [
                 {
-                  "nom": "Suite Collaborative",
+                  "nom": "Office 365",
                   "description": "Outil collaboratif pour la réalisation et le suivi d'enquêtes internes.",
                   "editeur": "Microsoft",
                   "referent": null,
@@ -1499,7 +1499,7 @@
                 },
                 {
                   "nom": "Vade m365 mail",
-                  "description": "Antispam mail cloud.",
+                  "description": "Antispam Office 365.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
