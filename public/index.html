@@ -142,6 +142,10 @@
     const criticityColor=l=>['Haute','Critique'].includes(l)?'#d32f2f':'#616161';
     let domainIndex=0,fullData=null;
 
+    function esc(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
     /* ---------- threadId persistant ---------- */
     let threadId=localStorage.getItem('chat_thread_id')||null;
 
@@ -251,7 +255,7 @@
             metrics.procTotal++;
             metrics.procAppsTotal+=proc.applications.length;
             const pDiv=document.createElement('div');pDiv.className='process';
-            pDiv.innerHTML=`<h4>${proc.nom}</h4><p>${proc.description}</p>`;
+            pDiv.innerHTML=`<h4>${esc(proc.nom)}</h4><p>${esc(proc.description)}</p>`;
             const appWrap=document.createElement('div');appWrap.className='apps';
             let hasApp=false;
 
@@ -298,8 +302,8 @@
                 }
               });
               aDiv.appendChild(iface);
-              aDiv.innerHTML+=`<p>${app.description}</p><p style="font-style:italic;color:#666">
-                                Hébergement : ${app.hebergement}</p>`;
+              aDiv.innerHTML+=`<p>${esc(app.description)}</p><p style="font-style:italic;color:#666">
+                                Hébergement : ${esc(app.hebergement)}</p>`;
               appWrap.appendChild(aDiv);
             });
 
@@ -396,7 +400,7 @@
     /* Append message au log */
     function addMsg(txt,cls){
       const div=document.createElement('div');
-      div.className=`chat-msg ${cls}`;div.innerHTML=txt;
+      div.className=`chat-msg ${cls}`;div.innerHTML=esc(txt);
       chatLog.appendChild(div);chatLog.scrollTop=chatLog.scrollHeight;
     }
 
