@@ -580,6 +580,212 @@
           ]
         },
         {
+          "nom": "Cyber sécurité",
+          "description": "Protection, détection et sensibilisation.",
+          "processus": [
+            {
+              "nom": "Gestion des accès",
+              "description": "Accès distants et bastions.",
+              "applications": [
+                {
+                  "nom": "Splashtop",
+                  "description": "Accès bureau distant sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Systancia Bastion",
+                  "description": "Bastion d’administration.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Lockself",
+                  "description": "Coffre-fort mots de passe.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Audit",
+              "description": "Contrôle de la posture sécurité.",
+              "applications": [
+                {
+                  "nom": "Board of Cyberex",
+                  "description": "Tableaux de bord cyber.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Prévention des intrusions",
+              "description": "Pare-feu, antivirus, filtrage.",
+              "applications": [
+                {
+                  "nom": "Fortinet",
+                  "description": "Pare-feu réseau.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Vade m365 mail",
+                  "description": "Antispam Office 365.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Sentinel anti-virus",
+                  "description": "Protection endpoints.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Supervision des menaces",
+              "description": "SOC et veille CTI.",
+              "applications": [
+                {
+                  "nom": "Orange Micro SOC",
+                  "description": "Service SOC externalisé (surveillance, détection, réponse).",
+                  "editeur": "Orange Cyberdefense",
+                  "referent": "David Lecerf",
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Sekoia exploitation",
+                  "description": "Plate-forme CTI / SIEM.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Sensibilisation",
+              "description": "Formation utilisateurs.",
+              "applications": [
+                {
+                  "nom": "Avant de cliquer",
+                  "description": "Campagnes d’hameçonnage simulé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
           "nom": "Outils techniques",
           "description": "Maintenance, supervision, téléphonie.",
           "processus": [
