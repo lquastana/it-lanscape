@@ -438,11 +438,34 @@
         },
         {
           "nom": "Qualité & Risques",
-          "description": "Qualité, gestion documentaire et indicateurs.",
+          "description": "Gestion de la qualité et des risques sanitaires.",
           "processus": [
             {
               "nom": "Qualité / Risque",
-              "description": "GED et évènements indésirables",
+              "description": "Gestion documentaire qualité et suivi des indicateurs.",
+              "applications": [
+                {
+                  "nom": "Yes",
+                  "description": "Solution de gestion documentaire qualité et gestion des risques.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Plan Blanc",
+              "description": "Gestion des situations d'urgence sanitaire et crise.",
               "applications": []
             }
           ]
