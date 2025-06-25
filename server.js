@@ -79,7 +79,7 @@ passport.deserializeUser((id, done) => {
 });
 
 app.post('/auth/login', passport.authenticate('local', {
-  failureRedirect: '/login.html'
+  failureRedirect: '/login.html?error=1'
 }), (req, res) => {
   res.redirect('/');
 });

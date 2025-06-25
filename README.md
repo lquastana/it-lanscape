@@ -74,7 +74,8 @@ Variables d'environnement utiles :
 ```
 SESSION_SECRET="votre_secret"
 # Pour désactiver l'authentification (mode développement uniquement)
-DISABLE_AUTH="true"
+# La valeur par défaut est "false" pour activer la connexion
+DISABLE_AUTH="false"
 ```
 
 Les données (y compris les comptes) sont persistées dans le volume `data` défini dans `docker-compose.yml`.
