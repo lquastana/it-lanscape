@@ -83,6 +83,10 @@ ALLOWED_IPS="allow 185.15.24.118; allow 172.18.0.1;"
 ```
 
 Les données (y compris les comptes) sont persistées dans le volume `data` défini dans `docker-compose.yml`.
+
+### 🔗 Assistant IA (OpenAI)
+
+Pour activer le chat, renseignez les variables `OPENAI_API_KEY` et `ASSISTANT_ID` dans votre fichier `.env` ou vos variables d'environnement. Sans ces valeurs, l'endpoint `/api/chat` renvoie le code **503** et le serveur démarre en mode dégradé.
 ---
 
 ## 🧪 Tests
