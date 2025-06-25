@@ -65,27 +65,19 @@ docker-compose build
 docker-compose up
 ```
 
-### 🛂 Authentification Office 365
-La page `/login.html` redirige vers Microsoft pour se connecter. Configurez les variables d'environnement suivantes :
+### 🛂 Authentification locale (Passport.js)
+Le formulaire `/login.html` utilise la stratégie `passport-local`.
+Les comptes sont définis dans `data/users.json` avec des mots de passe hachés via `bcrypt`.
 
-AZURE_CLIENT_ID="votre_client_id"
-AZURE_TENANT_ID="votre_tenant_id"
-AZURE_CLIENT_SECRET="votre_secret"
-AZURE_REDIRECT_URI="http://localhost:3000/auth/redirect"
-ALLOWED_USER="laurent.quastana@gcs-sirsco.fr"
-# Pour désactiver temporairement l'authentification
-# (mode développement uniquement)
+Variables d'environnement utiles :
+
+```
+SESSION_SECRET="votre_secret"
+# Pour désactiver l'authentification (mode développement uniquement)
 DISABLE_AUTH="true"
-
-Une fois authentifié, l'adresse e-mail est sauvegardée en session et l'accès est accordé uniquement si elle correspond à `ALLOWED_USER`.
-  -H 'Content-Type: application/json' \
-  -d '{"username":"user","password":"pass"}'
 ```
 
-Si l'utilisateur appartient à l'un des groupes autorisés, la réponse contient la liste de ses groupes.
-
-=======
->>>>>>> main
+Les données (y compris les comptes) sont persistées dans le volume `data` défini dans `docker-compose.yml`.
 ---
 
 ## 🧪 Tests

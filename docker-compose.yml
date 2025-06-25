@@ -4,6 +4,8 @@ services:
     build: .
     expose:
       - "3000"
+    volumes:
+      - data:/app/data
   nginx:
     image: nginx:alpine
     ports:
@@ -12,3 +14,5 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - web
+volumes:
+  data:

@@ -9,7 +9,9 @@ import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import OpenAI from 'openai';
 import { marked } from 'marked';
-import { ConfidentialClientApplication } from "@azure/msal-node";
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import bcrypt from 'bcrypt';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -24,18 +26,31 @@ const openai = new OpenAI({
   }
 });
 
+let users = [];
+if (!authDisabled) {
+  try {
+    const data = await fs.readFile(path.join(__dirname, 'data', 'auth', 'users.json'), 'utf-8');
+    users = JSON.parse(data);
+  } catch {
+    console.warn('Aucun fichier users.json, aucun utilisateur chargé');
+  }
+}
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 if (!authDisabled) {
   app.use(session({
     secret: process.env.SESSION_SECRET || 'change_me',
     resave: false,
     saveUninitialized: false
   }));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-  const openPaths = ['/auth/login','/auth/redirect','/login.html'];
+  const openPaths = ['/auth/login', '/auth/logout', '/login.html'];
   app.use((req, res, next) => {
     if (openPaths.includes(req.path)) return next();
-    if (req.session && req.session.user) return next();
+    if (req.isAuthenticated()) return next();
     if (req.method === 'GET') return res.redirect('/login.html');
     return res.status(401).json({ error: 'Not authenticated' });
   });
@@ -45,47 +60,35 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-const msalConfig = {
-  auth: {
-    clientId: process.env.AZURE_CLIENT_ID,
-    authority: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}`,
-    clientSecret: process.env.AZURE_CLIENT_SECRET
-  }
-};
-const cca = new ConfidentialClientApplication(msalConfig);
-
-app.get('/auth/login', async (_req, res) => {
+passport.use(new LocalStrategy(async (username, password, done) => {
+  const user = users.find(u => u.username === username);
+  if (!user) return done(null, false);
   try {
-    const url = await cca.getAuthCodeUrl({
-      scopes: ['User.Read'],
-      redirectUri: process.env.AZURE_REDIRECT_URI
-    });
-    res.redirect(url);
-  } catch {
-    res.status(500).send('Failed to generate auth URL');
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return done(null, false);
+    return done(null, user);
+  } catch (err) {
+    return done(err);
   }
+}));
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => {
+  const user = users.find(u => u.id === id);
+  done(null, user || false);
 });
 
-app.get('/auth/redirect', async (req, res) => {
-  try {
-    const result = await cca.acquireTokenByCode({
-      code: req.query.code,
-      scopes: ['User.Read'],
-      redirectUri: process.env.AZURE_REDIRECT_URI
-    });
-    const email = result.account.username;
-    if (
-      process.env.ALLOWED_USER &&
-      email.toLowerCase() !== process.env.ALLOWED_USER.toLowerCase()
-    ) {
-      return res.status(403).send('User not allowed');
-    }
-    req.session.user = { email };
-    res.redirect('/');
-  } catch (err) {
-    console.error('Auth error', err);
-    res.status(500).send('Authentication error');
-  }
+app.post('/auth/login', passport.authenticate('local', {
+  failureRedirect: '/login.html'
+}), (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/auth/logout', (req, res, next) => {
+  req.logout(err => {
+    if (err) return next(err);
+    res.redirect('/login.html');
+  });
 });
 
 /* ---------- /api/landscape (inchangé) ------------------- */
