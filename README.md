@@ -8,10 +8,25 @@ Basé sur un fichier JSON, ce projet propose un tableau de bord léger pour repr
 
 ---
 
+## Table des matières
+
+- [🚀 Démo](#-démo)
+- [🏥 Contexte](#-contexte)
+- [🧩 Fonctionnalités](#-fonctionnalites)
+- [⚙️ Installation](#-installation)
+- [🛂 Authentification locale](#-authentification-locale-passportjs)
+- [🧪 Tests](#-tests)
+- [📈 Indicateurs affichés](#-indicateurs-affiches)
+- [📄 Exemples d’usage](#-exemples-dusage)
+- [🛠️ Roadmap](#-roadmap)
+- [🙌 Contribution](#-contribution)
+- [📄 Licence](#-licence)
+
 ## 🚀 Démo
 
-> 🧪 [Lien vers la démo](https://votresite.vercel.app) *(optionnel)*  
-> 📊 Exemple de jeu de données : [`landscape_sample_clean.json`](./data/landscape_sample.json)
+> 🧪 [Lien vers la démo](https://votresite.vercel.app) *(optionnel)*
+> 📊 Exemple de jeu de données : [`CH_La_Sainte_Patiente.json`](./data/CH_La_Sainte_Patiente.json)
+
 
 ---
 
@@ -83,10 +98,6 @@ ALLOWED_IPS="allow 185.15.24.118; allow 172.18.0.1;"
 ```
 
 Les données (y compris les comptes) sont persistées dans le volume `data` défini dans `docker-compose.yml`.
-
-### 🔗 Assistant IA (OpenAI)
-
-Pour activer le chat, renseignez les variables `OPENAI_API_KEY` et `ASSISTANT_ID` dans votre fichier `.env` ou vos variables d'environnement. Sans ces valeurs, l'endpoint `/api/chat` renvoie le code **503** et le serveur démarre en mode dégradé.
 
 ### 🔗 Assistant IA (OpenAI)
 
@@ -192,6 +203,9 @@ npm install
 ```
 
 Consulte le fichier [`CONTRIBUTING.md`](./CONTRIBUTING.md) pour plus de détails.
+
+### 🔐 Protection de la branche `main`
+Dans les paramètres du dépôt GitHub, rubrique **Settings > Branches**, ajoute une règle sur `main` pour interdire les push directs et exiger une revue avant fusion.
 
 ---
 
