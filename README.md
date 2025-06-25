@@ -24,9 +24,10 @@ Basé sur un fichier JSON, ce projet propose un tableau de bord léger pour repr
 
 ## 🚀 Démo
 
-> 🧪 [Lien vers la démo](https://votresite.vercel.app) *(optionnel)*
+> 🧪 [Démonstrateur](https://votresite.vercel.app)
 > 📊 Exemple de jeu de données : [`CH_La_Sainte_Patiente.json`](./data/CH_La_Sainte_Patiente.json)
 
+  ![image](https://github.com/user-attachments/assets/524ee5d7-3976-4100-9617-947df49fd6cc)
 
 ---
 
@@ -37,6 +38,7 @@ Conçu à partir de cas d’usage hospitaliers fictifs (ex. `Institut Alta`), ce
 - Visualiser rapidement les processus couverts par le système d'information
 - Identifier les redondances et mutualisations d'applications
 - Piloter la couverture fonctionnelle et technique de l’établissement
+
 
 ---
 
@@ -207,10 +209,7 @@ npm install
 
 Consulte le fichier [`CONTRIBUTING.md`](./CONTRIBUTING.md) pour plus de détails.
 
-### 🔐 Protection de la branche `main`
-Dans les paramètres du dépôt GitHub, rubrique **Settings > Branches**, ajoute une règle sur `main` pour interdire les push directs et exiger une revue avant fusion.
 
----
 
 ## 📄 Licence
 
