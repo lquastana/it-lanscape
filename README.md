@@ -58,7 +58,9 @@ Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
 Un fichier `docker-compose.yml` est fourni pour exécuter l'application derrière
 un serveur **Nginx**. Par défaut, seule l'adresse IP `185.15.24.118` est autorisée.
 Pour ajouter d'autres adresses, éditez `nginx.conf` et rajoutez des lignes
-`allow` supplémentaires.
+`allow` supplémentaires. Nginx expose également un accès **HTTPS** : placez vos
+certificats dans `./certs/cert.pem` et `./certs/key.pem` pour activer la
+connexion sécurisée sur le port `443`.
 
 ```bash
 docker-compose build
