@@ -47,7 +47,7 @@ if (!authDisabled) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  const openPaths = ['/auth/login', '/auth/logout', '/login.html'];
+  const openPaths = ['/auth/login', '/login.html'];
   app.use((req, res, next) => {
     if (openPaths.includes(req.path)) return next();
     if (req.isAuthenticated()) return next();
@@ -85,6 +85,7 @@ app.post('/auth/login', passport.authenticate('local', {
 });
 
 app.get('/auth/logout', (req, res, next) => {
+  if (!req.isAuthenticated()) return res.redirect('/login.html');
   req.logout(err => {
     if (err) return next(err);
     res.redirect('/login.html');
