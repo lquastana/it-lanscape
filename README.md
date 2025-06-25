@@ -57,7 +57,7 @@ Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
 
 Un fichier `docker-compose.yml` est fourni pour exécuter l'application derrière
 un serveur **Nginx**. Les adresses autorisées sont définies via la variable
-`ALLOWED_IPS` dans `.env.local` (voir le fichier exemple `.env.local.example`).
+`ALLOWED_IPS` dans `.env` (voir le fichier exemple `.env.local.example`).
 Nginx génère sa configuration au démarrage en utilisant cette valeur et expose
 également un accès **HTTPS** : placez vos certificats dans `./certs/cert.pem` et
 `./certs/key.pem` pour activer la connexion sécurisée sur le port `443`.
