@@ -9,7 +9,7 @@ services:
   nginx:
     image: nginx:alpine
     env_file:
-      - .env.local
+      - .env
     ports:
       - "80:80"
       - "443:443"
