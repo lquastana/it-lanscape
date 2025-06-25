@@ -479,23 +479,6 @@
               "description": "Optimisation du codage PMSI et suivi qualité.",
               "applications": [
                 {
-                  "nom": "PMSI Pilot",
-                  "description": "Pilotage qualité du codage PMSI.",
-                  "editeur": null,
-                  "referent": null,
-                  "hebergement": "CH Bastia",
-                  "multiEtablissement": false,
-                  "criticite": "Standard",
-                  "lienPRTG": null,
-                  "interfaces": {
-                    "Planification": false,
-                    "Facturation": false,
-                    "Administrative": false,
-                    "Medicale": false,
-                    "Autre": true
-                  }
-                },
-                {
                   "nom": "Outils ATIH",
                   "description": "Outils d'analyse et d'optimisation PMSI fournis par l'ATIH.",
                   "editeur": "ATIH",
@@ -542,28 +525,11 @@
               "description": "Pilotage budgétaire et financier de l’établissement.",
               "applications": [
                 {
-                  "nom": "PMSI Pilot",
-                  "description": "Pilotage financier lié au PMSI.",
-                  "editeur": null,
-                  "referent": null,
-                  "hebergement": "CH Bastia",
-                  "multiEtablissement": false,
-                  "criticite": "Standard",
-                  "lienPRTG": null,
-                  "interfaces": {
-                    "Planification": false,
-                    "Facturation": false,
-                    "Administrative": false,
-                    "Medicale": false,
-                    "Autre": true
-                  }
-                },
-                {
                   "nom": "Magellan",
                   "description": "Solution décisionnelle pour le contrôle budgétaire et financier.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CH Bastia",
+                  "hebergement": "CH Castelluccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
