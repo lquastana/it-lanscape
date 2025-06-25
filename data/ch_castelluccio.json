@@ -267,11 +267,90 @@
         },
         {
           "nom": "Support",
-          "description": "Applications logistiques et d’approvisionnement.",
+          "description": "Le domaine Support regroupe les fonctions logistiques, économiques et techniques nécessaires au bon fonctionnement de l’établissement.",
           "processus": [
+            {
+              "nom": "Hébergement",
+              "description": "Gestion de l’hôtellerie et de l’hébergement hospitalier",
+              "applications": []
+            },
+            {
+              "nom": "Portail achat PUI",
+              "description": "Portail d’achats pour la pharmacie à usage intérieur",
+              "applications": [
+                {
+                  "nom": "Hospitalis",
+                  "description": "Gestion des marchés et commandes PUI",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
             {
               "nom": "GEF / Inventaire",
               "description": "Gestion des équipements et inventaire",
+              "applications": [
+                {
+                  "nom": "Magh2",
+                  "description": "Suivi des immobilisations et inventaires",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Marché",
+              "description": "Gestion et suivi des marchés publics",
+              "applications": [
+                {
+                  "nom": "Marco",
+                  "description": "Suivi des procédures et contrats de marchés",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Lingerie",
+              "description": "Gestion du linge hospitalier",
+              "applications": []
+            },
+            {
+              "nom": "Magasin",
+              "description": "Gestion du magasin et des stocks",
               "applications": []
             }
           ]
