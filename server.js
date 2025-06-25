@@ -19,12 +19,17 @@ const PORT = process.env.PORT || 3000;
 
 const authDisabled = process.env.DISABLE_AUTH === 'true';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  defaultHeaders: {
-    "OpenAI-Beta": "assistants=v2"
-  }
-});
+let openai;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    defaultHeaders: {
+      "OpenAI-Beta": "assistants=v2"
+    }
+  });
+} else {
+  console.warn('OPENAI_API_KEY not set, /api/chat disabled');
+}
 
 let users = [];
 if (!authDisabled) {
@@ -110,6 +115,9 @@ app.get('/api/landscape', async (_req, res) => {
 });
 
 app.post('/api/chat', async (req, res) => {
+  if (!openai || !process.env.ASSISTANT_ID) {
+    return res.status(503).json({ error: 'Assistant not configured' });
+  }
   const question = req.body.question?.trim();
   let threadId = req.body.threadId;
 
