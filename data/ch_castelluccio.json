@@ -1,2 +1,1226 @@
 {
-  "etablissements":[{ "nom": "CH Castelluccio",       "domaines": [] }]}
+  "etablissements": [
+    {
+      "nom": "CH Castelluccio",
+      "domaines": [
+        {
+          "nom": "DP Commun",
+          "description": "Applications transversales DPI, pharmacie.",
+          "processus": [
+            {
+              "nom": "DPI",
+              "description": "Dossier Patient Informatisé.",
+              "applications": [
+                {
+                  "nom": "DxCare",
+                  "description": "Dossier clinique centralisé du patient.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "DxPlanning",
+                  "description": "Module intégré de planification des ressources médicales et administratives.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Base Médicaments",
+              "description": "Base de données médicamenteuses",
+              "applications": [
+                {
+                  "nom": "VIDAL",
+                  "description": "Base de données et sécurisation des prescriptions médicamenteuses.",
+                  "editeur": "Vidal",
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Tracabilité DMI",
+              "description": "Suivi des dispositifs médicaux implantables",
+              "applications": [
+                {
+                  "nom": "Newac",
+                  "description": "Traçabilité des dispositifs médicaux",
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Repas",
+              "description": "Gestion et suivi des repas",
+              "applications": [
+                {
+                  "nom": "Hestia",
+                  "description": "Dédiée aux établissements de soins, cette solution Web couvre la prise des commandes de repas quels que soient le profil des convives (patients, résidents, personnels) et leurs contraintes alimentaires (régimes, textures, portions, grammages, allergies, aversions, etc.), mais aussi la gestion de la production culinaire (prévisions, commandes fournisseurs, fabrications, traçabilité, …), ou encore le suivi des ingesta pour prévenir la dénutrition des publics fragilisés.",
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Administrative": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Pharmacie",
+              "description": "Gestion de la pharmacie",
+              "applications": [
+                {
+                  "nom": "Genois",
+                  "description": "Gestion des stocks et des prescriptions pharmacie",
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "interfaces": {
+                    "Administrative": true,
+                    "Facturation": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Administrative",
+          "description": "Gestion administrative du parcours patient.",
+          "processus": [
+            {
+              "nom": "Dépôt de valeurs",
+              "description": "Gestion du dépôt et stockage sécurisé des valeurs des patients.",
+              "applications": []
+            },
+            {
+              "nom": "GAP",
+              "description": "Gestion Administrative du Patient (admissions, identités, mouvements).",
+              "applications": [
+                {
+                  "nom": "Trakcare",
+                  "description": "Gestion administrative du patient, suivi administratif et gestion des mouvements.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Droits",
+              "description": "Gestion des droits administratifs et des couvertures sociales des patients.",
+              "applications": [
+                {
+                  "nom": "CDRi",
+                  "description": "Gestion des droits administratifs, couverture sociale et facturation patient.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Tutelles / Curatelles",
+              "description": "Suivi des mesures de protection juridique.",
+              "applications": [
+                {
+                  "nom": "Élap TUTELLE",
+                  "description": "Gestion des tutelles et curatelles.",
+                  "editeur": "Médiane",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Spécialités",
+          "description": "Dossiers et outils spécifiques aux spécialités médicales.",
+          "processus": [
+            {
+              "nom": "Urgences",
+              "description": "Prise en charge des passages aux urgences",
+              "applications": []
+            },
+            {
+              "nom": "Hospitalisation à domicile",
+              "description": "Suivi des patients en HAD",
+              "applications": []
+            },
+            {
+              "nom": "Spy",
+              "description": "Suivi psychiatrique",
+              "applications": [
+                {
+                  "nom": "Cora",
+                  "description": "Gestion des dossiers en psychiatrie",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Addicto",
+              "description": "Suivi des patients en addictologie",
+              "applications": [
+                {
+                  "nom": "éO Addictions",
+                  "description": "Gestion des prises en charge addictologiques",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Support",
+          "description": "Le domaine Support regroupe les fonctions logistiques, économiques et techniques nécessaires au bon fonctionnement de l’établissement.",
+          "processus": [
+            {
+              "nom": "Hébergement",
+              "description": "Gestion de l’hôtellerie et de l’hébergement hospitalier",
+              "applications": []
+            },
+            {
+              "nom": "Portail achat PUI",
+              "description": "Portail d’achats pour la pharmacie à usage intérieur",
+              "applications": [
+                {
+                  "nom": "Hospitalis",
+                  "description": "Gestion des marchés et commandes PUI",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GEF / Inventaire",
+              "description": "Gestion des équipements et inventaire",
+              "applications": [
+                {
+                  "nom": "Magh2",
+                  "description": "Suivi des immobilisations et inventaires",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Marché",
+              "description": "Gestion et suivi des marchés publics",
+              "applications": [
+                {
+                  "nom": "Marco",
+                  "description": "Suivi des procédures et contrats de marchés",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Lingerie",
+              "description": "Gestion du linge hospitalier",
+              "applications": []
+            },
+            {
+              "nom": "Magasin",
+              "description": "Gestion du magasin et des stocks",
+              "applications": []
+            }
+          ]
+        },
+        {
+          "nom": "Communication / Collaboration",
+          "description": "Outils de messagerie, d’accès web et de partage documentaire.",
+          "processus": [
+            {
+              "nom": "Bureautique",
+              "description": "Messagerie et agenda interne",
+              "applications": [
+                {
+                  "nom": "Exchange",
+                  "description": "Serveur de messagerie professionnelle Microsoft Exchange pour les emails et calendriers internes.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Portail web externe",
+              "description": "Portail web personnalisé pour la communication externe",
+              "applications": [
+                {
+                  "nom": "Dev. spécifique",
+                  "description": "Accès web dédié aux patients et partenaires.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Intranet",
+              "description": "Espace collaboratif interne",
+              "applications": []
+            },
+            {
+              "nom": "GED",
+              "description": "Gestion Électronique de Documents",
+              "applications": [
+                {
+                  "nom": "FileNet",
+                  "description": "Plateforme GED IBM pour l’archivage et la traçabilité documentaire.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Dossier médico-techniques",
+          "description": "Plateaux techniques et imagerie.",
+          "processus": [
+            {
+              "nom": "Imagerie",
+              "description": "RIS et gravure médias",
+              "applications": []
+            },
+            {
+              "nom": "Télémédecine",
+              "description": "Télé-imagerie et téléconsultation",
+              "applications": []
+            }
+          ]
+        },
+        {
+          "nom": "Gestion",
+          "description": "Ressources humaines, paie, finances et gestion du personnel.",
+          "processus": [
+            {
+              "nom": "Paie",
+              "description": "Gestion de la paie du personnel hospitalier.",
+              "applications": [
+                {
+                  "nom": "PH7",
+                  "description": "Solution de paie pour le personnel hospitalier.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "RH",
+              "description": "Gestion des ressources humaines.",
+              "applications": [
+                {
+                  "nom": "AGIRH",
+                  "description": "SIRH pour le suivi du personnel et les dossiers RH.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Facturation",
+              "description": "Facturation des soins et actes médicaux.",
+              "applications": [
+                {
+                  "nom": "Trakcare",
+                  "description": "Facturation des séjours, actes, diagnostics et RSS.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Formation GPMC",
+              "description": "Gestion prévisionnelle des emplois et compétences.",
+              "applications": [
+                {
+                  "nom": "Gesform",
+                  "description": "Suivi des formations et GPEC.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Temps non médical",
+              "description": "Gestion du temps de travail du personnel non médical.",
+              "applications": [
+                {
+                  "nom": "Octime",
+                  "description": "Gestion du temps de travail du personnel non médical.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Temps médical",
+              "description": "Gestion du temps de travail des praticiens.",
+              "applications": [
+                {
+                  "nom": "AGIRH GTT",
+                  "description": "Module AGIRH pour le suivi du temps médical.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Qualité & Risques",
+          "description": "Gestion de la qualité et des risques sanitaires.",
+          "processus": [
+            {
+              "nom": "Qualité / Risque",
+              "description": "Gestion documentaire qualité et suivi des indicateurs.",
+              "applications": [
+                {
+                  "nom": "Yes",
+                  "description": "Solution de gestion documentaire qualité et gestion des risques.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Plan Blanc",
+              "description": "Gestion des situations d'urgence sanitaire et crise.",
+              "applications": []
+            }
+          ]
+        },
+        {
+          "nom": "Efficience / PMSI",
+          "description": "Pilotage de l’activité, codage PMSI et optimisation médico-économique.",
+          "processus": [
+            {
+              "nom": "Actes, diag. RSS",
+              "description": "Saisie et contrôle des actes, diagnostics et Résumés de Sortie Standardisés (RSS).",
+              "applications": [
+                {
+                  "nom": "Trakcare",
+                  "description": "Gestion administrative et facturation des actes médicaux et RSS.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Qualité optimisation",
+              "description": "Optimisation du codage PMSI et suivi qualité.",
+              "applications": [
+                {
+                  "nom": "Outils ATIH",
+                  "description": "Outils d'analyse et d'optimisation PMSI fournis par l'ATIH.",
+                  "editeur": "ATIH",
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Requeteur",
+              "description": "Outils décisionnels et reporting d'activité.",
+              "applications": [
+                {
+                  "nom": "BO",
+                  "description": "BusinessObjects – requêtes et reporting d'activité.",
+                  "editeur": "SAP",
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Contrôle de Gestion",
+              "description": "Pilotage budgétaire et financier de l’établissement.",
+              "applications": [
+                {
+                  "nom": "Magellan",
+                  "description": "Solution décisionnelle pour le contrôle budgétaire et financier.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Échange de données",
+          "description": "Ce domaine regroupe les solutions assurant l’intégration, l’interopérabilité et la diffusion des données entre les systèmes d’information de santé.",
+          "processus": [
+            {
+              "nom": "MSS",
+              "description": "Messagerie Sécurisée de Santé",
+              "applications": [
+                {
+                  "nom": "Medimail",
+                  "description": "Application de messagerie sécurisée utilisée pour l’échange de données de santé entre professionnels.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "EAI",
+              "description": "Échange et Partage de Données via Bus d’intégration",
+              "applications": [
+                {
+                  "nom": "Enovacom",
+                  "description": "Plateforme d’interopérabilité multi-établissements.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "Antares",
+                  "description": "Bus d’intégration dédié aux applications locales.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Référentiels",
+              "description": "Référentiels partagés pour l’identification des ressources et structures.",
+              "applications": [
+                {
+                  "nom": "ROR",
+                  "description": "Répertoire Opérationnel des Ressources.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "CIODC",
+                  "description": "Référentiel d’identité et structures sanitaires.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "CIODM",
+                  "description": "Référentiel de données commun.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Cyber sécurité",
+          "description": "Protection, détection et sensibilisation.",
+          "processus": [
+            {
+              "nom": "Gestion des accès",
+              "description": "Accès distants et bastions.",
+              "applications": [
+                {
+                  "nom": "Splashtop",
+                  "description": "Accès bureau distant sécurisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Systancia Bastion",
+                  "description": "Bastion d’administration.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Lockself",
+                  "description": "Coffre-fort mots de passe.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Audit",
+              "description": "Contrôle de la posture sécurité.",
+              "applications": [
+                {
+                  "nom": "Board of Cyberex",
+                  "description": "Tableaux de bord cyber.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Prévention des intrusions",
+              "description": "Pare-feu, antivirus, filtrage.",
+              "applications": [
+                {
+                  "nom": "Fortinet",
+                  "description": "Pare-feu réseau.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Vade m365 mail",
+                  "description": "Antispam Office 365.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Sentinel anti-virus",
+                  "description": "Protection endpoints.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Supervision des menaces",
+              "description": "SOC et veille CTI.",
+              "applications": [
+                {
+                  "nom": "Orange Micro SOC",
+                  "description": "Service SOC externalisé (surveillance, détection, réponse).",
+                  "editeur": "Orange Cyberdefense",
+                  "referent": "David Lecerf",
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Sekoia exploitation",
+                  "description": "Plate-forme CTI / SIEM.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Sensibilisation",
+              "description": "Formation utilisateurs.",
+              "applications": [
+                {
+                  "nom": "Avant de cliquer",
+                  "description": "Campagnes d’hameçonnage simulé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Outils techniques",
+          "description": "Maintenance, supervision, téléphonie.",
+          "processus": [
+            {
+              "nom": "Supervision SI",
+              "description": "Monitoring applicatif et réseau.",
+              "applications": [
+                {
+                  "nom": "PRTG",
+                  "description": "Surveillance en temps réel de l'infrastructure.",
+                  "editeur": "Paessler AG",
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GLPI",
+              "description": "Gestion de parc et support.",
+              "applications": [
+                {
+                  "nom": "Gestup",
+                  "description": "Inventaire matériel et gestion des demandes de support.",
+                  "editeur": "Gestup",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GTC",
+              "description": "Gestion Technique Centralisée pour les bâtiments et infrastructures.",
+              "applications": [
+                {
+                  "nom": "WIT",
+                  "description": "Contrôle et automatisation technique des bâtiments.",
+                  "editeur": "TECLIB",
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Téléphonie",
+              "description": "Téléphonie fixe",
+              "applications": []
+            }
+          ]
+        },
+        {
+          "nom": "Sureté",
+          "description": "Protection physique des locaux et contrôle d’accès.",
+          "processus": [
+            {
+              "nom": "Contrôle des clés",
+              "description": "Gestion centralisée des clés et autorisations d’accès aux locaux sensibles.",
+              "applications": [
+                {
+                  "nom": "SIP",
+                  "description": "Application de gestion des clés et serrures, permettant de tracer les détenteurs et les droits d’accès.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Annuaire & ref. internes",
+          "description": "Référentiels organisation & finances.",
+          "processus": [
+            {
+              "nom": "Comptes budgétaires",
+              "description": "Ce processus vise à référencer et structurer les comptes budgétaires utilisés pour le suivi financier, les engagements comptables, et les analyses économiques internes.",
+              "applications": [
+                {
+                  "nom": "Magh2",
+                  "description": "Outil de gestion économique et financière incluant la gestion budgétaire, les imputations analytiques, et l’inventaire.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Structures & nomenclatures",
+              "description": "Ce processus permet de gérer les référentiels internes (unités fonctionnelles, services, structures organisationnelles) nécessaires à l’interopérabilité des outils SI.",
+              "applications": [
+                {
+                  "nom": "Convergence",
+                  "description": "Référentiel organisationnel utilisé pour structurer les nomenclatures internes, interfacé avec d’autres outils SI pour assurer la cohérence des données.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Castelluccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
