@@ -24,7 +24,7 @@ Basé sur un fichier JSON, ce projet propose un tableau de bord léger pour repr
 
 ## 🚀 Démo
 
-> 🧪 [Démonstrateur](https://votresite.vercel.app)
+> 🧪 [Démonstrateur](https://it-lanscape-production.up.railway.app/)
 > 📊 Exemple de jeu de données : [`CH_La_Sainte_Patiente.json`](./data/CH_La_Sainte_Patiente.json)
 
   ![image](https://github.com/user-attachments/assets/524ee5d7-3976-4100-9617-947df49fd6cc)
