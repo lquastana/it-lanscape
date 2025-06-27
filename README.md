@@ -3,7 +3,7 @@
 **Visualisation simple et modulaire d'une cartographie applicative hospitalière**  
 Basé sur un fichier JSON, ce projet propose un tableau de bord léger pour représenter les domaines, processus et applications d’un établissement de santé.
 
-[![Build](https://github.com/votre_user/it-landscape/actions/workflows/test.yml/badge.svg)](https://github.com/votre_user/it-landscape/actions/workflows/test.yml)
+[![Build](https://github.com/lquastana/it-landscape/actions/workflows/test.yml/badge.svg)](https://github.com/lquastana/it-landscape/actions/workflows/test.yml)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 [![Demo](https://img.shields.io/badge/demo-live-green)](https://it-lanscape-production.up.railway.app/)
 ![Node](https://img.shields.io/badge/node-%3E%3D14.0-brightgreen)
