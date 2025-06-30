@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>{{APP_TITLE}}</title>
+  <title>Cartographie des Hôpitaux Publics de Corse</title>
 
   <style>
     /* ======== Styles généraux ======== */
@@ -90,7 +90,7 @@
 <body>
   <!-- ======== Bandeau héro ======== -->
   <header class="hero">
-    <h1>{{APP_TITLE}}</h1>
+    <h1>Cartographie des Hôpitaux Publics de Corse</h1>
     <p>Explorez les domaines, processus et applications.</p>
   </header>
 
@@ -139,12 +139,8 @@
                            Facturation:'#f44336',Autre:'#9e9e9e'};
     const domainColors=['#e5f4fd','#fbf4e9','#eaf7eb','#f9ebf2','#ede8fd','#fdf3e5'];
     const dpDomains=['DP Spécialités','DP Administrative','DP Commun','Dossier médico-techniques'];
-    const criticityColor=l=>['Haute','Critique'].includes(l)?'#d32f2f':'#616161';
+    const criticityColor=l=>['Critique'].includes(l)?'#d32f2f':'#616161';
     let domainIndex=0,fullData=null;
-
-    function esc(s){
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
 
     /* ---------- threadId persistant ---------- */
     let threadId=localStorage.getItem('chat_thread_id')||null;
@@ -217,7 +213,6 @@
         procAppsMap:{},
         dpAppTotal:0,
         ifaceCoverage:{},
-        critHaute:0,
         critStandard:0,
         critCritique:0,
         hebergCounts:{},
@@ -255,21 +250,20 @@
             metrics.procTotal++;
             metrics.procAppsTotal+=proc.applications.length;
             const pDiv=document.createElement('div');pDiv.className='process';
-            pDiv.innerHTML=`<h4>${esc(proc.nom)}</h4><p>${esc(proc.description)}</p>`;
+            pDiv.innerHTML=`<h4>${proc.nom}</h4><p>${proc.description}</p>`;
             const appWrap=document.createElement('div');appWrap.className='apps';
             let hasApp=false;
 
             proc.applications.forEach(app=>{
               const critOk=!f.criticite||
-                (f.criticite==='Standard'&&!['Haute','Critique'].includes(app.criticite))||
-                (f.criticite==='Haute'&&['Haute','Critique'].includes(app.criticite));
+                (f.criticite==='Standard'&&!['Critique'].includes(app.criticite))||
+                (f.criticite==='Critique'&&['Critique'].includes(app.criticite));
               const intOk=!f.interface||app.interfaces[f.interface];
               const multiOk=!f.multi||((f.multi==='Oui')===app.multiEtablissement);
               if(!critOk||(f.heberg&&app.hebergement!==f.heberg)||!intOk||!multiOk) return;
 
               metrics.appShown++;
-              if(app.criticite==='Haute') metrics.critHaute++;
-              else if(app.criticite==='Critique') metrics.critCritique++;
+              if(app.criticite==='Critique') metrics.critCritique++;
               else metrics.critStandard++;
               metrics.hebergCounts[app.hebergement]=(metrics.hebergCounts[app.hebergement]||0)+1;
               metrics.fieldsTotal+=3;
@@ -302,8 +296,8 @@
                 }
               });
               aDiv.appendChild(iface);
-              aDiv.innerHTML+=`<p>${esc(app.description)}</p><p style="font-style:italic;color:#666">
-                                Hébergement : ${esc(app.hebergement)}</p>`;
+              aDiv.innerHTML+=`<p>${app.description}</p><p style="font-style:italic;color:#666">
+                                Hébergement : ${app.hebergement}</p>`;
               appWrap.appendChild(aDiv);
             });
 
@@ -400,7 +394,7 @@
     /* Append message au log */
     function addMsg(txt,cls){
       const div=document.createElement('div');
-      div.className=`chat-msg ${cls}`;div.innerHTML=esc(txt);
+      div.className=`chat-msg ${cls}`;div.innerHTML=txt;
       chatLog.appendChild(div);chatLog.scrollTop=chatLog.scrollHeight;
     }
 
@@ -410,7 +404,7 @@
       const proc=(m.procTotal?((m.procWithApps/m.procTotal)*100):0).toFixed(1);
       const appAlign=m.alignPct||'0.0';
       const mut=(m.appShown?((m.multi/m.appShown)*100):0).toFixed(1);
-      const critTotal=m.critHaute+m.critStandard+m.critCritique;
+      const critTotal=m.critStandard+m.critCritique;
       const hebergTotal=Object.values(m.hebergCounts).reduce((a,b)=>a+b,0);
       const complPct=m.fieldsTotal?((m.fieldsFilled/m.fieldsTotal)*100).toFixed(1):'0.0';
 
@@ -419,7 +413,6 @@
 
       let critHTML='';
       const cs=critTotal?((m.critStandard/critTotal)*100).toFixed(1):'0.0';
-      const ch=critTotal?((m.critHaute/critTotal)*100).toFixed(1):'0.0';
       const cc=critTotal?((m.critCritique/critTotal)*100).toFixed(1):'0.0';
       critHTML+=`<li>Standard : ${m.critStandard} (${cs}%) ${bar(cs,'#4caf50')}</li>`;
       critHTML+=`<li>Critique : ${m.critCritique} (${cc}%) ${bar(cc,'#d32f2f')}</li>`;
