@@ -100,8 +100,8 @@
     <div class="legend" id="legend"></div>
 
     <div class="filters">
-      <label>Établissement : <select id="filter-etab"><option value="">Tous</option></select></label>
-      <label>Domaine : <select id="filter-domaine"><option value="">Tous</option></select></label>
+      <label>Établissement : <select id="filter-etab" multiple size="4"><option value="">Tous</option></select></label>
+      <label>Domaine : <select id="filter-domaine" multiple size="4"><option value="">Tous</option></select></label>
       <label>Criticité : <select id="filter-criticite"><option value="">Tous</option>
                          <option value="Standard">Standard</option><option value="Critique">Critique</option></select></label>
       <label>Hébergement : <select id="filter-heberg"><option value="">Tous</option></select></label>
@@ -195,9 +195,11 @@
 
     /* ---------- Rendu cartographie ---------- */
     function render(){
+      const multiSelectValues=id=>[...document.getElementById(id).selectedOptions]
+                                    .map(o=>o.value).filter(v=>v);
       const f={
-        etab:document.getElementById('filter-etab').value,
-        domaine:document.getElementById('filter-domaine').value,
+        etab:multiSelectValues('filter-etab'),
+        domaine:multiSelectValues('filter-domaine'),
         criticite:document.getElementById('filter-criticite').value,
         heberg:document.getElementById('filter-heberg').value,
         interface:document.getElementById('filter-interface').value,
@@ -222,7 +224,7 @@
         alignOk:0
       };
       fullData.etablissements.forEach(etab=>{
-        if(f.etab&&f.etab!==etab.nom)return;
+        if(f.etab.length && !f.etab.includes(etab.nom))return;
         const etabDiv=document.createElement('div');
         const h2=document.createElement('h2');h2.textContent=etab.nom;h2.style.cursor='pointer';
         const etabContent=document.createElement('div');
@@ -238,7 +240,7 @@
               });
             }));
           }
-          if(f.domaine&&f.domaine!==dom.nom)return;
+          if(f.domaine.length && !f.domaine.includes(dom.nom))return;
           const dDiv=document.createElement('div');dDiv.className='domain';
           dDiv.style.backgroundColor=domainColors[domainIndex++%domainColors.length];
 
