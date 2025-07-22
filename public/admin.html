@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Administration JSON</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:20px;}
+    select,textarea,button{width:100%;margin-bottom:12px;}
+    textarea{height:60vh;}
+    button{background:#1B75BC;color:#fff;border:none;padding:10px;border-radius:4px;cursor:pointer;}
+    #msg{font-weight:bold;}
+  </style>
+</head>
+<body>
+  <h1>Édition des fichiers JSON</h1>
+  <select id="file-select"></select>
+  <textarea id="file-content"></textarea>
+  <button id="save">Enregistrer</button>
+  <div id="msg"></div>
+  <script>
+    async function loadFiles(){
+      const res=await fetch('/api/files');
+      const {files}=await res.json();
+      const sel=document.getElementById('file-select');
+      files.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;sel.appendChild(o);});
+      sel.onchange();
+    }
+    document.getElementById('file-select').onchange=async function(){
+      const f=this.value;if(!f)return;
+      const res=await fetch('/api/file/'+f);
+      document.getElementById('file-content').value=await res.text();
+      document.getElementById('msg').textContent='';
+    };
+    document.getElementById('save').onclick=async function(){
+      const f=document.getElementById('file-select').value;
+      const txt=document.getElementById('file-content').value;
+      try{
+        const json=JSON.parse(txt);
+        const res=await fetch('/api/file/'+f,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(json)});
+        document.getElementById('msg').textContent=res.ok?'Enregistré':'Erreur';
+      }catch(e){
+        document.getElementById('msg').textContent='JSON invalide';
+      }
+    };
+    loadFiles();
+  </script>
+</body>
+</html>
