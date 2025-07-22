@@ -2,46 +2,154 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Administration JSON</title>
+  <title>Administration</title>
   <style>
     body{font-family:Arial,sans-serif;margin:20px;}
-    select,textarea,button{width:100%;margin-bottom:12px;}
-    textarea{height:60vh;}
-    button{background:#1B75BC;color:#fff;border:none;padding:10px;border-radius:4px;cursor:pointer;}
-    #msg{font-weight:bold;}
+    select,button{margin-bottom:12px;}
+    .domain,.process,.app{border:1px solid #ccc;padding:8px;border-radius:6px;margin-bottom:6px;}
+    .process{margin-left:20px;}
+    .app{margin-left:40px;}
+    .actions button{margin-right:6px;}
+    dialog{border:none;border-radius:8px;padding:20px;}
+    dialog::backdrop{background:rgba(0,0,0,0.3);}
   </style>
 </head>
 <body>
-  <h1>Édition des fichiers JSON</h1>
+  <h1>Administration des données</h1>
   <select id="file-select"></select>
-  <textarea id="file-content"></textarea>
   <button id="save">Enregistrer</button>
-  <div id="msg"></div>
+  <div id="msg" style="font-weight:bold;"></div>
+  <div id="content"></div>
+
+  <dialog id="editor">
+    <form method="dialog" id="edit-form"></form>
+  </dialog>
+
   <script>
+    let currentFile=null, data=null, editing=null;
+
     async function loadFiles(){
       const res=await fetch('/api/files');
       const {files}=await res.json();
       const sel=document.getElementById('file-select');
+      sel.innerHTML='<option value="">-- fichier --</option>';
       files.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;sel.appendChild(o);});
-      sel.onchange();
     }
+
     document.getElementById('file-select').onchange=async function(){
-      const f=this.value;if(!f)return;
-      const res=await fetch('/api/file/'+f);
-      document.getElementById('file-content').value=await res.text();
+      currentFile=this.value;
+      if(!currentFile)return;
+      const res=await fetch('/api/file/'+currentFile);
+      data=await res.json();
+      render();
       document.getElementById('msg').textContent='';
     };
+
+    function render(){
+      const cont=document.getElementById('content');
+      cont.innerHTML='';
+      if(!data)return;
+      data.etablissements.forEach((etab,eIdx)=>{
+        const ediv=document.createElement('div');
+        ediv.innerHTML='<h2>'+etab.nom+'</h2>';
+        etab.domaines.forEach((dom,dIdx)=>{
+          const d=document.createElement('div');d.className='domain';
+          d.innerHTML='<h3>'+dom.nom+'</h3>';
+          const btnAdd=document.createElement('button');btnAdd.textContent='Ajouter processus';
+          btnAdd.onclick=()=>editProcess(eIdx,dIdx,null);
+          d.appendChild(btnAdd);
+          dom.processus.forEach((proc,pIdx)=>{
+            const p=document.createElement('div');p.className='process';
+            const header=document.createElement('div');
+            header.textContent=proc.nom;
+            const acts=document.createElement('span');acts.className='actions';
+            const bEdit=document.createElement('button');bEdit.textContent='Modifier';bEdit.onclick=()=>editProcess(eIdx,dIdx,pIdx);
+            const bDel=document.createElement('button');bDel.textContent='Supprimer';bDel.onclick=()=>{if(confirm('Supprimer ?')){dom.processus.splice(pIdx,1);render();}};
+            const bAddApp=document.createElement('button');bAddApp.textContent='Ajouter application';bAddApp.onclick=()=>editApp(eIdx,dIdx,pIdx,null);
+            acts.append(bEdit,bDel,bAddApp);header.appendChild(acts);p.appendChild(header);
+            proc.applications.forEach((app,aIdx)=>{
+              const a=document.createElement('div');a.className='app';
+              const h=document.createElement('div');h.textContent=app.nom;
+              const aa=document.createElement('span');aa.className='actions';
+              const eb=document.createElement('button');eb.textContent='Modifier';eb.onclick=()=>editApp(eIdx,dIdx,pIdx,aIdx);
+              const db=document.createElement('button');db.textContent='Supprimer';db.onclick=()=>{if(confirm('Supprimer ?')){proc.applications.splice(aIdx,1);render();}};
+              aa.append(eb,db);h.appendChild(aa);a.appendChild(h);
+              p.appendChild(a);
+            });
+            d.appendChild(p);
+          });
+          ediv.appendChild(d);
+        });
+        cont.appendChild(ediv);
+      });
+    }
+
+    function editProcess(eIdx,dIdx,pIdx){
+      editing={type:'process',eIdx,dIdx,pIdx};
+      const proc=pIdx!=null? data.etablissements[eIdx].domaines[dIdx].processus[pIdx]:{nom:'',description:'',applications:[]};
+      const form=document.getElementById('edit-form');
+      form.innerHTML='<h3>Processus</h3>'+
+        '<label>Nom<input name="nom" value="'+proc.nom+'" required></label><br>'+
+        '<label>Description<input name="description" value="'+proc.description+'"></label><br>'+
+        '<menu><button value="cancel">Annuler</button><button value="ok">OK</button></menu>';
+      const dlg=document.getElementById('editor');
+      dlg.returnValue='cancel';
+      dlg.showModal();
+      form.onsubmit=(e)=>{
+        e.preventDefault();
+        const f=new FormData(form);
+        const obj={nom:f.get('nom'),description:f.get('description'),applications:proc.applications||[]};
+        if(pIdx==null) data.etablissements[eIdx].domaines[dIdx].processus.push(obj);
+        else Object.assign(proc,obj);
+        dlg.close('ok');
+        render();
+      };
+      dlg.onclose=()=>{};
+    }
+
+    function editApp(eIdx,dIdx,pIdx,aIdx){
+      editing={type:'app',eIdx,dIdx,pIdx,aIdx};
+      const app=aIdx!=null? data.etablissements[eIdx].domaines[dIdx].processus[pIdx].applications[aIdx]:{nom:'',description:'',editeur:'',referent:'',hebergement:'',multiEtablissement:false,criticite:'Standard',lienPRTG:null,interfaces:{Planification:false,Facturation:false,Administrative:false,Medicale:false,Autre:false}};
+      const form=document.getElementById('edit-form');
+      form.innerHTML='<h3>Application</h3>'+
+        '<label>Nom<input name="nom" value="'+app.nom+'" required></label><br>'+
+        '<label>Description<input name="description" value="'+app.description+'"></label><br>'+
+        '<label>Éditeur<input name="editeur" value="'+(app.editeur||'')+'"></label><br>'+
+        '<label>Référent<input name="referent" value="'+(app.referent||'')+'"></label><br>'+
+        '<label>Hébergement<input name="hebergement" value="'+(app.hebergement||'')+'"></label><br>'+
+        '<label>Criticité<select name="criticite"><option '+(app.criticite==='Standard'?'selected':'')+'>Standard</option><option '+(app.criticite==='Critique'?'selected':'')+'>Critique</option></select></label><br>'+
+        '<label>Multi-établissement<input type="checkbox" name="multi" '+(app.multiEtablissement?'checked':'')+'></label><br>'+
+        '<menu><button value="cancel">Annuler</button><button value="ok">OK</button></menu>';
+      const dlg=document.getElementById('editor');
+      dlg.returnValue='cancel';
+      dlg.showModal();
+      form.onsubmit=(e)=>{
+        e.preventDefault();
+        const f=new FormData(form);
+        const obj={
+          nom:f.get('nom'),
+          description:f.get('description'),
+          editeur:f.get('editeur')||null,
+          referent:f.get('referent')||null,
+          hebergement:f.get('hebergement'),
+          multiEtablissement:f.get('multi')==='on',
+          criticite:f.get('criticite'),
+          lienPRTG:app.lienPRTG||null,
+          interfaces:app.interfaces||{Planification:false,Facturation:false,Administrative:false,Medicale:false,Autre:false}
+        };
+        if(aIdx==null) data.etablissements[eIdx].domaines[dIdx].processus[pIdx].applications.push(obj);
+        else Object.assign(app,obj);
+        dlg.close('ok');
+        render();
+      };
+    }
+
     document.getElementById('save').onclick=async function(){
-      const f=document.getElementById('file-select').value;
-      const txt=document.getElementById('file-content').value;
-      try{
-        const json=JSON.parse(txt);
-        const res=await fetch('/api/file/'+f,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(json)});
-        document.getElementById('msg').textContent=res.ok?'Enregistré':'Erreur';
-      }catch(e){
-        document.getElementById('msg').textContent='JSON invalide';
-      }
+      if(!currentFile||!data)return;
+      const res=await fetch('/api/file/'+currentFile,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data,null,2)});
+      document.getElementById('msg').textContent=res.ok?'Enregistré':'Erreur';
     };
+
     loadFiles();
   </script>
 </body>
