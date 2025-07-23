@@ -43,7 +43,7 @@ Conçu à partir de cas d’usage hospitaliers fictifs (ex. `Institut Alta`), ce
 ## ⚙️ Installation
 
 Le projet est maintenant unifié : un seul `package.json` contient toutes les dépendances
-du serveur Express et du front-end Next.js situé dans `./frontend`.
+du front-end et des routes API Next.js situées dans `./frontend`.
 
 ```bash
 npm install
@@ -56,8 +56,8 @@ npm install
 npm start
 ```
 
-Cette commande démarre à la fois l'API Express et l'interface Next.js.
-L'interface et l'API sont disponibles sur http://localhost:3001
+Cette commande lance Next.js ainsi que les routes API intégrées.
+L'interface et l'API sont disponibles sur http://localhost:3000
 
 ### 🐳 Déploiement Docker avec Nginx
 
