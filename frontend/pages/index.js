@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
+import { motion } from 'framer-motion';
+import '../styles/globals.css';
+import { Button } from '../components/ui/button';
 
 export default function Home() {
   useEffect(() => {
@@ -448,8 +451,11 @@ export default function Home() {
     #chat-q{flex:1;padding:8px;border-radius:8px;border:1px solid #ccc;}
       `}</style>
       <header className="hero">
-        <h1>Cartographie des Hôpitaux Publics de Corse</h1>
+        <motion.h1 initial={{opacity:0, y:-10}} animate={{opacity:1, y:0}} transition={{duration:0.5}}>
+          Cartographie des Hôpitaux Publics de Corse
+        </motion.h1>
         <p>Explorez les domaines, processus et applications.</p>
+        <Button className="mt-4" onClick={() => window.scrollTo({top: document.getElementById('content').offsetTop, behavior: 'smooth'})}>Voir la cartographie</Button>
       </header>
       <section className="legend-wrapper">
         <h2 className="legend-title">Légende &amp; Filtres</h2>
