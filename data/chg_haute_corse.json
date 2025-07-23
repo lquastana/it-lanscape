@@ -58,7 +58,7 @@
               "description": "Portail d'achats pharmacie à usage intérieur.",
               "applications": [
                 {
-                  "nom": "GRECAPS",
+                  "nom": "Epicure",
                   "description": "Groupement Régional Corse d'Achats de Produits de Santé.",
                   "editeur": null,
                   "referent": null,
@@ -88,6 +88,23 @@
                   "hebergement": "GHT Haute Corse",
                   "multiEtablissement": false,
                   "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "Hospitalis",
+                  "description": "Plateforme SaaS de digitalisation de la supply chain hospitalièr.",
+                  "editeur": "Cegedim Business Services",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -277,6 +294,23 @@
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "Hublo",
+                  "description": "Plateforme de gestion des remplacements et planification RH en établissements de santé.",
+                  "editeur": "Hublo SAS",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Facturation": false,
                     "Autre": true
                   }
                 }
@@ -588,101 +622,101 @@
             }
           ]
         },
-{
-  "nom": "DP Spécialités",
-  "description": "Applications de dossier patient propres à certaines spécialités médicales.",
-  "processus": [
-    {
-      "nom": "Dialyse",
-      "description": "Suivi des séances de dialyse et de l’état du patient.",
-      "applications": [
         {
-          "nom": "Hemadialyse",
-          "description": "Gestion des traitements et suivi des patients dialysés.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": true
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Urgences",
-      "description": "Prise en charge et dossier des patients aux urgences.",
-      "applications": [
-        {
-          "nom": "Terminal Urgences",
-          "description": "Terminal Urgences : enregistrement, tri et suivi patient.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": true
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Cardio",
-      "description": "Suivi cardiologique et comptes rendus.",
-      "applications": [
-        {
-          "nom": "Cardioreport",
-          "description": "Application spécialisée dans la cardiologie et l'édition de comptes rendus.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Standard",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Chimiotherapie",
-      "description": "Prescription et suivi des traitements de chimiothérapie.",
-      "applications": [
-        {
-          "nom": "Asclepios",
-          "description": "Dossier oncologique et chimiothérapie.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SITEC",
-          "multiEtablissement": true,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": true
-          }
-        },
-          {
+          "nom": "DP Spécialités",
+          "description": "Applications de dossier patient propres à certaines spécialités médicales.",
+          "processus": [
+            {
+              "nom": "Dialyse",
+              "description": "Suivi des séances de dialyse et de l’état du patient.",
+              "applications": [
+                {
+                  "nom": "Hemadialyse",
+                  "description": "Gestion des traitements et suivi des patients dialysés.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Urgences",
+              "description": "Prise en charge et dossier des patients aux urgences.",
+              "applications": [
+                {
+                  "nom": "Terminal Urgences",
+                  "description": "Terminal Urgences : enregistrement, tri et suivi patient.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Cardio",
+              "description": "Suivi cardiologique et comptes rendus.",
+              "applications": [
+                {
+                  "nom": "Cardioreport",
+                  "description": "Application spécialisée dans la cardiologie et l'édition de comptes rendus.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Chimiotherapie",
+              "description": "Prescription et suivi des traitements de chimiothérapie.",
+              "applications": [
+                {
+                  "nom": "Asclepios",
+                  "description": "Dossier oncologique et chimiothérapie.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
                   "nom": "Drugcam",
                   "description": "Contrôle vidéo de préparation chimio.",
                   "editeur": null,
@@ -692,7 +726,6 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -700,81 +733,79 @@
                     "Autre": true
                   }
                 }
-        
-      ]
-    },
-    {
-      "nom": "Ephad",
-      "description": "Suivi médico-administratif en établissement d’hébergement.",
-      "applications": [
-        {
-          "nom": "DxEhpad",
-          "description": "Application de gestion du dossier résident en EHPAD.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SITEC",
-          "multiEtablissement": true,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": true,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        }
-      ]
-    },
-    {
-      "nom": "SAMU",
-      "description": "Régulation des appels et interventions des équipes SMUR.",
-      "applications": [
-        {
-          "nom": "Exos",
-          "description": "Application de régulation et suivi des appels d’urgence médicale.",
-          "editeur": "Exos",
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": false,
-            "Medicale": false,
-            "Autre": false
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Réanimation",
-      "description": "Dossier patient pour soins intensifs et réanimation.",
-      "applications": [
-        {
-          "nom": "ICCA",
-          "description": "Dossier de réanimation clinique informatisé.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        }
-      ]
-    }
-  ]
-}
-,
+              ]
+            },
+            {
+              "nom": "Ephad",
+              "description": "Suivi médico-administratif en établissement d’hébergement.",
+              "applications": [
+                {
+                  "nom": "DxEhpad",
+                  "description": "Application de gestion du dossier résident en EHPAD.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "SAMU",
+              "description": "Régulation des appels et interventions des équipes SMUR.",
+              "applications": [
+                {
+                  "nom": "Exos",
+                  "description": "Application de régulation et suivi des appels d’urgence médicale.",
+                  "editeur": "Exos",
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Réanimation",
+              "description": "Dossier patient pour soins intensifs et réanimation.",
+              "applications": [
+                {
+                  "nom": "ICCA",
+                  "description": "Dossier de réanimation clinique informatisé.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
         {
           "nom": "DP Administrative",
           "description": "Gestion administrative du parcours patient.",
@@ -1027,240 +1058,239 @@
           ]
         },
         {
-  "nom": "Dossier médico-techniques",
-  "description": "Plateaux techniques : imagerie, laboratoire, bloc, anapath, télémédecine.",
-  "processus": [
-    {
-      "nom": "Dossier transfusionnel",
-      "description": "Suivi des produits sanguins labiles et des actes transfusionnels.",
-      "applications": []
-    },
-    {
-      "nom": "Imagerie",
-      "description": "Systèmes RIS, PACS et archivage d’imagerie médicale.",
-      "applications": [
-        {
-          "nom": "Xplore (RIS)",
-          "description": "Radiology Information System – gestion des examens d’imagerie.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SITEC",
-          "multiEtablissement": true,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": true,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
+          "nom": "Dossier médico-techniques",
+          "description": "Plateaux techniques : imagerie, laboratoire, bloc, anapath, télémédecine.",
+          "processus": [
+            {
+              "nom": "Dossier transfusionnel",
+              "description": "Suivi des produits sanguins labiles et des actes transfusionnels.",
+              "applications": []
+            },
+            {
+              "nom": "Imagerie",
+              "description": "Systèmes RIS, PACS et archivage d’imagerie médicale.",
+              "applications": [
+                {
+                  "nom": "Xplore (RIS)",
+                  "description": "Radiology Information System – gestion des examens d’imagerie.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Vepro (PACS)",
+                  "description": "Archivage et visualisation des images radiologiques.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "SygID",
+                  "description": "Gestion du système de dosimétrie",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Laboratoire",
+              "description": "Gestion des analyses de biologie médicale.",
+              "applications": [
+                {
+                  "nom": "Kalisil",
+                  "description": "Middleware et gestion des automates de laboratoire.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "GHT Haute Corse",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Labo SA2B",
+                  "description": "Système de gestion de laboratoire (LIS) interopérable.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Bloc",
+              "description": "Gestion du planning opératoire et suivi des interventions.",
+              "applications": [
+                {
+                  "nom": "DxBloc",
+                  "description": "Planification et pilotage des blocs opératoires.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Echographie",
+              "description": "Gestion des examens d’échographie et comptes rendus.",
+              "applications": [
+                {
+                  "nom": "MonEcho",
+                  "description": "Solution de gestion et de compte-rendu pour les examens d’échographie.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Anapath",
+              "description": "Dossier d’anatomopathologie.",
+              "applications": [
+                {
+                  "nom": "Diamic (Xpath)",
+                  "description": "Gestion des examens anatomopathologiques.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Télémédecine",
+              "description": "Applications de téléconsultation et de RCP à distance.",
+              "applications": [
+                {
+                  "nom": "Telediag",
+                  "description": "Télé-imagerie, partage sécurisé d’examens à distance.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "Alta Strada - RCP",
+                  "description": "Organisation et conduite de Réunions de Concertation Pluridisciplinaires à distance.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                },
+                {
+                  "nom": "Alta Strada - Télémed.",
+                  "description": "Module de téléconsultation interopérable avec les outils régionaux.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
         },
-        {
-          "nom": "Vepro (PACS)",
-          "description": "Archivage et visualisation des images radiologiques.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        },
-        {
-          "nom": "SygID",
-          "description": "Gestion du système de dosimétrie",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Standard",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": false,
-            "Medicale": false,
-            "Autre": false
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Laboratoire",
-      "description": "Gestion des analyses de biologie médicale.",
-      "applications": [
-        {
-          "nom": "Kalisil",
-          "description": "Middleware et gestion des automates de laboratoire.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "GHT Haute Corse",
-          "multiEtablissement": false,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        },
-        {
-          "nom": "Labo SA2B",
-          "description": "Système de gestion de laboratoire (LIS) interopérable.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SAS",
-          "multiEtablissement": true,
-          "criticite": "Standard",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Bloc",
-      "description": "Gestion du planning opératoire et suivi des interventions.",
-      "applications": [
-        {
-          "nom": "DxBloc",
-          "description": "Planification et pilotage des blocs opératoires.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SITEC",
-          "multiEtablissement": true,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": true,
-            "Facturation": false,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": true
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Echographie",
-      "description": "Gestion des examens d’échographie et comptes rendus.",
-      "applications": [
-        {
-          "nom": "MonEcho",
-          "description": "Solution de gestion et de compte-rendu pour les examens d’échographie.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SITEC",
-          "multiEtablissement": false,
-          "criticite": "Standard",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Anapath",
-      "description": "Dossier d’anatomopathologie.",
-      "applications": [
-        {
-          "nom": "Diamic (Xpath)",
-          "description": "Gestion des examens anatomopathologiques.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SAS",
-          "multiEtablissement": true,
-          "criticite": "Standard",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": true,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": false
-          }
-        }
-      ]
-    },
-    {
-      "nom": "Télémédecine",
-      "description": "Applications de téléconsultation et de RCP à distance.",
-      "applications": [
-        {
-          "nom": "Telediag",
-          "description": "Télé-imagerie, partage sécurisé d’examens à distance.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SAS",
-          "multiEtablissement": true,
-          "criticite": "Critique",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": true,
-            "Medicale": true,
-            "Autre": true
-          }
-        },
-        {
-          "nom": "Alta Strada - RCP",
-          "description": "Organisation et conduite de Réunions de Concertation Pluridisciplinaires à distance.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SAS",
-          "multiEtablissement": true,
-          "criticite": "Standard",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": false,
-            "Medicale": true,
-            "Autre": false
-          }
-        },
-        {
-          "nom": "Alta Strada - Télémed.",
-          "description": "Module de téléconsultation interopérable avec les outils régionaux.",
-          "editeur": null,
-          "referent": null,
-          "hebergement": "SAS",
-          "multiEtablissement": true,
-          "criticite": "Standard",
-          "lienPRTG": null,
-          "interfaces": {
-            "Planification": false,
-            "Facturation": false,
-            "Administrative": false,
-            "Medicale": true,
-            "Autre": false
-          }
-        }
-      ]
-    }
-  ]
-}
-,
         {
           "nom": "Échange de données",
           "description": "Messageries sécurisées et interopérabilité des systèmes.",
@@ -1387,7 +1417,7 @@
             }
           ]
         },
-{
+        {
           "nom": "Cyber sécurité",
           "description": "Protection, détection et sensibilisation.",
           "processus": [
@@ -1405,7 +1435,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1414,7 +1443,7 @@
                   }
                 },
                 {
-                  "nom": "Systancia Bastion",
+                  "nom": "Systancia Cyber Element",
                   "description": "Bastion d’administration.",
                   "editeur": null,
                   "referent": null,
@@ -1423,7 +1452,6 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1441,7 +1469,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1456,7 +1483,7 @@
               "description": "Contrôle de la posture sécurité.",
               "applications": [
                 {
-                  "nom": "Board of Cyberex",
+                  "nom": "Board of Cyber",
                   "description": "Tableaux de bord cyber.",
                   "editeur": null,
                   "referent": null,
@@ -1465,7 +1492,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1489,7 +1515,6 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1507,7 +1532,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1525,7 +1549,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1549,7 +1572,6 @@
                   "criticite": "Critique",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1567,7 +1589,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
@@ -1591,7 +1612,6 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
