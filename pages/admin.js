@@ -22,7 +22,17 @@ export default function Admin() {
       currentFile = this.value;
       if (!currentFile) return;
       const res = await fetch('/api/file/' + currentFile);
-      data = await res.json();
+      if (!res.ok) {
+        document.getElementById('msg').textContent = 'Erreur';
+        data = null;
+        render();
+        return;
+      }
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
       render();
       document.getElementById('msg').textContent = '';
     };
@@ -30,7 +40,10 @@ export default function Admin() {
     function render() {
       const cont = document.getElementById('content');
       cont.innerHTML = '';
-      if (!data) return;
+      if (!data || !Array.isArray(data.etablissements)) {
+        document.getElementById('msg').textContent = 'Fichier invalide';
+        return;
+      }
       data.etablissements.forEach((etab, eIdx) => {
         const ediv = document.createElement('div');
         ediv.innerHTML = '<h2>' + etab.nom + '</h2>';
