@@ -1,3 +1,163 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Base layout */
+*,*::before,*::after {
+  box-sizing: border-box;
+}
+body {
+  @apply font-sans m-0 bg-gray-50 text-gray-900;
+}
+
+/* Hero banner */
+.hero {
+  @apply bg-blue-700 text-white px-6 py-10 text-center rounded-b-2xl;
+}
+.hero h1 {
+  @apply m-0 text-3xl;
+}
+.hero p {
+  @apply mt-2 mx-auto max-w-xl;
+}
+
+/* Legend and filters */
+.legend-wrapper {
+  @apply bg-white p-4 rounded-xl shadow-md w-fit my-6 mx-auto;
+}
+.legend-title {
+  @apply mb-4 text-lg text-center;
+}
+.legend {
+  @apply flex flex-wrap gap-3 justify-center mb-5;
+}
+.legend-item {
+  @apply inline-flex items-center text-sm whitespace-nowrap;
+}
+.legend-color {
+  @apply w-3.5 h-3.5 rounded-full mr-1.5 border border-black/25;
+}
+.filters {
+  @apply text-center flex flex-wrap gap-2 justify-center;
+}
+.filters label {
+  @apply inline-block;
+}
+.filters select {
+  @apply p-1;
+}
+
+/* Cartography */
+.domain {
+  @apply bg-white border border-gray-700 rounded-lg mb-4 p-2;
+}
+.domain h3 {
+  @apply cursor-pointer m-0 mb-1;
+}
+.process {
+  @apply border border-gray-300 rounded-lg bg-white/25 p-2 mb-4 ml-0;
+}
+.process h4 {
+  @apply m-0 mb-1 font-bold;
+}
+.process p:first-of-type {
+  @apply m-0 mb-2 text-gray-700;
+}
+.apps {
+  @apply flex flex-wrap gap-4;
+}
+.apps .application {
+  @apply flex-[0_0_calc(33.333%_-_16px)] bg-white border-2 border-gray-500 rounded-lg relative p-2 m-0;
+}
+@media (max-width:900px){
+  .apps .application { @apply flex-[0_0_calc(50%_-_16px)]; }
+}
+@media (max-width:600px){
+  .apps .application { @apply flex-[0_0_100%]; }
+}
+.application h5 {
+  @apply m-0 mb-1 flex items-center gap-1.5;
+}
+.crit-dot {
+  @apply absolute top-1 right-1 min-w-[24px] px-1 text-[0.7rem] text-center rounded-full text-white cursor-pointer no-underline;
+}
+.iface-dot {
+  @apply inline-block w-2.5 h-2.5 rounded-full mr-1 border border-black/20;
+}
+.multi-icon {
+  @apply text-base;
+}
+
+/* Floating buttons and report */
+#chat-toggle {
+  @apply fixed bottom-5 right-5 z-[10000] bg-blue-700 text-white border-0 rounded-full w-[52px] h-[52px] text-[1.4rem] shadow-lg cursor-pointer;
+}
+#report-toggle {
+  @apply fixed bottom-5 right-20 z-[10000] bg-blue-700 text-white border-0 rounded-full w-[52px] h-[52px] text-[1.4rem] shadow-lg cursor-pointer;
+}
+#report-box {
+  @apply fixed top-0 left-0 w-screen h-screen overflow-auto bg-white z-[9998] p-6 shadow-xl;
+}
+#copy-report-btn {
+  @apply absolute top-3 right-3 bg-gray-200 border-0 p-1.5 rounded text-[0.8rem] cursor-pointer;
+}
+
+/* Chat */
+.chatbox {
+  @apply fixed top-0 left-0 w-screen h-screen flex flex-col bg-white z-[9999] p-6 shadow-xl transition-all duration-300 rounded-none;
+}
+.chatbox.hidden {
+  @apply hidden;
+}
+#chat-log {
+  @apply flex-1 overflow-y-auto mb-3;
+}
+.chat-msg {
+  @apply my-7 p-2 rounded-lg whitespace-pre-wrap;
+}
+.user {
+  @apply bg-blue-700 text-white text-right;
+}
+.bot {
+  @apply bg-gray-200;
+}
+#chat-form {
+  @apply flex gap-1.5;
+}
+#chat-q {
+  @apply flex-1 p-2 rounded-lg border border-gray-300;
+}
+
+/* Admin specific */
+.wrapper {
+  @apply max-w-3xl my-5 mx-auto;
+}
+
+header {
+  @apply bg-blue-700 text-white p-5 text-center rounded-b-xl;
+}
+
+select,
+button {
+  @apply p-2 mb-3 rounded;
+}
+
+button.primary {
+  @apply bg-blue-700 text-white border-0 cursor-pointer;
+}
+
+.domain.collapsed > .process {
+  display: none;
+}
+
+.process.collapsed > .app {
+  display: none;
+}
+
+dialog {
+  @apply border-0 rounded-lg p-5;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}

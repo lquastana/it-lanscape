@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
-import '../styles/admin.css';
 
 export default function Admin() {
   useEffect(() => {
