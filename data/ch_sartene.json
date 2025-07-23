@@ -4,6 +4,36 @@
       "nom": "CH Sartène",
       "domaines": [
         {
+          "nom": "DP Administrative",
+          "description": "Gestion administrative du parcours patient.",
+          "processus": [
+            {
+              "nom": "GAP",
+              "description": "Gestion Administrative du Patient.",
+              "applications": [
+                {
+                  "nom": "Trakcare",
+                  "description": "Admission, identités, mouvements.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+
+        {
           "nom": "DP Commun",
           "description": "Applications transversales DPI, pharmacie.",
           "processus": [
@@ -94,9 +124,9 @@
               "description": "Suivi des patients en HAD",
               "applications": [
                 {
-                  "nom": "HAD Anthadine",
+                  "nom": "Domilink HAD",
                   "description": "Plate-forme hospitalisation à domicile",
-                  "hebergement": "CH Castelluccio",
+                  "hebergement": "SAS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -134,6 +164,23 @@
                   "interfaces": {
                     "Autre": true
                   }
+                },
+                {
+                  "nom": "Hospitalis",
+                  "description": "Plateforme SaaS de digitalisation de la supply chain hospitalièr.",
+                  "editeur": "Cegedim Business Services",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
                 }
               ]
             }
@@ -157,6 +204,17 @@
                     "Medicale": true,
                     "Administrative": true
                   }
+                },
+                {
+                  "nom": "Backbone PACS",
+                  "description": "PACS",
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "interfaces": {
+                    "Medicale": true,
+                    "Administrative": false
+                  }
                 }
               ]
             },
@@ -167,12 +225,90 @@
                 {
                   "nom": "Telediag",
                   "description": "Plate-forme de télé-imagerie",
-                  "hebergement": "SITEC",
+                  "hebergement": "SAS",
                   "multiEtablissement": true,
                   "criticite": "Critique",
                   "interfaces": {
                     "Medicale": true,
                     "Autre": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Communication / Collaboration",
+          "description": "Bureautique, intranet et partage documentaire.",
+          "processus": [
+            {
+              "nom": "Bureautique",
+              "description": "Messagerie et agenda.",
+              "applications": [
+                {
+                  "nom": "Exchange",
+                  "description": "Messagerie et calendriers Outlook/Exchange.",
+                  "editeur": "Microsoft",
+                  "referent": null,
+                  "hebergement": "CH Sartène",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "Portail web externe",
+              "description": "Site internet institutionnel.",
+              "applications": [
+                {
+                  "nom": "Portail web externe",
+                  "description": "Hébergement du site public de l’hôpital.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            },
+            {
+              "nom": "GED",
+              "description": "Gestion électronique des documents.",
+              "applications": [
+                {
+                  "nom": "SharePoint",
+                  "description": "Plate-forme documentaire collaborative.",
+                  "editeur": "Microsoft",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
                   }
                 }
               ]
@@ -228,7 +364,7 @@
                 {
                   "nom": "Magellan",
                   "description": "Suivi budgétaire",
-                  "hebergement": "CH Castelluccio",
+                  "hebergement": "SAS",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -255,6 +391,7 @@
             }
           ]
         },
+        
         {
           "nom": "Qualité & Risques",
           "description": "Qualité, gestion documentaire et indicateurs.",
@@ -266,13 +403,37 @@
                 {
                   "nom": "YES",
                   "description": "Gestion documentaire qualité & événements indésirables",
-                  "hebergement": "CH Castelluccio",
+                  "hebergement": "CH Sartène",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
                 }
               ]
+            },
+            {
+              "nom": "Contrôle de gestion",
+              "description": "Suivi budgétaire et comptabilité analytique.",
+              "applications": [
+                {
+                  "nom": "Magellan",
+                  "description": "Suite d’outils décisionnels pour le pilotage économique.",
+                  "editeur": "SIB",
+                  "referent": "",
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                }
+              ]
             }
+
           ]
         },
         {
@@ -314,6 +475,30 @@
                   }
                 }
               ]
+            },
+            {
+              "nom": "EAI",
+              "description": "Middleware d’interopérabilité.",
+              "applications": [
+                {
+                  "nom": "Enovacom",
+                  "description": "Plaque d’échanges de données (EAI) – interopérabilité applicative.",
+                  "editeur": "Enovacom",
+                  "referent": "DSI AJA",
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=34115&tabid=1",
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  }
+                }
+              ]
+              
             }
           ]
         },
@@ -369,6 +554,35 @@
             }
           ]
         },
+        {
+          "nom": "Sureté",
+          "description": "Sécurité physique du site.",
+          "processus": [
+            {
+              "nom": "Vidéosurveillance",
+              "description": "Vidéosurveillance",
+              "applications": [
+                {
+                  "nom": "Smart PSS",
+                  "description": "Vidéosurveillance.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  }
+                }
+              ]
+            }          ]
+        },
+
         {
           "nom": "Annuaire & ref. internes",
           "description": "Référentiels organisation & finances.",

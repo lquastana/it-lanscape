@@ -109,6 +109,42 @@ app.get('/api/landscape', async (_req, res) => {
   }
 });
 
+/* ---------- API d\x27administration JSON ------------------ */
+app.get('/api/files', async (_req, res) => {
+  try {
+    const dataDir = path.join(__dirname, 'data');
+    const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.json'));
+    res.json({ files });
+  } catch {
+    res.status(500).json({ error: 'Erreur lecture répertoire' });
+  }
+});
+
+app.get('/api/file/:name', async (req, res) => {
+  try {
+    const name = path.basename(req.params.name);
+    if (!name.endsWith('.json')) return res.status(400).json({ error: 'Fichier invalide' });
+    const file = path.join(__dirname, 'data', name);
+    const data = await fs.readFile(file, 'utf-8');
+    res.type('application/json').send(data);
+  } catch {
+    res.status(500).json({ error: 'Erreur lecture fichier' });
+  }
+});
+
+app.post('/api/file/:name', async (req, res) => {
+  try {
+    const name = path.basename(req.params.name);
+    if (!name.endsWith('.json')) return res.status(400).json({ error: 'Fichier invalide' });
+    const file = path.join(__dirname, 'data', name);
+    await fs.writeFile(file, JSON.stringify(req.body, null, 2), 'utf-8');
+    res.json({ ok: true });
+  } catch {
+    res.status(500).json({ error: 'Erreur écriture fichier' });
+  }
+});
+
+
 app.post('/api/chat', async (req, res) => {
   const question = req.body.question?.trim();
   let threadId = req.body.threadId;

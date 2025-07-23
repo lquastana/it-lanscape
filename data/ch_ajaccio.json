@@ -96,6 +96,23 @@
                     "Medicale": false,
                     "Autre": true
                   }
+                },
+                {
+                  "nom": "Hospitalis",
+                  "description": "Plateforme SaaS de digitalisation de la supply chain hospitalièr.",
+                  "editeur": "Cegedim Business Services",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
                 }
               ]
             },
@@ -150,9 +167,9 @@
               "description": "Stocks et magasin hospitalier.",
               "applications": [
                 {
-                  "nom": "Zap",
+                  "nom": "Hospilog",
                   "description": "Gestion logistique et magasin (stocks, commandes, sorties).",
-                  "editeur": null,
+                  "editeur": "KLS Group",
                   "referent": "Xavier-Joseph Tavera",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -317,6 +334,23 @@
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "Hublo",
+                  "description": "Plateforme de gestion des remplacements et planification RH en établissements de santé.",
+                  "editeur": "Hublo SAS",
+                  "referent": null,
+                  "hebergement": "SAS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Facturation": false,
                     "Autre": true
                   }
                 }
@@ -732,11 +766,11 @@
               ]
             },
             {
-              "nom": "Edmus",
+              "nom": "Neurologie",
               "description": "Prise en charge des patients neurologiques.",
               "applications": [
                 {
-                  "nom": "Edema",
+                  "nom": "Edmus",
                   "description": "Gestion des soins intensifs néonataux, pédiatriques et adultes",
                   "editeur": null,
                   "referent": null,
@@ -1635,7 +1669,7 @@
                 {
                   "nom": "Enovacom",
                   "description": "Plaque d’échanges de données (EAI) – interopérabilité applicative.",
-                  "editeur": "Xperis",
+                  "editeur": "Enovacom",
                   "referent": "DSI AJA",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -1737,7 +1771,7 @@
                   }
                 },
                 {
-                  "nom": "Systancia Bastion",
+                  "nom": "Systancia Cyber Element",
                   "description": "Bastion d’administration.",
                   "editeur": null,
                   "referent": null,
@@ -1779,7 +1813,7 @@
               "description": "Contrôle de la posture sécurité.",
               "applications": [
                 {
-                  "nom": "Board of Cyberex",
+                  "nom": "Board of Cybere",
                   "description": "Tableaux de bord cyber.",
                   "editeur": null,
                   "referent": null,
@@ -1803,8 +1837,26 @@
               "description": "Pare-feu, antivirus, filtrage.",
               "applications": [
                 {
-                  "nom": "Fortinet",
-                  "description": "Pare-feu réseau.",
+                  "nom": "Fortinet Local",
+                  "description": "Pare-feu réseau local.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  }
+                },
+                {
+                  "nom": "Fortinet SDWAN",
+                  "description": "Pare-feu réseau SDWAN.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SITEC",
@@ -1821,8 +1873,8 @@
                   }
                 },
                 {
-                  "nom": "Vade m365 mail",
-                  "description": "Antispam Office 365.",
+                  "nom": "Vade Cloud",
+                  "description": "Antispam Exchange.",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "SAS",
@@ -2065,9 +2117,9 @@
               "description": "Structure interne des unités.",
               "applications": [
                 {
-                  "nom": "Convergence",
+                  "nom": "Prodige (GDR)",
                   "description": "Nomenclature services et UF.",
-                  "editeur": null,
+                  "editeur": "MIPIH",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
