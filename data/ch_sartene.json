@@ -324,7 +324,7 @@
               "description": "SIRH & planning",
               "applications": [
                 {
-                  "nom": "Agirh",
+                  "nom": "AGIRH",
                   "description": "SIRH",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -401,7 +401,7 @@
               "description": "GED et évènements indésirables",
               "applications": [
                 {
-                  "nom": "YES",
+                  "nom": "Yes",
                   "description": "Gestion documentaire qualité & événements indésirables",
                   "hebergement": "CH Sartène",
                   "multiEtablissement": false,
@@ -465,7 +465,7 @@
               "description": "Messagerie Sécurisée de Santé",
               "applications": [
                 {
-                  "nom": "MSS",
+                  "nom": "Medimail",
                   "description": "Messagerie sécurisée de santé",
                   "hebergement": "Saas",
                   "multiEtablissement": true,

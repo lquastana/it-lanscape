@@ -507,7 +507,7 @@
               "description": "Analyse décisionnelle Business Objects.",
               "applications": [
                 {
-                  "nom": "BO",
+                  "nom": "Business Object",
                   "description": "BusinessObjects – requêtes et reporting.",
                   "editeur": "SAP",
                   "referent": null,

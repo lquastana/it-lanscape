@@ -66,6 +66,7 @@
     .bar-fill{height:100%;color:#fff;font-size:0.8rem;text-align:center;line-height:20px;}
     .donut{--pct:0;--clr:#1B75BC;width:80px;height:80px;border-radius:50%;background:conic-gradient(var(--clr) calc(var(--pct)*1%),#eee 0);position:relative;display:inline-block;margin-right:6px;}
     .donut::after{content:attr(data-pct) "%";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.8rem;font-weight:bold;color:#333;}
+    #copy-report-btn{position:absolute;top:12px;right:12px;background:#eee;border:none;padding:4px 6px;border-radius:4px;font-size:0.8rem;cursor:pointer;}
 
     /* ======== Popup chat ======== */
     .chatbox{position:fixed;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;
@@ -141,6 +142,7 @@
     const dpDomains=['DP Spécialités','DP Administrative','DP Commun','Dossier médico-techniques'];
     const criticityColor=l=>['Critique'].includes(l)?'#d32f2f':'#616161';
     let domainIndex=0,fullData=null;
+    let reportDiff='';
 
     /* ---------- threadId persistant ---------- */
     let threadId=localStorage.getItem('chat_thread_id')||null;
@@ -221,7 +223,11 @@
         fieldsFilled:0,
         fieldsTotal:0,
         alignTotal:0,
-        alignOk:0
+        alignOk:0,
+        noAppProcesses:[],
+        nonMultiApps:[],
+        incompleteApps:[],
+        alignDiffs:[]
       };
       fullData.etablissements.forEach(etab=>{
         if(f.etab.length && !f.etab.includes(etab.nom))return;
@@ -269,10 +275,12 @@
               else metrics.critStandard++;
               metrics.hebergCounts[app.hebergement]=(metrics.hebergCounts[app.hebergement]||0)+1;
               metrics.fieldsTotal+=3;
-              if(app.editeur)metrics.fieldsFilled++;
-              if(app.referent)metrics.fieldsFilled++;
-              if(app.lienPRTG)metrics.fieldsFilled++;
-              if(app.multiEtablissement)metrics.multi++;
+              const missing=[];
+              if(app.editeur){metrics.fieldsFilled++;}else missing.push('editeur');
+              if(app.referent){metrics.fieldsFilled++;}else missing.push('referent');
+              if(app.lienPRTG){metrics.fieldsFilled++;}else missing.push('supervision');
+              if(missing.length) metrics.incompleteApps.push({app:app.nom,etab:etab.nom,domain:dom.nom,process:proc.nom,missing});
+              if(app.multiEtablissement)metrics.multi++; else metrics.nonMultiApps.push({app:app.nom,etab:etab.nom,domain:dom.nom,process:proc.nom});
               const key=`${dom.nom}::${proc.nom}`;
               metrics.procAppsMap[key]=metrics.procAppsMap[key]||{};
               metrics.procAppsMap[key][etab.nom]=metrics.procAppsMap[key][etab.nom]||new Set();
@@ -306,6 +314,8 @@
             if(hasApp){
               metrics.procWithApps++;
               pDiv.appendChild(appWrap);procCont.appendChild(pDiv);
+            } else {
+              metrics.noAppProcesses.push({domain:dom.nom,process:proc.nom});
             }
           });
 
@@ -318,11 +328,12 @@
         etabDiv.appendChild(etabContent);cont.appendChild(etabDiv);
       });
       let alignTotal=0,alignOk=0;
-      Object.values(metrics.procAppsMap).forEach(map=>{
-        const sets=Object.values(map).map(s=>[...s].sort().join('|'));
+      Object.entries(metrics.procAppsMap).forEach(([key,map])=>{
+        const sets=Object.entries(map).map(([e,s])=>({etab:e,apps:[...s].sort()}));
         if(sets.length>1){
           alignTotal++;
-          if(new Set(sets).size===1)alignOk++;
+          const sig=new Set(sets.map(s=>s.apps.join('|')));
+          if(sig.size===1) alignOk++; else metrics.alignDiffs.push({process:key,detail:sets});
         }
       });
       metrics.alignTotal=alignTotal;
@@ -431,6 +442,32 @@
         ifaceHTML+=`<li>${t} : ${p}% ${bar(p,col)}</li>`;
       }
 
+      const diffLines=[];
+      if(m.noAppProcesses.length){
+        diffLines.push('Alignement processus:');
+        m.noAppProcesses.forEach(p=>diffLines.push(`- ${p.domain} :: ${p.process}`));
+      }
+      if(m.alignDiffs.length){
+        diffLines.push('Alignement applications:');
+        m.alignDiffs.forEach(d=>{
+          const det=d.detail.map(s=>`${s.etab}: ${s.apps.join(', ')}`).join(' | ');
+          diffLines.push(`- ${d.process} -> ${det}`);
+        });
+      }
+      if(m.nonMultiApps.length){
+        diffLines.push('Taux de mutualisation:');
+        m.nonMultiApps.forEach(a=>{
+          diffLines.push(`- ${a.app} (${a.etab} - ${a.domain}::${a.process})`);
+        });
+      }
+      if(m.incompleteApps.length){
+        diffLines.push('Complétude des données:');
+        m.incompleteApps.forEach(a=>{
+          diffLines.push(`- ${a.app} (${a.etab} - ${a.domain}::${a.process}) : manque ${a.missing.join(', ')}`);
+        });
+      }
+      reportDiff=diffLines.join('\n');
+
       reportBox.innerHTML=
         `<h2>Rapport: Indicateurs de convergence SI</h2>`+
         `<p style="margin-top: 0; font-style: italic; color: #666;"> Synthèse des principaux indicateurs d’alignement, de mutualisation et de couverture SI sur l’ensemble des entités évaluées.</p>`+
@@ -442,7 +479,12 @@
         `</div>`+
         `<section class="report-section"><h3>🔥 Répartition par criticité</h3><ul>${critHTML}</ul></section>`+
         `<section class="report-section"><h3>🏢 Répartition de l'hébergement</h3><ul>${hebergHTML}</ul></section>`+
-        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><ul>${ifaceHTML}</ul></section>`;
+        `<section class="report-section"><h3>🧩 Couverture d'interfaces</h3><ul>${ifaceHTML}</ul></section>`+
+        `<button id="copy-report-btn" title="Copier le détail">📋</button>`;
+      const copyBtn=document.getElementById('copy-report-btn');
+      if(copyBtn){
+        copyBtn.addEventListener('click',()=>navigator.clipboard.writeText(reportDiff));
+      }
     }
 
     /* ---------- Initialisation ---------- */

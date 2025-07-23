@@ -523,7 +523,7 @@
               "description": "Analyse décisionnelle Business Objects.",
               "applications": [
                 {
-                  "nom": "BO",
+                  "nom": "Business Object",
                   "description": "BusinessObjects – requêtes et reporting.",
                   "editeur": "SAP",
                   "referent": null,
@@ -646,7 +646,7 @@
               "description": "Prise en charge des patients en situation d'urgence.",
               "applications": [
                 {
-                  "nom": "inal UrgencTermes",
+                  "nom": "Terminal Urgences",
                   "description": "Triage Urgences : dossier médical du patient.",
                   "editeur": "IES",
                   "referent": "Lisandru Benedetti",
@@ -1213,6 +1213,11 @@
           "description": "Plateaux techniques et imagerie.",
           "processus": [
             {
+              "nom": "Dossier transfusionnel",
+              "description": "Suivi des produits sanguins labiles et des actes transfusionnels.",
+              "applications": []
+            },
+            {
               "nom": "Télémédecine",
               "description": "Télé-imagerie, RCP, téléconsultation.",
               "applications": [
@@ -1252,7 +1257,7 @@
                   }
                 },
                 {
-                  "nom": "Alta Strada – RCP",
+                  "nom": "Alta Strada - RCP",
                   "description": "Réunions de concertation pluridisciplinaire.",
                   "editeur": null,
                   "referent": null,
@@ -1269,7 +1274,7 @@
                   }
                 },
                 {
-                  "nom": "Alta Strada – Télémed.",
+                  "nom": "Alta Strada - Télémed.",
                   "description": "Téléconsultations spécialisées.",
                   "editeur": null,
                   "referent": null,

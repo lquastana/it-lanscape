@@ -684,7 +684,7 @@
               "description": "Outils décisionnels et reporting d'activité.",
               "applications": [
                 {
-                  "nom": "BO",
+                  "nom": "Business Object",
                   "description": "BusinessObjects – requêtes et reporting d'activité.",
                   "editeur": "SAP",
                   "referent": null,
