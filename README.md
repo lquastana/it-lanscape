@@ -2,6 +2,7 @@
 
 **Visualisation simple et modulaire d'une cartographie applicative hospitalière**  
 Basé sur un fichier JSON, ce projet propose un tableau de bord léger pour représenter les domaines, processus et applications d’un établissement de santé.
+Une interface React/Next.js compose le front-end pour afficher la cartographie.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D14.0-brightgreen)
@@ -49,7 +50,15 @@ npm install
 
 ```bash
 npm start
+### Demarrer le front-end Next.js
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
+
+L'interface Next.js est disponible sur http://localhost:3001
 
 Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
 
