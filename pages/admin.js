@@ -21,9 +21,22 @@ export default function Admin() {
     document.getElementById('file-select').onchange = async function () {
       currentFile = this.value;
       if (!currentFile) return;
-      const res = await fetch('/api/file/' + currentFile);
+      let res;
+      try {
+        res = await fetch('/api/file/' + encodeURIComponent(currentFile));
+      } catch {
+        document.getElementById('msg').textContent = 'Erreur réseau';
+        data = null;
+        render();
+        return;
+      }
       if (!res.ok) {
-        document.getElementById('msg').textContent = 'Erreur';
+        let err = 'Erreur';
+        try {
+          const { error } = await res.json();
+          if (error) err = error;
+        } catch {}
+        document.getElementById('msg').textContent = err;
         data = null;
         render();
         return;
@@ -31,10 +44,13 @@ export default function Admin() {
       try {
         data = await res.json();
       } catch {
+        document.getElementById('msg').textContent = 'Fichier invalide';
         data = null;
+        render();
+        return;
       }
-      render();
       document.getElementById('msg').textContent = '';
+      render();
     };
 
     function render() {
@@ -179,7 +195,7 @@ export default function Admin() {
 
     document.getElementById('save').onclick = async function () {
       if (!currentFile || !data) return;
-      const res = await fetch('/api/file/' + currentFile, {
+      const res = await fetch('/api/file/' + encodeURIComponent(currentFile), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data, null, 2)
