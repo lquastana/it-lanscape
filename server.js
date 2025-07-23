@@ -12,10 +12,11 @@ import { marked } from 'marked';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
+import next from 'next';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 const authDisabled = process.env.DISABLE_AUTH === 'true';
 
@@ -25,6 +26,11 @@ const openai = new OpenAI({
     "OpenAI-Beta": "assistants=v2"
   }
 });
+
+const dev = process.env.NODE_ENV !== 'production';
+const nextApp = next({ dev, dir: path.join(__dirname, 'frontend') });
+const handle = nextApp.getRequestHandler();
+await nextApp.prepare();
 
 let users = [];
 if (!authDisabled) {
@@ -202,5 +208,7 @@ app.post('/api/chat', async (req, res) => {
     res.status(500).json({ error: 'Échec de la requête assistant' });
   }
 });
+app.all("*", (req, res) => handle(req, res));
+
 /* ---------- Lancement serveur ---------------------------- */
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

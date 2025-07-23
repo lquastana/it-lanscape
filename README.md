@@ -49,18 +49,11 @@ npm install
 ### ▶️ Lancer le serveur
 
 ```bash
-npm start
-### Demarrer le front-end Next.js (Tailwind + shadcn/ui + Framer Motion)
-
-```bash
-cd frontend
 npm install
-npm run dev
+npm start
 ```
 
-L'interface Next.js est disponible sur http://localhost:3001
-
-Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
+L'interface et l'API sont disponibles sur http://localhost:3001
 
 ### 🐳 Déploiement Docker avec Nginx
 
