@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
+import '../styles/admin.css';
 
 export default function Admin() {
   useEffect(() => {
@@ -212,22 +213,6 @@ export default function Admin() {
     <>
       <Head>
         <title>Administration</title>
-        <style>{`
-    body{font-family:Arial,sans-serif;margin:0;background:#f5f5f5;}
-    .wrapper{max-width:900px;margin:20px auto;}
-    header{background:#1B75BC;color:#fff;padding:20px;text-align:center;border-bottom-left-radius:12px;border-bottom-right-radius:12px;}
-    select,button{padding:6px 10px;margin-bottom:12px;border-radius:4px;}
-    button.primary{background:#1B75BC;color:#fff;border:none;cursor:pointer;}
-    .domain,.process,.app{background:#fff;border:1px solid #ccc;padding:8px;border-radius:6px;margin-bottom:8px;}
-    .process{margin-left:20px;}
-    .app{margin-left:40px;}
-    .actions button{margin-right:6px;}
-    h2,h3,h4{cursor:pointer;margin:0;}
-    .domain.collapsed>.process{display:none;}
-    .process.collapsed>.app{display:none;}
-    dialog{border:none;border-radius:8px;padding:20px;}
-    dialog::backdrop{background:rgba(0,0,0,0.3);}
-        `}</style>
       </Head>
       <header><h1>Administration des données</h1></header>
       <div className="wrapper">
