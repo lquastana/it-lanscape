@@ -126,7 +126,7 @@
                 {
                   "nom": "Domilink HAD",
                   "description": "Plate-forme hospitalisation à domicile",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -136,7 +136,7 @@
                 {
                   "nom": "MobiSoins",
                   "description": "Application mobile de soins",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {
@@ -170,7 +170,7 @@
                   "description": "Plateforme SaaS de digitalisation de la supply chain hospitalièr.",
                   "editeur": "Cegedim Business Services",
                   "referent": null,
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Critique",
                   "lienPRTG": null,
@@ -208,7 +208,7 @@
                 {
                   "nom": "Backbone PACS",
                   "description": "PACS",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": true,
                   "criticite": "Critique",
                   "interfaces": {
@@ -225,7 +225,7 @@
                 {
                   "nom": "Telediag",
                   "description": "Plate-forme de télé-imagerie",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": true,
                   "criticite": "Critique",
                   "interfaces": {
@@ -274,7 +274,7 @@
                   "description": "Hébergement du site public de l’hôpital.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -298,7 +298,7 @@
                   "description": "Plate-forme documentaire collaborative.",
                   "editeur": "Microsoft",
                   "referent": null,
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Critique",
                   "lienPRTG": null,
@@ -336,7 +336,7 @@
                 {
                   "nom": "Hublo",
                   "description": "Renforts & remplacements",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -364,7 +364,7 @@
                 {
                   "nom": "Magellan",
                   "description": "Suivi budgétaire",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "interfaces": {}
@@ -419,7 +419,7 @@
                   "description": "Suite d’outils décisionnels pour le pilotage économique.",
                   "editeur": "SIB",
                   "referent": "",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": "https://prtg-gcs.chg-aj.local/group.htm?id=41034&tabid=1",
@@ -467,7 +467,7 @@
                 {
                   "nom": "MSS",
                   "description": "Messagerie sécurisée de santé",
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": true,
                   "criticite": "Standard",
                   "interfaces": {
@@ -567,7 +567,7 @@
                   "description": "Vidéosurveillance.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "SAS",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Critique",
                   "lienPRTG": null,
