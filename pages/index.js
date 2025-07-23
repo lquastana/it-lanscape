@@ -1,11 +1,14 @@
-'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/button';
 
+
 export default function Home() {
+  const reportBoxRef = useRef(null);
+  const [reportVisible, setReportVisible] = useState(false);
   useEffect(() => {
+
         /* ---------- Constantes légende / couleurs ---------- */
         const interfaceColors={Medicale:'#4caf50',Administrative:'#ffeb3b',Planification:'#2196f3',
                                Facturation:'#f44336',Autre:'#9e9e9e'};
@@ -455,7 +458,6 @@ export default function Home() {
           Cartographie des Hôpitaux Publics de Corse
         </motion.h1>
         <p>Explorez les domaines, processus et applications.</p>
-        <Button className="mt-4" onClick={() => window.scrollTo({top: document.getElementById('content').offsetTop, behavior: 'smooth'})}>Voir la cartographie</Button>
       </header>
       <section className="legend-wrapper">
         <h2 className="legend-title">Légende &amp; Filtres</h2>
@@ -478,9 +480,19 @@ export default function Home() {
           <button type="submit">Envoyer</button>
         </form>
       </section>
-      <section id="report-box" className="hidden"></section>
+      <section
+  id="report-box"
+  ref={reportBoxRef}
+  className={reportVisible ? '' : 'hidden'}
+>
+</section>
       <button id="chat-toggle">💬</button>
-      <button id="report-toggle">🧠</button>
+      <button
+  id="report-toggle"
+  onClick={() => setReportVisible(v => !v)}
+>
+  🧠
+</button>
     </>
   );
 }
