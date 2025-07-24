@@ -3,7 +3,8 @@ import path from 'path';
 
 export default async function handler(req, res) {
   const { name } = req.query;
-  const safeName = path.basename(name);
+  const safeName = path.basename(name) + '.json';
+  console.log(safeName)
   if (!safeName.endsWith('.json')) {
     return res.status(400).json({ error: 'Fichier invalide' });
   }

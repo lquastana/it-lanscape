@@ -8,6 +8,7 @@ import ChatBox from '../components/ChatBox';
 import Report from '../components/Report';
 import { useLandscapeData } from '../hooks/useLandscapeData';
 
+
 export default function Home() {
   const { data, sets, filters, updateFilter, interfaceColors, metrics } = useLandscapeData();
   const [reportVisible, setReportVisible] = useState(false);
@@ -30,7 +31,6 @@ export default function Home() {
       </section>
       <Cartography data={data} colors={interfaceColors} />
       <Report metrics={metrics} visible={reportVisible} onClose={() => setReportVisible(false)} />
-      <ChatBox />
       <button id="report-toggle" onClick={() => setReportVisible(v => !v)}>🧠</button>
     </>
   );
