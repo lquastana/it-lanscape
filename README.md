@@ -2,9 +2,10 @@
 
 **Visualisation simple et modulaire d'une cartographie applicative hospitalière**  
 Basé sur un fichier JSON, ce projet propose un tableau de bord léger pour représenter les domaines, processus et applications d’un établissement de santé.
+Une interface **React 19** avec **Next.js 15** compose le front-end pour afficher la cartographie, avec Tailwind CSS, shadcn/ui et Framer Motion pour les animations.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Node](https://img.shields.io/badge/node-%3E%3D14.0-brightgreen)
+![Node](https://img.shields.io/badge/node-%3E%3D18.0-brightgreen)
 
 ---
 
@@ -41,6 +42,9 @@ Conçu à partir de cas d’usage hospitaliers fictifs (ex. `Institut Alta`), ce
 
 ## ⚙️ Installation
 
+Le projet est maintenant unifié : un seul `package.json` contient toutes les dépendances
+du front-end et des routes API Next.js situées dans `./frontend`.
+
 ```bash
 npm install
 ````
@@ -48,10 +52,12 @@ npm install
 ### ▶️ Lancer le serveur
 
 ```bash
+npm install
 npm start
 ```
 
-Le serveur démarre sur : [http://localhost:3000](http://localhost:3000)
+Cette commande lance Next.js ainsi que les routes API intégrées.
+L'interface et l'API sont disponibles sur http://localhost:3000
 
 ### 🐳 Déploiement Docker avec Nginx
 
