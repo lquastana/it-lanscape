@@ -1,7 +1,7 @@
 /* --------------------------------------------------
    Reset minimal & variables pratiques
 -------------------------------------------------- */
-.hidden{display:none!important;}
+
 
 *,*::before,*::after{box-sizing:border-box;}
 body{
