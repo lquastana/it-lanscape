@@ -191,12 +191,19 @@ body {
 }
 
 .domain-box {
-  flex: 1 1 100%;
+  flex: 1 1 calc(50% - 1rem); /* 2 par ligne si possible */
   border: 2px solid;
   padding: 1rem;
   border-radius: 0.5rem;
   page-break-inside: avoid;
   box-sizing: border-box;
+  background: #fff;
+}
+
+@media (max-width: 900px) {
+  .domain-box {
+    flex: 1 1 100%; /* 1 par ligne sur petit écran */
+  }
 }
 
 .domain-box h3 {
@@ -389,3 +396,11 @@ body {
   cursor: pointer;
   font-size: 0.9rem;
 }
+
+.domains-condensed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+

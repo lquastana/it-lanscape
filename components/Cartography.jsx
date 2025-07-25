@@ -40,8 +40,8 @@ export default function Cartography({ data, colors }) {
               key={dom.nom}
               className="domain-box"
               style={{
-                borderColor: bgColor,
-                backgroundColor: bgColor + '20' // Opacité légère
+                borderColor: "grey",
+                backgroundColor: bgColor // Opacité légère
               }}
             >
               <h3>{dom.nom}</h3>
