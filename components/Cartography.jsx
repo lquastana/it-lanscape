@@ -16,7 +16,7 @@ export default function Cartography({ data, colors, condensedPrintView = false }
     setOpenProcess(o => ({ ...o,  [`${d}::${p}`]: !(o[`${d}::${p}`] ?? true) }));
 
   return (
-    <main id="content">
+    <main id="content" className={condensedPrintView ? 'condensed' : ''}>
       {data.etablissements.map(etab => (
         <div key={etab.nom}>
           <h2>{etab.nom}</h2>

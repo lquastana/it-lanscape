@@ -135,6 +135,15 @@ body{
 }
 .multi-icon{font-size:1rem;}
 
+/* condensed print view for Paysage */
+.condensed .domain{margin-bottom:8px;padding:6px;}
+.condensed .process{margin-bottom:8px;padding:6px;}
+.condensed .application{flex:0 0 calc(25% - 16px);padding:6px;}
+.condensed h2{font-size:1.2rem;}
+.condensed h3{font-size:1rem;}
+.condensed h4{font-size:.9rem;}
+.condensed h5{font-size:.8rem;}
+
 /* --------------------------------------------------
    Floating buttons
 -------------------------------------------------- */
