@@ -8,19 +8,22 @@ export default function ApplicativeView({ data }) {
     <main id="content">
       {data.etablissements.map(etab => {
         const infraEtab = infra.etablissements.find(e => e.nom === etab.nom);
-        const apps = [];
+        const appMap = new Map();
         etab.domaines.forEach(d =>
-          d.processus.forEach(p => p.applications.forEach(a => apps.push(a)))
+          d.processus.forEach(p =>
+            p.applications.forEach(a => {
+              if (!appMap.has(a.trigramme)) appMap.set(a.trigramme, a);
+            })
+          )
         );
+        const apps = Array.from(appMap.values());
         return (
           <div key={etab.nom}>
             <h2>{etab.nom}</h2>
             <div className="apps">
               {apps.map(app => {
                 const servers = infraEtab
-                  ? infraEtab.serveurs.filter(
-                      s => s.trigramme && s.trigramme === app.trigramme
-                    )
+                  ? infraEtab.applications?.[app.trigramme] || []
                   : [];
                 return (
                   <div key={app.trigramme} className="application">
