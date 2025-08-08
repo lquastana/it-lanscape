@@ -7,14 +7,13 @@ export default async function handler(req, res) {
   }
   try {
     const dataDir = path.join(process.cwd(), 'data');
-    const files = (await fs.readdir(dataDir)).filter(
-      f => f.endsWith('.json') && !f.endsWith('.infra.json')
-    );
+    const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.infra.json'));
     const etablissements = [];
     for (const file of files) {
       const content = await fs.readFile(path.join(dataDir, file), 'utf-8');
-      const { etablissements: e = [] } = JSON.parse(content);
-      etablissements.push(...e);
+      const json = JSON.parse(content);
+      const nom = json.etablissement || json.nom;
+      etablissements.push({ nom, serveurs: json.serveurs || [] });
     }
     res.status(200).json({ etablissements });
   } catch {

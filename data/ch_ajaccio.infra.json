@@ -1,0 +1,19 @@
+{
+  "etablissement": "CH Ajaccio",
+  "serveurs": [
+    {
+      "nom": "srv-pharma-01",
+      "description": "Serveur principal de l'application Pharma",
+      "os": "Linux",
+      "ip": "10.0.0.1",
+      "applications": ["PHA"]
+    },
+    {
+      "nom": "srv-rx-01",
+      "description": "Serveur pour la radiologie",
+      "os": "Windows",
+      "ip": "10.0.0.2",
+      "applications": ["REC"]
+    }
+  ]
+}

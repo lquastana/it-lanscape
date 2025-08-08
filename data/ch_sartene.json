@@ -26,13 +26,13 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "TRB"
                 }
               ]
             }
           ]
         },
-
         {
           "nom": "DP Commun",
           "description": "Applications transversales DPI, pharmacie.",
@@ -51,7 +51,8 @@
                     "Medicale": true,
                     "Administrative": true,
                     "Planification": true
-                  }
+                  },
+                  "trigramme": "DXC"
                 },
                 {
                   "nom": "DxPlanning",
@@ -62,7 +63,8 @@
                   "interfaces": {
                     "Planification": true,
                     "Administrative": true
-                  }
+                  },
+                  "trigramme": "DXP"
                 }
               ]
             },
@@ -78,7 +80,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Administrative": true
-                  }
+                  },
+                  "trigramme": "OMN"
                 },
                 {
                   "nom": "GENOIS",
@@ -90,7 +93,8 @@
                     "Administrative": true,
                     "Facturation": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "GEB"
                 }
               ]
             }
@@ -115,7 +119,8 @@
                     "Administrative": true,
                     "Facturation": true,
                     "Planification": true
-                  }
+                  },
+                  "trigramme": "TER"
                 }
               ]
             },
@@ -131,7 +136,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Administrative": true
-                  }
+                  },
+                  "trigramme": "DOM"
                 },
                 {
                   "nom": "MobiSoins",
@@ -141,7 +147,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Administrative": true
-                  }
+                  },
+                  "trigramme": "MOB"
                 }
               ]
             }
@@ -163,7 +170,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MAG"
                 },
                 {
                   "nom": "Hospitalis",
@@ -180,7 +188,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "HOS"
                 }
               ]
             }
@@ -203,7 +212,8 @@
                   "interfaces": {
                     "Medicale": true,
                     "Administrative": true
-                  }
+                  },
+                  "trigramme": "XPL"
                 },
                 {
                   "nom": "Backbone PACS",
@@ -214,7 +224,8 @@
                   "interfaces": {
                     "Medicale": true,
                     "Administrative": false
-                  }
+                  },
+                  "trigramme": "BAC"
                 }
               ]
             },
@@ -231,7 +242,8 @@
                   "interfaces": {
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TEL"
                 }
               ]
             }
@@ -255,13 +267,13 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "EXC"
                 }
               ]
             },
@@ -279,13 +291,13 @@
                   "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "POR"
                 }
               ]
             },
@@ -303,13 +315,13 @@
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
-                    
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SHA"
                 }
               ]
             }
@@ -331,7 +343,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Administrative": true
-                  }
+                  },
+                  "trigramme": "AGI"
                 },
                 {
                   "nom": "Hublo",
@@ -339,7 +352,8 @@
                   "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "HUB"
                 }
               ]
             },
@@ -353,7 +367,8 @@
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Critique",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "PHX"
                 }
               ]
             },
@@ -367,7 +382,8 @@
                   "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "MAA"
                 }
               ]
             },
@@ -385,13 +401,13 @@
                     "Administrative": true,
                     "Facturation": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TRC"
                 }
               ]
             }
           ]
         },
-        
         {
           "nom": "Qualité & Risques",
           "description": "Qualité, gestion documentaire et indicateurs.",
@@ -406,7 +422,8 @@
                   "hebergement": "CH Sartène",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "YES"
                 }
               ]
             },
@@ -429,11 +446,11 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MAA"
                 }
               ]
             }
-
           ]
         },
         {
@@ -450,7 +467,8 @@
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Standard",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "BUS"
                 }
               ]
             }
@@ -472,7 +490,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MEB"
                 }
               ]
             },
@@ -495,10 +514,10 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "ENO"
                 }
               ]
-              
             }
           ]
         },
@@ -518,7 +537,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "PRT"
                 },
                 {
                   "nom": "Oxygène",
@@ -526,7 +546,8 @@
                   "hebergement": "CH Castelluccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "OXY"
                 },
                 {
                   "nom": "GestSup",
@@ -534,7 +555,8 @@
                   "hebergement": "CH Castelluccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "GEC"
                 }
               ]
             },
@@ -548,7 +570,8 @@
                   "hebergement": "CH Sartène",
                   "multiEtablissement": false,
                   "criticite": "Standard",
-                  "interfaces": {}
+                  "interfaces": {},
+                  "trigramme": "OXE"
                 }
               ]
             }
@@ -577,12 +600,13 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SMA"
                 }
               ]
-            }          ]
+            }
+          ]
         },
-
         {
           "nom": "Annuaire & ref. internes",
           "description": "Référentiels organisation & finances.",
@@ -599,7 +623,8 @@
                   "criticite": "Standard",
                   "interfaces": {
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MAG"
                 }
               ]
             }
