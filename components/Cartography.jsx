@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { DOMAIN_COLORS } from '../lib/constants';
 
-export default function Cartography({ data, colors }) {
+// condensedPrintView condense les descriptions pour une vue "paysage" destinée à l'impression
+export default function Cartography({ data, colors, condensedPrintView = false }) {
   if (!data) return <main id="content">Chargement…</main>;
 
   /* mémorise l’ouverture des domaines et processus */
@@ -21,7 +22,7 @@ export default function Cartography({ data, colors }) {
           <h2>{etab.nom}</h2>
 
           {etab.domaines.map((dom, idx) => {
-            const domOpen = openDomain[dom.nom] ?? true;
+            const domOpen = condensedPrintView ? true : (openDomain[dom.nom] ?? true);
             const bg      = DOMAIN_COLORS[idx % DOMAIN_COLORS.length];   // ←◀ couleur
 
             return (
@@ -30,34 +31,37 @@ export default function Cartography({ data, colors }) {
                 className="domain"
                 style={{ background: bg }}       /* ▲ arrière‑plan coloré */
               >
-                <h3 onClick={() => toggleDomain(dom.nom)}>
-                  {dom.nom} {domOpen ? '▼' : '▶︎'}
+                <h3 onClick={condensedPrintView ? undefined : () => toggleDomain(dom.nom)}>
+                  {dom.nom}
+                  {condensedPrintView ? null : ` ${domOpen ? '▼' : '▶︎'}`}
                 </h3>
 
                 {domOpen && (
                   <>
-                    <p>{dom.description}</p>
+                    {!condensedPrintView && <p>{dom.description}</p>}
 
                     {dom.processus.map(proc => {
                       const k = `${dom.nom}::${proc.nom}`;
-                      const procOpen = openProcess[k] ?? true;
+                      const procOpen = condensedPrintView ? true : (openProcess[k] ?? true);
                       return (
                         <div key={proc.nom} className="process">
-                          <h4 onClick={() => toggleProcess(dom.nom, proc.nom)}>
-                            {proc.nom} {procOpen ? '▼' : '▶︎'}
+                          <h4 onClick={condensedPrintView ? undefined : () => toggleProcess(dom.nom, proc.nom)}>
+                            {proc.nom}
+                            {condensedPrintView ? null : ` ${procOpen ? '▼' : '▶︎'}`}
                           </h4>
 
                           {procOpen && (
                             <>
-                              <p>{proc.description}</p>
+                              {!condensedPrintView && <p>{proc.description}</p>}
                               <div className="apps">
                                 {proc.applications.map(app => (
                                   <div key={app.nom} className="application">
                                     {/* ------------- contenu inchangé ------------- */}
                                     <h5>
                                       {app.nom}
-                                      {app.multiEtablissement &&
-                                        <span className="multi-icon">🏛️</span>}
+                                      {app.multiEtablissement && (
+                                        <span className="multi-icon">🏛️</span>
+                                      )}
                                     </h5>
 
                                     <span
@@ -86,10 +90,14 @@ export default function Cartography({ data, colors }) {
                                       )}
                                     </div>
 
-                                    <p>{app.description}</p>
-                                    <p style={{ fontStyle: 'italic', color: '#666' }}>
-                                      Hébergement&nbsp;: {app.hebergement}
-                                    </p>
+                                    {!condensedPrintView && (
+                                      <>
+                                        <p>{app.description}</p>
+                                        <p style={{ fontStyle: 'italic', color: '#666' }}>
+                                          Hébergement&nbsp;: {app.hebergement}
+                                        </p>
+                                      </>
+                                    )}
                                   </div>
                                 ))}
                               </div>

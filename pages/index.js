@@ -16,8 +16,22 @@ export default function Home() {
   const [view, setView] = useState('metier');
 
   let content = null;
-  if (view === 'paysage') content = <div>Vue paysage en cours…</div>;
-  if (view === 'metier') content = <Cartography data={data} colors={interfaceColors} />;
+  if (view === 'paysage')
+    content = (
+      <Cartography
+        data={data}
+        colors={interfaceColors}
+        condensedPrintView
+      />
+    );
+  if (view === 'metier')
+    content = (
+      <Cartography
+        data={data}
+        colors={interfaceColors}
+        condensedPrintView={false}
+      />
+    );
   if (view === 'applicatif') content = <ApplicativeView data={data} />;
 
   return (
