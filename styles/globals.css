@@ -97,16 +97,22 @@ body{
 /* --------------------------------------------------
    Cartographie
 -------------------------------------------------- */
+.domains{display:flex;flex-wrap:wrap;gap:16px;}
 .domain{
+  flex:1 1 calc(50% - 16px);
   background:#fff;border:1px solid #555;
-  border-radius:8px;margin-bottom:16px;padding:10px;
+  border-radius:8px;padding:10px;
 }
+@media(max-width:900px){.domain{flex:1 1 100%;}}
 .domain h3{cursor:pointer;margin:0 0 4px;}
+.processes{display:flex;flex-wrap:wrap;gap:16px;}
 .process{
+  flex:1 1 calc(50% - 16px);
   border:1px solid #ccc;border-radius:8px;
   background:rgba(255,255,255,.25);
-  padding:10px;margin-bottom:16px;
+  padding:10px;
 }
+@media(max-width:700px){.process{flex:1 1 100%;}}
 .process h4{margin:0 0 4px;font-weight:bold;}
 .process p:first-of-type{margin:0 0 8px;color:#444;}
 
@@ -136,8 +142,9 @@ body{
 .multi-icon{font-size:1rem;}
 
 /* condensed print view for Paysage */
-.condensed .domain{margin-bottom:8px;padding:6px;}
-.condensed .process{margin-bottom:8px;padding:6px;}
+.condensed .domains,.condensed .processes{gap:8px;}
+.condensed .domain{flex:1 1 calc(50% - 8px);padding:6px;}
+.condensed .process{flex:1 1 calc(50% - 8px);padding:6px;}
 .condensed .application{flex:0 0 calc(25% - 16px);padding:6px;}
 .condensed h2{font-size:1.2rem;}
 .condensed h3{font-size:1rem;}

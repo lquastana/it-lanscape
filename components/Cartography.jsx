@@ -20,97 +20,100 @@ export default function Cartography({ data, colors, condensedPrintView = false }
       {data.etablissements.map(etab => (
         <div key={etab.nom}>
           <h2>{etab.nom}</h2>
+          <div className="domains">
+            {etab.domaines.map((dom, idx) => {
+              const domOpen = condensedPrintView ? true : (openDomain[dom.nom] ?? true);
+              const bg      = DOMAIN_COLORS[idx % DOMAIN_COLORS.length];   // ←◀ couleur
 
-          {etab.domaines.map((dom, idx) => {
-            const domOpen = condensedPrintView ? true : (openDomain[dom.nom] ?? true);
-            const bg      = DOMAIN_COLORS[idx % DOMAIN_COLORS.length];   // ←◀ couleur
+              return (
+                <div
+                  key={dom.nom}
+                  className="domain"
+                  style={{ background: bg }}       /* ▲ arrière‑plan coloré */
+                >
+                  <h3 onClick={condensedPrintView ? undefined : () => toggleDomain(dom.nom)}>
+                    {dom.nom}
+                    {condensedPrintView ? null : ` ${domOpen ? '▼' : '▶︎'}`}
+                  </h3>
 
-            return (
-              <div
-                key={dom.nom}
-                className="domain"
-                style={{ background: bg }}       /* ▲ arrière‑plan coloré */
-              >
-                <h3 onClick={condensedPrintView ? undefined : () => toggleDomain(dom.nom)}>
-                  {dom.nom}
-                  {condensedPrintView ? null : ` ${domOpen ? '▼' : '▶︎'}`}
-                </h3>
+                  {domOpen && (
+                    <>
+                      {!condensedPrintView && <p>{dom.description}</p>}
 
-                {domOpen && (
-                  <>
-                    {!condensedPrintView && <p>{dom.description}</p>}
+                      <div className="processes">
+                        {dom.processus.map(proc => {
+                          const k = `${dom.nom}::${proc.nom}`;
+                          const procOpen = condensedPrintView ? true : (openProcess[k] ?? true);
+                          return (
+                            <div key={proc.nom} className="process">
+                              <h4 onClick={condensedPrintView ? undefined : () => toggleProcess(dom.nom, proc.nom)}>
+                                {proc.nom}
+                                {condensedPrintView ? null : ` ${procOpen ? '▼' : '▶︎'}`}
+                              </h4>
 
-                    {dom.processus.map(proc => {
-                      const k = `${dom.nom}::${proc.nom}`;
-                      const procOpen = condensedPrintView ? true : (openProcess[k] ?? true);
-                      return (
-                        <div key={proc.nom} className="process">
-                          <h4 onClick={condensedPrintView ? undefined : () => toggleProcess(dom.nom, proc.nom)}>
-                            {proc.nom}
-                            {condensedPrintView ? null : ` ${procOpen ? '▼' : '▶︎'}`}
-                          </h4>
+                              {procOpen && (
+                                <>
+                                  {!condensedPrintView && <p>{proc.description}</p>}
+                                  <div className="apps">
+                                    {proc.applications.map(app => (
+                                      <div key={app.nom} className="application">
+                                        {/* ------------- contenu inchangé ------------- */}
+                                        <h5>
+                                          {app.nom}
+                                          {app.multiEtablissement && (
+                                            <span className="multi-icon">🏛️</span>
+                                          )}
+                                        </h5>
 
-                          {procOpen && (
-                            <>
-                              {!condensedPrintView && <p>{proc.description}</p>}
-                              <div className="apps">
-                                {proc.applications.map(app => (
-                                  <div key={app.nom} className="application">
-                                    {/* ------------- contenu inchangé ------------- */}
-                                    <h5>
-                                      {app.nom}
-                                      {app.multiEtablissement && (
-                                        <span className="multi-icon">🏛️</span>
-                                      )}
-                                    </h5>
+                                        <span
+                                          className="crit-dot"
+                                          style={{
+                                            backgroundColor:
+                                              app.criticite === 'Critique'
+                                                ? '#d32f2f'
+                                                : '#616161'
+                                          }}
+                                        >
+                                          {app.criticite}
+                                        </span>
 
-                                    <span
-                                      className="crit-dot"
-                                      style={{
-                                        backgroundColor:
-                                          app.criticite === 'Critique'
-                                            ? '#d32f2f'
-                                            : '#616161'
-                                      }}
-                                    >
-                                      {app.criticite}
-                                    </span>
+                                        <div>
+                                          {Object.entries(app.interfaces).map(
+                                            ([t, act]) =>
+                                              act && (
+                                                <span
+                                                  key={t}
+                                                  className="iface-dot"
+                                                  style={{ backgroundColor: colors[t] }}
+                                                  title={t}
+                                                />
+                                              )
+                                          )}
+                                        </div>
 
-                                    <div>
-                                      {Object.entries(app.interfaces).map(
-                                        ([t, act]) =>
-                                          act && (
-                                            <span
-                                              key={t}
-                                              className="iface-dot"
-                                              style={{ backgroundColor: colors[t] }}
-                                              title={t}
-                                            />
-                                          )
-                                      )}
-                                    </div>
-
-                                    {!condensedPrintView && (
-                                      <>
-                                        <p>{app.description}</p>
-                                        <p style={{ fontStyle: 'italic', color: '#666' }}>
-                                          Hébergement&nbsp;: {app.hebergement}
-                                        </p>
-                                      </>
-                                    )}
+                                        {!condensedPrintView && (
+                                          <>
+                                            <p>{app.description}</p>
+                                            <p style={{ fontStyle: 'italic', color: '#666' }}>
+                                              Hébergement&nbsp;: {app.hebergement}
+                                            </p>
+                                          </>
+                                        )}
+                                      </div>
+                                    ))}
                                   </div>
-                                ))}
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </>
-                )}
-              </div>
-            );
-          })}
+                                </>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       ))}
     </main>
