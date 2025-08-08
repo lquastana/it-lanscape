@@ -3,14 +3,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Donut KPI
- * @param {number|string} pct   Pourcentage (0‑100). On accepte aussi une string déjà « xx.x ».
- * @param {string} label        Libellé sous le donut
- * @param {string} color        Couleur principale (#hex, rgb…)
+ * Retourne une couleur fixe en fonction du tiers de pourcentage :
+ * - Rouge pour 0-33%
+ * - Jaune pour 34-66%
+ * - Vert pour 67-100%
+ * @param {number} pct
+ * @returns {string} couleur CSS
  */
-export default function Donut({ pct = 0, label = '', color = '#1B75BC' }) {
-  // on fige le pourcentage sur une décimale max
-  const pctVal = Number(pct).toFixed(1);
+function getTierColor(pct) {
+  const value = parseFloat(pct);
+  if (value <= 33) return '#e74c3c';      // Rouge
+  if (value <= 66) return '#f1c40f';      // Jaune
+  return '#2ecc71';                       // Vert
+}
+
+/**
+ * Donut KPI
+ * @param {number|string} pct   Pourcentage (0‑100). Accepte string « xx.x ».
+ * @param {string} label        Libellé sous le donut
+ * @param {string} color        Couleur manuelle (#hex, rgb…), sinon auto
+ */
+export default function Donut({ pct = 0, label = '', color }) {
+  const pctVal = parseFloat(pct).toFixed(1);
+  const donutColor = color || getTierColor(pctVal);
 
   return (
     <div style={{ textAlign: 'center', minWidth: 120 }}>
@@ -18,11 +33,11 @@ export default function Donut({ pct = 0, label = '', color = '#1B75BC' }) {
         className="donut"
         style={{
           '--pct': pctVal,
-          '--clr': color,
+          '--clr': donutColor,
           width: 80,
           height: 80,
           borderRadius: '50%',
-          background: `conic-gradient(${color} ${pctVal}%, #eee 0)`,
+          background: `conic-gradient(${donutColor} ${pctVal}%, #eee 0)`,
           display: 'inline-block',
           position: 'relative',
         }}
