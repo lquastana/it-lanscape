@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import Legend from '../components/Legend';
 import Filters from '../components/Filters';
 import Cartography from '../components/Cartography';
-import ApplicativeView from '../components/ApplicativeView';
 import ChatBox from '../components/ChatBox';
 import Report from '../components/Report';
 import { useLandscapeData } from '../hooks/useLandscapeData';
@@ -13,27 +12,6 @@ import { useLandscapeData } from '../hooks/useLandscapeData';
 export default function Home() {
   const { data, sets, filters, updateFilter, interfaceColors, metrics } = useLandscapeData();
   const [reportVisible, setReportVisible] = useState(false);
-  const [view, setView] = useState('metier');
-
-  let content = null;
-  if (view === 'paysage')
-    content = (
-      <Cartography
-        data={data}
-        colors={interfaceColors}
-        condensedPrintView
-      />
-    );
-  if (view === 'metier')
-    content = (
-      <Cartography
-        data={data}
-        colors={interfaceColors}
-        condensedPrintView={false}
-      />
-    );
-  if (view === 'applicatif') content = <ApplicativeView data={data} />;
-
   return (
     <>
       <Head>
@@ -51,17 +29,10 @@ export default function Home() {
         <Legend colors={interfaceColors} />
         <Filters sets={sets} filters={filters} onChange={updateFilter} />
       </section>
-      <nav
-        className="view-switch"
-        style={{ position: 'fixed', top: 20, right: 20, display: 'flex', gap: '0.5rem' }}
-      >
-        <button onClick={() => setView('paysage')}>Vue Paysage</button>
-        <button onClick={() => setView('metier')}>Vue Métier</button>
-        <button onClick={() => setView('applicatif')}>Vue Applicatif</button>
-      </nav>
-      {content}
+      <Cartography data={data} colors={interfaceColors} />
       <Report metrics={metrics} visible={reportVisible} onClose={() => setReportVisible(false)} />
       <button id="report-toggle" onClick={() => setReportVisible(v => !v)}>🧠</button>
     </>
   );
 }
+
