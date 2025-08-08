@@ -18,20 +18,20 @@ export default function ApplicativeView({ data }) {
             <div className="apps">
               {apps.map(app => {
                 const servers = infraEtab
-                  ? infraEtab.serveurs.filter(s =>
-                      (s.applications || []).includes(app.trigramme)
+                  ? infraEtab.serveurs.filter(
+                      s => s.trigramme && s.trigramme === app.trigramme
                     )
                   : [];
                 return (
                   <div key={app.trigramme} className="application">
                     <h5>{app.nom}</h5>
                     {servers.map(s => (
-                      <details key={s.nom} className="server">
-                        <summary>{s.nom}</summary>
+                      <details key={s.VM} className="server">
+                        <summary>{s.VM}</summary>
                         <table className="server-details">
                           <tbody>
                             {Object.entries(s)
-                              .filter(([k]) => !['nom', 'applications'].includes(k))
+                              .filter(([k]) => !['VM', 'trigramme'].includes(k))
                               .map(([k, v]) => (
                                 <tr key={k}>
                                   <th>{k}</th>
