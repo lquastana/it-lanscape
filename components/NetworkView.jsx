@@ -26,7 +26,7 @@ export default function NetworkView({ data, search = '' }) {
           <h2>{etab.nom}</h2>
           {etab.vlans.map(vlan => (
             <details key={vlan.id} className="domain" open>
-              <summary><h3>{`VLAN-${vlan.id}`}</h3></summary>
+              <summary>{`VLAN-${vlan.id}`}</summary>
               <p>{vlan.description}</p>
               <p><strong>Réseau :</strong> {vlan.network}</p>
               <p><strong>Passerelle :</strong> {vlan.gateway}</p>
