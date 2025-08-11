@@ -122,6 +122,7 @@ export function useLandscapeData() {
     heberg: '',
     interface: '',
     multi: '',
+    search: '',
   });
 
   const sets = useFilterSets(raw);
@@ -135,6 +136,7 @@ export function useLandscapeData() {
         etab: [], domaine: [],
         criticite: '', heberg: '',
         interface: '', multi: '',
+        search: '',
       });
     } else {
       setFilters(f => ({ ...f, [name]: value }));

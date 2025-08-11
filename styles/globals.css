@@ -88,47 +88,138 @@ body {
 }
 
 
-/* --------------------------------------------------
-   Filtres avancés
--------------------------------------------------- */
-.filters {
+/* ---- Toolbar compacte ---- */
+.filters-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  margin: 8px 0 10px;
+}
+
+.search-compact {
+  position: relative;
+  flex: 1;
+  min-width: 260px;
+}
+.search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 36px 0 34px; /* place pour l'icône et le bouton clear */
+  border: 1.5px solid #b7c7d9;
+  border-radius: 8px;
+  background: #fff;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.search-input:focus {
+  border-color: #1B75BC;
+  box-shadow: 0 0 0 3px rgba(27, 117, 188, 0.18);
+}
+/* icône loupe (pseudo-élément) */
+.search-compact::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"%23000\" d=\"M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19 15.5 14Zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"/></svg>') center / contain no-repeat;
+  background: #6b7280; /* Couleur de l'icône */
+}
+.search-clear {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  color: #6b7280;
+}
+.search-clear:hover { background: rgba(0,0,0,.05); }
+
+.toolbar-actions { display: flex; gap: 8px; }
+.btn-secondary {
+  background: #fff;
+  color: #1B75BC;
+  border: 1px solid #cfe0ef;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-secondary:hover { filter: brightness(0.98); }
+.btn-reset {
+  background: #1B75BC;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-reset:hover { filter: brightness(1.05); }
+
+/* ---- Collapsibles ---- */
+.collapsible, .filters-collapsible {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height .3s ease, opacity .2s ease;
+}
+.collapsible.open, .filters-collapsible.open {
+  opacity: 1;
+  max-height: 1200px; /* assez grand pour le contenu */
+}
+
+/* Légende compacte en ligne */
+.legend-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 8px 2px 10px;
+}
+.legend-pill {
+  position: relative;
+  padding-left: 22px;
+  font-size: .92rem;
+  color: #333;
+}
+.legend-pill::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.25);
+  background: var(--legend-color, #ddd);
+}
+.legend-pill[data-color] { --legend-color: attr(data-color color); }
+
+/* Grille des filtres quand dépliée */
+.filters-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 14px;
   align-items: start;
+  padding-top: 10px;
 }
-@media(max-width:1100px) { .filters { grid-template-columns: repeat(2, 1fr); } }
-@media(max-width:650px)  { .filters { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { .filters-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 650px)  { .filters-grid { grid-template-columns: 1fr; } }
 
-.filter-item {
-  display: flex;
-  flex-direction: column;
-  font-size: .9rem;
-}
-.filter-item span {
-  margin-bottom: 4px;
-  font-weight: 600;
-}
-.filters select {
+.filter-item { display: flex; flex-direction: column; font-size: .9rem; }
+.filter-item span { margin-bottom: 4px; font-weight: 600; color: #111; }
+.filter-item .count { font-weight: 500; color: #1B75BC; font-style: normal; }
+.filters-grid select {
   width: 100%;
   padding: 6px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
-
-.filter-actions {
-  grid-column: 1 / -1;
-  text-align: right;
-}
-.filter-actions button {
-  background: #1B75BC;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-
 
 /* --------------------------------------------------
    Cartographie INTERACTIVE
@@ -377,7 +468,7 @@ body {
   background: #fff;
   z-index: 9999;
   padding: 24px;
-  box-shadow: 0 0 12px rgba(0,0,0,.3);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   transition: all .3s ease;
 }
 .chatbox.hidden { display: none; }
@@ -425,3 +516,34 @@ body {
   margin-top: 0.5rem;
 }
 
+.server {
+  margin: 8px 0;
+}
+
+.server-details {
+  margin-top: 10px;
+  width: 80%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.server-details th {
+  background: #eaf4ff;       /* bleu clair */
+  color: #0d4a78;
+  text-align: left;
+  padding: 4px 6px;
+  font-weight: 600;
+  width: 30%;
+}
+
+.server-details td {
+  background: #fff;
+  color: #111;
+  text-align: left;
+  padding: 4px 6px;
+}
+
+.server-details tr:not(:last-child) th,
+.server-details tr:not(:last-child) td {
+  border-bottom: 1px solid #d7e6f7;
+}
