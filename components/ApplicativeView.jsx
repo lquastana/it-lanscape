@@ -197,8 +197,9 @@ function EtabNormal({
                                       backgroundColor: app.criticite === 'Critique' ? '#d32f2f' : '#616161',
                                     }}
                                     title={`Criticité : ${app.criticite}`}
-                                  />
-                                  {app.criticite}
+                                  >
+                                    {app.criticite}
+                                  </span>
                                   <div className="iface-list">
                                     {Object.entries(app.interfaces || {}).map(([t, act]) =>
                                       act ? (
