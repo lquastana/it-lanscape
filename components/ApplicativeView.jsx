@@ -10,12 +10,35 @@ function useServerIndex(infraEtab) {
         map.set(tri, servers);
       });
     }
-    return map;
+  return map;
   }, [infraEtab]);
 }
 
-function EtabCondensed({ etab, infraEtab, colors, showSwitch, condensedPrintView, setCondensedPrintView }) {
+function appMatches(app, serverIndex, term) {
+  if (!term) return true;
+  if (app.nom.toLowerCase().includes(term)) return true;
+  if (app.trigramme) {
+    const servers = serverIndex.get(app.trigramme) || [];
+    return servers.some(s => s.VM.toLowerCase().includes(term));
+  }
+  return false;
+}
+
+function EtabCondensed({ etab, infraEtab, colors, showSwitch, condensedPrintView, setCondensedPrintView, search }) {
   const serverIndex = useServerIndex(infraEtab);
+  const term = search ? search.toLowerCase() : '';
+
+  const domains = etab.domaines
+    .map((dom, idx) => {
+      const processus = dom.processus
+        .map(proc => ({
+          ...proc,
+          applications: proc.applications.filter(app => appMatches(app, serverIndex, term)),
+        }))
+        .filter(p => p.applications.length > 0);
+      return { dom, idx, processus };
+    })
+    .filter(d => d.processus.length > 0);
 
   return (
     <div>
@@ -30,7 +53,7 @@ function EtabCondensed({ etab, infraEtab, colors, showSwitch, condensedPrintView
         )}
       </div>
       <div className="domains-condensed">
-        {etab.domaines.map((dom, idx) => {
+        {domains.map(({ dom, idx, processus }) => {
           const bgColor = DOMAIN_COLORS[idx % DOMAIN_COLORS.length];
           return (
             <div
@@ -40,7 +63,7 @@ function EtabCondensed({ etab, infraEtab, colors, showSwitch, condensedPrintView
             >
               <h3>{dom.nom}</h3>
               <div className="process-grid">
-                {dom.processus.map(proc => (
+                {processus.map(proc => (
                   <div key={proc.nom} className="process-box">
                     <strong>{proc.nom}</strong>
                     <div className="apps-row">
@@ -106,8 +129,22 @@ function EtabNormal({
   showSwitch,
   condensedPrintView,
   setCondensedPrintView,
+  search,
 }) {
   const serverIndex = useServerIndex(infraEtab);
+  const term = search ? search.toLowerCase() : '';
+
+  const domains = etab.domaines
+    .map((dom, idx) => {
+      const processus = dom.processus
+        .map(proc => ({
+          ...proc,
+          applications: proc.applications.filter(app => appMatches(app, serverIndex, term)),
+        }))
+        .filter(p => p.applications.length > 0);
+      return { dom, idx, processus };
+    })
+    .filter(d => d.processus.length > 0);
 
   return (
     <div>
@@ -121,7 +158,7 @@ function EtabNormal({
           </div>
         )}
       </div>
-      {etab.domaines.map((dom, idx) => {
+      {domains.map(({ dom, idx, processus }) => {
         const domOpen = openDomain[dom.nom] ?? true;
         const bg = DOMAIN_COLORS[idx % DOMAIN_COLORS.length];
         return (
@@ -132,7 +169,7 @@ function EtabNormal({
             {domOpen && (
               <>
                 <p>{dom.description}</p>
-                {dom.processus.map(proc => {
+                {processus.map(proc => {
                   const k = `${dom.nom}::${proc.nom}`;
                   const procOpen = openProcess[k] ?? true;
                   return (
@@ -159,10 +196,10 @@ function EtabNormal({
                                     style={{
                                       backgroundColor: app.criticite === 'Critique' ? '#d32f2f' : '#616161',
                                     }}
-                                  >
-                                    {app.criticite}
-                                  </span>
-                                  <div>
+                                    title={`Criticité : ${app.criticite}`}
+                                  />
+                                  {app.criticite}
+                                  <div className="iface-list">
                                     {Object.entries(app.interfaces || {}).map(([t, act]) =>
                                       act ? (
                                         <span
@@ -171,7 +208,7 @@ function EtabNormal({
                                           style={{ backgroundColor: colors[t], marginRight: 3 }}
                                           title={t}
                                         />
-                                      ) : null
+                                      ) : null,
                                     )}
                                   </div>
                                   <p>{app.description}</p>
@@ -230,7 +267,7 @@ function EtabNormal({
   );
 }
 
-export default function ApplicativeView({ data, colors = INTERFACE_COLORS }) {
+export default function ApplicativeView({ data, colors = INTERFACE_COLORS, search = '' }) {
   const { data: infra } = useInfrastructureData();
 
   const [openDomain, setOpenDomain] = useState({});
@@ -264,6 +301,7 @@ export default function ApplicativeView({ data, colors = INTERFACE_COLORS }) {
                 showSwitch={i === 0}
                 condensedPrintView={condensedPrintView}
                 setCondensedPrintView={setCondensedPrintView}
+                search={search}
               />
             );
           })}
@@ -286,6 +324,7 @@ export default function ApplicativeView({ data, colors = INTERFACE_COLORS }) {
               showSwitch={i === 0}
               condensedPrintView={condensedPrintView}
               setCondensedPrintView={setCondensedPrintView}
+              search={search}
             />
           );
         })

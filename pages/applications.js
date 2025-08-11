@@ -26,10 +26,10 @@ export default function ApplicationsPage() {
       </header>
       <section className="legend-wrapper">
         <h2 className="legend-title">Légende &amp; Filtres</h2>
-        <Legend colors={interfaceColors} />
-        <Filters sets={sets} filters={filters} onChange={updateFilter} />
-      </section>
-      <ApplicativeView data={data} />
-    </>
+      <Legend colors={interfaceColors} />
+      <Filters sets={sets} filters={filters} onChange={updateFilter} />
+    </section>
+    <ApplicativeView data={data} search={filters.search} />
+  </>
   );
 }

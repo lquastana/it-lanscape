@@ -22,6 +22,19 @@ export default function Filters({ sets, filters, onChange }) {
 
   return (
     <form className="filters" onSubmit={(e) => e.preventDefault()}>
+      {/* Recherche libre */}
+      <label className="filter-item">
+        <span>Recherche</span>
+        <input
+          type="text"
+          name="search"
+          value={filters.search}
+          onChange={handleText}
+          style={{ ...fullWidth, padding: 6, borderRadius: 6 }}
+          placeholder="Mot clé…"
+        />
+      </label>
+
       {/* Établissement (multi) */}
       <label className="filter-item">
         <span>Établissement</span>
