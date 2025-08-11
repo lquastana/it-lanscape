@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { DOMAIN_COLORS } from '../lib/constants';
+import { DOMAIN_COLORS, INTERFACE_COLORS } from '../lib/constants';
 import useInfrastructureData from '../hooks/useInfrastructureData';
 
 function useServerIndex(infraEtab) {
@@ -66,7 +66,7 @@ function EtabCondensed({ etab, infraEtab, colors, showSwitch, condensedPrintView
                                     <span
                                       key={t}
                                       className="iface-dot"
-                                      style={{ backgroundColor: colors[t] }}
+                                      style={{ backgroundColor: colors[t], marginRight: 3 }}
                                       title={t}
                                     />
                                   ) : null
@@ -168,7 +168,7 @@ function EtabNormal({
                                         <span
                                           key={t}
                                           className="iface-dot"
-                                          style={{ backgroundColor: colors[t] }}
+                                          style={{ backgroundColor: colors[t], marginRight: 3 }}
                                           title={t}
                                         />
                                       ) : null
@@ -230,7 +230,7 @@ function EtabNormal({
   );
 }
 
-export default function ApplicativeView({ data, colors = {} }) {
+export default function ApplicativeView({ data, colors = INTERFACE_COLORS }) {
   const { data: infra } = useInfrastructureData();
 
   const [openDomain, setOpenDomain] = useState({});
