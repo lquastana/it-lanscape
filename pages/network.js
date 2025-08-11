@@ -27,7 +27,7 @@ export default function NetworkPage() {
       <section className="legend-wrapper">
         <NetworkFilters filters={filters} onChange={updateFilter} />
       </section>
-      <NetworkView data={data} search={filters.search} />
+      <NetworkView data={data} />
     </>
   );
 }

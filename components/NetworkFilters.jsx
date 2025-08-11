@@ -4,6 +4,7 @@ export default function NetworkFilters({ filters, onChange }) {
   const searchRef = useRef(null);
   const handleText = e => onChange('search', e.target.value);
   const clearSearch = () => onChange('search', '');
+  const handleMode = e => onChange('mode', e.target.value);
   useEffect(() => {
     const onKey = e => {
       if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
@@ -38,6 +39,28 @@ export default function NetworkFilters({ filters, onChange }) {
             ✖
           </button>
         )}
+      </div>
+      <div className="search-mode" style={{ marginLeft: '1rem' }}>
+        <label style={{ marginRight: '0.5rem' }}>
+          <input
+            type="radio"
+            name="mode"
+            value="vlan"
+            checked={filters.mode === 'vlan'}
+            onChange={handleMode}
+          />
+          VLAN
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="mode"
+            value="server"
+            checked={filters.mode === 'server'}
+            onChange={handleMode}
+          />
+          Serveur
+        </label>
       </div>
     </div>
   );

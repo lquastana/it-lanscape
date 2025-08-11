@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import useInfrastructureData from '../hooks/useInfrastructureData';
 import { prettyLabel, prettyValue } from '../lib/utils';
 
-export default function NetworkView({ data, search = '' }) {
+export default function NetworkView({ data }) {
   const { data: infra } = useInfrastructureData();
 
   const serverIndex = useMemo(() => {
