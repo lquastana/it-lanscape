@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { DOMAIN_COLORS, INTERFACE_COLORS } from '../lib/constants';
+import {toGiBRounded,prettyLabel,prettyValue} from '../lib/utils';
 import useInfrastructureData from '../hooks/useInfrastructureData';
 
 function useServerIndex(infraEtab) {
@@ -89,7 +90,7 @@ function EtabCondensed({ etab, infraEtab, colors, showSwitch, condensedPrintView
                                     <span
                                       key={t}
                                       className="iface-dot"
-                                      style={{ backgroundColor: colors[t], marginRight: 3 }}
+                                      style={{ backgroundColor: colors[t] }}
                                       title={t}
                                     />
                                   ) : null
@@ -206,7 +207,7 @@ function EtabNormal({
                                         <span
                                           key={t}
                                           className="iface-dot"
-                                          style={{ backgroundColor: colors[t], marginRight: 3 }}
+                                          style={{ backgroundColor: colors[t] }}
                                           title={t}
                                         />
                                       ) : null,
@@ -218,9 +219,9 @@ function EtabNormal({
                                   </p>
                                   {app.trigramme && (
                                     <div className="servers-section">
-                                      <h6 onClick={() => toggleServers(etab.nom, app.trigramme)}>
+                                      <h5 onClick={() => toggleServers(etab.nom, app.trigramme)}>
                                         Serveurs logiques {sOpen ? '▼' : '▶︎'}
-                                      </h6>
+                                      </h5>
                                       {sOpen && (
                                         <>
                                           {servers.length > 0 ? (
@@ -233,8 +234,8 @@ function EtabNormal({
                                                       .filter(([k]) => !['VM', 'trigramme'].includes(k))
                                                       .map(([k, v]) => (
                                                         <tr key={k}>
-                                                          <th>{k}</th>
-                                                          <td>{Array.isArray(v) ? v.join(', ') : v}</td>
+                                                          <th className="server-key">{prettyLabel(k)}</th>
+                                                          <td className="server-val">{prettyValue(k, v)}</td>
                                                         </tr>
                                                       ))}
                                                   </tbody>
