@@ -31,34 +31,44 @@ export default function Report({ metrics = {}, visible = false, onClose }) {
 
   /* ---------- barres dynamiques ---------- */
   const totalHeberg = Object.values(hebergCounts).reduce((a, b) => a + b, 0);
-  const hebergBars = Object.entries(hebergCounts).map(([h, c]) => {
-    const pct = totalHeberg ? (c / totalHeberg * 100).toFixed(1) : 0;
+const hebergBars = Object.entries(hebergCounts)
+  .sort(([a], [b]) => {
+    const isGHT = str => str.startsWith('GHT');
+    const isCH = str => str.startsWith('CH');
+    if (isGHT(a) && !isGHT(b)) return -1;
+    if (!isGHT(a) && isGHT(b)) return 1;
+    if (isCH(a) && !isCH(b)) return -1;
+    if (!isCH(a) && isCH(b)) return 1;
+    return a.localeCompare(b);
+  })
+  .map(([h, count]) => {
+    const pct = totalHeberg ? (count / totalHeberg * 100).toFixed(1) : 0;
     const color = HEBERG_COLORS[h] ?? HEBERG_COLORS.DEFAULT;
     return (
       <Bar
         key={h}
         pct={pct}
         color={color}
-        label={`${h} : ${pct}%`}
+        label={`${h} : ${count}`}
       />
     );
   });
 
-  const ifaceBars = Object.entries(INTERFACE_COLORS)
-    .filter(([key]) => key !== 'DEFAULT')
-    .map(([iface, color]) => {
-      const pct = dpAppTotal
-        ? ((ifaceCoverage[iface] || 0) / dpAppTotal * 100).toFixed(1)
-        : 0;
-      return (
-        <Bar
-          key={iface}
-          pct={pct}
-          color={color}
-          label={`${iface} : ${pct}%`}
-        />
-      );
-    });
+  const ifaceOrder = ['Medicale', 'Administrative', 'Facturation', 'Planification', 'Autre'];
+
+  const ifaceBars = ifaceOrder.map((iface) => {
+    const color = INTERFACE_COLORS[iface] ?? INTERFACE_COLORS.DEFAULT;
+    const count = ifaceCoverage[iface] || 0;
+    const pct = dpAppTotal ? (count / dpAppTotal * 100).toFixed(1) : 0;
+    return (
+      <Bar
+        key={iface}
+        pct={pct}
+        color={color}
+        label={`${iface} : ${count}`}
+      />
+    );
+  });
 
   const critTotal = critStandard + critCritique;
 
@@ -129,15 +139,16 @@ export default function Report({ metrics = {}, visible = false, onClose }) {
       <section style={{ marginBottom: 32 }}>
         <h3>🔥 Répartition par criticité</h3>
         <Bar
-          pct={critTotal ? (critStandard / critTotal * 100).toFixed(1) : 0}
-          color="#4caf50"
-          label={`Standard : ${critStandard}`}
-        />
-        <Bar
           pct={critTotal ? (critCritique / critTotal * 100).toFixed(1) : 0}
           color="#d32f2f"
           label={`Critique : ${critCritique}`}
         />
+        <Bar
+          pct={critTotal ? (critStandard / critTotal * 100).toFixed(1) : 0}
+          color="#4caf50"
+          label={`Standard : ${critStandard}`}
+        />
+
       </section>
 
       {/* hébergement */}
