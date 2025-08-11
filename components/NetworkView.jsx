@@ -9,8 +9,8 @@ export default function NetworkView({ data, search = '' }) {
     const map = new Map();
     if (infra?.etablissements) {
       infra.etablissements.forEach(e => {
-        Object.values(e.applications || {}).forEach(list => {
-          list.forEach(s => map.set(s.VM.toLowerCase(), s));
+        (e.serveurs || []).forEach(s => {
+          if (s.VM) map.set(s.VM.toLowerCase(), s);
         });
       });
     }
@@ -25,38 +25,40 @@ export default function NetworkView({ data, search = '' }) {
         <div key={etab.nom} className="etab-block">
           <h2>{etab.nom}</h2>
           {etab.vlans.map(vlan => (
-            <div key={vlan.id} className="domain">
-              <h3>{`VLAN-${vlan.id}`}</h3>
+            <details key={vlan.id} className="domain" open>
+              <summary><h3>{`VLAN-${vlan.id}`}</h3></summary>
               <p>{vlan.description}</p>
               <p><strong>Réseau :</strong> {vlan.network}</p>
               <p><strong>Passerelle :</strong> {vlan.gateway}</p>
-              <div className="apps">
+              <ul className="server-list">
                 {vlan.serveurs.map(s => {
                   const info = serverIndex.get(s.nom.toLowerCase());
                   return (
-                    <details key={s.ip} className="server">
-                      <summary>{s.nom} — {s.ip}</summary>
-                      {info ? (
-                        <table className="server-details">
-                          <tbody>
-                            {Object.entries(info)
-                              .filter(([k]) => !['VM', 'trigramme'].includes(k))
-                              .map(([k, v]) => (
-                                <tr key={k}>
-                                  <th className="server-key">{prettyLabel(k)}</th>
-                                  <td className="server-val">{prettyValue(k, v)}</td>
-                                </tr>
-                              ))}
-                          </tbody>
-                        </table>
-                      ) : (
-                        <p style={{ fontSize: '0.9em', color: '#666' }}>Aucun détail infrastructure</p>
-                      )}
-                    </details>
+                    <li key={s.ip}>
+                      <details className="server">
+                        <summary>{s.nom} — {s.ip}</summary>
+                        {info ? (
+                          <table className="server-details">
+                            <tbody>
+                              {Object.entries(info)
+                                .filter(([k]) => !['VM', 'trigramme'].includes(k))
+                                .map(([k, v]) => (
+                                  <tr key={k}>
+                                    <th className="server-key">{prettyLabel(k)}</th>
+                                    <td className="server-val">{prettyValue(k, v)}</td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                        ) : (
+                          <p style={{ fontSize: '0.9em', color: '#666' }}>Aucun détail infrastructure</p>
+                        )}
+                      </details>
+                    </li>
                   );
                 })}
-              </div>
-            </div>
+              </ul>
+            </details>
           ))}
         </div>
       ))}

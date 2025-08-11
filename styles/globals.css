@@ -520,6 +520,12 @@ body {
   margin: 8px 0;
 }
 
+.server-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
 .server-details {
   margin-top: 10px;
   width: 80%;

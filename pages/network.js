@@ -25,7 +25,6 @@ export default function NetworkPage() {
         <p>Explorez les VLANs et leurs serveurs.</p>
       </header>
       <section className="legend-wrapper">
-        <h2 className="legend-title">Recherche</h2>
         <NetworkFilters filters={filters} onChange={updateFilter} />
       </section>
       <NetworkView data={data} search={filters.search} />

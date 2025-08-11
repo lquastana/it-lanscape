@@ -13,13 +13,14 @@ export default async function handler(req, res) {
       const content = await fs.readFile(path.join(dataDir, file), 'utf-8');
       const json = JSON.parse(content);
       const nom = json.etablissement || json.nom;
+      const allServers = json.serveurs || [];
       const grouped = {};
-      for (const srv of json.serveurs || []) {
+      for (const srv of allServers) {
         if (!srv.trigramme) continue;
         if (!grouped[srv.trigramme]) grouped[srv.trigramme] = [];
         grouped[srv.trigramme].push(srv);
       }
-      etablissements.push({ nom, applications: grouped });
+      etablissements.push({ nom, applications: grouped, serveurs: allServers });
     }
     res.status(200).json({ etablissements });
   } catch {
