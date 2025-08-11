@@ -26,7 +26,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TRD"
                 }
               ]
             },
@@ -49,7 +50,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "REC"
                 }
               ]
             },
@@ -72,7 +74,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "EPA"
                 }
               ]
             },
@@ -95,7 +98,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MAG"
                 },
                 {
                   "nom": "Hospitalis",
@@ -112,7 +116,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "HOS"
                 }
               ]
             },
@@ -151,7 +156,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "OFF"
                 }
               ]
             },
@@ -174,7 +180,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "COC"
                 }
               ]
             },
@@ -197,7 +204,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "DEA"
                 }
               ]
             },
@@ -220,7 +228,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "SHB"
                 }
               ]
             },
@@ -243,7 +252,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TEA"
                 }
               ]
             }
@@ -272,7 +282,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "PHX"
                 }
               ]
             },
@@ -295,7 +306,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "AGI"
                 },
                 {
                   "nom": "Hublo",
@@ -312,7 +324,8 @@
                     "Medicale": false,
                     "Facturation": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "HUB"
                 }
               ]
             },
@@ -335,7 +348,8 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TRB"
                 }
               ]
             },
@@ -358,7 +372,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "GES"
                 }
               ]
             },
@@ -381,7 +396,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "AGA"
                 }
               ]
             },
@@ -404,7 +420,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "AGB"
                 }
               ]
             }
@@ -433,7 +450,8 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TRB"
                 }
               ]
             },
@@ -456,7 +474,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "PMS"
                 },
                 {
                   "nom": "Outils ATIH",
@@ -473,7 +492,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "OUT"
                 }
               ]
             },
@@ -496,7 +516,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "BUS"
                 }
               ]
             },
@@ -519,7 +540,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "DIM"
                 }
               ]
             },
@@ -542,7 +564,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "PMS"
                 },
                 {
                   "nom": "Magellan",
@@ -559,7 +582,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MAA"
                 }
               ]
             }
@@ -588,7 +612,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "YES"
                 }
               ]
             },
@@ -616,7 +641,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "OFF"
                 }
               ]
             }
@@ -645,7 +671,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "HEM"
                 }
               ]
             },
@@ -668,7 +695,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TER"
                 }
               ]
             },
@@ -691,7 +719,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "CAA"
                 }
               ]
             },
@@ -714,7 +743,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "ASC"
                 },
                 {
                   "nom": "Drugcam",
@@ -731,7 +761,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "DRU"
                 }
               ]
             },
@@ -754,7 +785,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "DXE"
                 }
               ]
             },
@@ -777,7 +809,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "EXO"
                 }
               ]
             },
@@ -800,7 +833,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "ICC"
                 }
               ]
             }
@@ -834,7 +868,8 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TRB"
                 }
               ]
             },
@@ -857,7 +892,8 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "DIB"
                 }
               ]
             },
@@ -885,7 +921,8 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "GEO"
                 }
               ]
             }
@@ -914,7 +951,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "DXC"
                 },
                 {
                   "nom": "DxPlanning",
@@ -931,7 +969,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "DXP"
                 }
               ]
             },
@@ -954,7 +993,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "VIA"
                 },
                 {
                   "nom": "Sillage médicament",
@@ -971,7 +1011,8 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SIL"
                 },
                 {
                   "nom": "Thesorimed",
@@ -988,7 +1029,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "THE"
                 },
                 {
                   "nom": "Newac",
@@ -1005,7 +1047,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "NEW"
                 }
               ]
             },
@@ -1028,7 +1071,8 @@
                     "Administrative": true,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "WIN"
                 }
               ]
             },
@@ -1051,7 +1095,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "NUA"
                 }
               ]
             }
@@ -1085,7 +1130,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "XPL"
                 },
                 {
                   "nom": "Vepro (PACS)",
@@ -1102,7 +1148,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "VEP"
                 },
                 {
                   "nom": "SygID",
@@ -1119,7 +1166,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SYG"
                 }
               ]
             },
@@ -1142,7 +1190,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "KAA"
                 },
                 {
                   "nom": "Labo SA2B",
@@ -1159,7 +1208,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "LAB"
                 }
               ]
             },
@@ -1182,7 +1232,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "DXB"
                 }
               ]
             },
@@ -1205,7 +1256,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "MON"
                 }
               ]
             },
@@ -1228,7 +1280,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "DIC"
                 }
               ]
             },
@@ -1251,7 +1304,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "TEL"
                 },
                 {
                   "nom": "Alta Strada - RCP",
@@ -1268,7 +1322,8 @@
                     "Administrative": false,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "ALT"
                 },
                 {
                   "nom": "Alta Strada - Télémed.",
@@ -1285,7 +1340,8 @@
                     "Administrative": false,
                     "Medicale": true,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "ALA"
                 }
               ]
             }
@@ -1314,7 +1370,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MEB"
                 }
               ]
             },
@@ -1337,7 +1394,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "EIE"
                 },
                 {
                   "nom": "Enovacom",
@@ -1354,7 +1412,8 @@
                     "Administrative": true,
                     "Medicale": true,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "ENO"
                 }
               ]
             },
@@ -1377,7 +1436,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "ROR"
                 },
                 {
                   "nom": "CIODC",
@@ -1394,7 +1454,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "CIO"
                 },
                 {
                   "nom": "CIODM",
@@ -1411,7 +1472,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "CIA"
                 }
               ]
             }
@@ -1440,7 +1502,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SPL"
                 },
                 {
                   "nom": "Systancia Cyber Element",
@@ -1457,7 +1520,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SYA"
                 },
                 {
                   "nom": "Lockself",
@@ -1474,7 +1538,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "LOC"
                 }
               ]
             },
@@ -1497,7 +1562,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "BOC"
                 }
               ]
             },
@@ -1520,7 +1586,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "FOB"
                 },
                 {
                   "nom": "Vade m365 mail",
@@ -1537,7 +1604,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "VAA"
                 },
                 {
                   "nom": "Sentinel anti-virus",
@@ -1554,7 +1622,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SEN"
                 }
               ]
             },
@@ -1577,7 +1646,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "ORA"
                 },
                 {
                   "nom": "Sekoia exploitation",
@@ -1594,7 +1664,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "SEK"
                 }
               ]
             },
@@ -1617,7 +1688,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": false
-                  }
+                  },
+                  "trigramme": "AVA"
                 }
               ]
             }
@@ -1646,7 +1718,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "ARD"
                 }
               ]
             }
@@ -1675,7 +1748,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "PRT"
                 }
               ]
             },
@@ -1698,7 +1772,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "CLA"
                 }
               ]
             },
@@ -1721,7 +1796,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "SAU"
                 }
               ]
             }
@@ -1750,7 +1826,8 @@
                     "Administrative": false,
                     "Medicale": false,
                     "Autre": true
-                  }
+                  },
+                  "trigramme": "MAG"
                 }
               ]
             },

@@ -26,9 +26,30 @@ body {
   text-align: center;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  position: relative;
 }
 .hero h1 { margin: 0; font-size: 2.2rem; }
 .hero p { margin: 10px auto 0; max-width: 680px; }
+
+.view-switch {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+}
+.view-switch a {
+  background: #fff;
+  color: #1B75BC;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.view-switch a.active {
+  background: #0d4a78;
+  color: #fff;
+}
 
 
 
@@ -191,7 +212,7 @@ body {
 }
 
 .domain-box {
-  flex: 1 1 calc(50% - 1rem); /* 2 par ligne si possible */
+  flex: 1 1 calc(50% - 1rem);
   border: 2px solid;
   padding: 1rem;
   border-radius: 0.5rem;
@@ -202,7 +223,7 @@ body {
 
 @media (max-width: 900px) {
   .domain-box {
-    flex: 1 1 100%; /* 1 par ligne sur petit écran */
+    flex: 1 1 100%;
   }
 }
 
