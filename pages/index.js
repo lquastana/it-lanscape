@@ -22,6 +22,7 @@ export default function Home() {
         <div className="view-switch">
           <Link href="/" className="active">Vue Métier</Link>
           <Link href="/applications">Vue Applicative</Link>
+          <Link href="/network">Vue Réseau</Link>
         </div>
         <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           Cartographie des Hôpitaux Publics de Corse
