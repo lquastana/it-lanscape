@@ -1,12 +1,13 @@
+
 {
   "etablissement": "CH Ajaccio",
   "serveurs": [
     {
-      "VM": "3PAR_SSMC_3.7",
+      "VM": "vm-1",
       "CPUs": 4,
       "MemoryMiB": 16384,
       "TotalDiskCapacityMiB": 512000,
-      "PrimaryIPAddress": "172.20.106.5",
+      "PrimaryIPAddress": "198.51.100.1",
       "Antivirus": "Non préconisé par Spie",
       "Contact": "David Etienne - +33 6 33 40 76 37 - david.etienne@emerging-it.fr",
       "Editeur": null,
@@ -16,11 +17,11 @@
       "trigramme": ""
     },
     {
-      "VM": "3PAR-SAN01_VSP",
+      "VM": "vm-2",
       "CPUs": 4,
       "MemoryMiB": 4096,
       "TotalDiskCapacityMiB": 524288,
-      "PrimaryIPAddress": "172.20.106.9",
+      "PrimaryIPAddress": "198.51.100.2",
       "Antivirus": "Non préconisé par Spie",
       "Contact": "David Etienne - +33 6 33 40 76 37 - david.etienne@emerging-it.fr",
       "Editeur": null,
@@ -30,11 +31,11 @@
       "trigramme": ""
     },
     {
-      "VM": "3PAR-SAN02_VSP",
+      "VM": "vm-3",
       "CPUs": 4,
       "MemoryMiB": 4096,
       "TotalDiskCapacityMiB": 524288,
-      "PrimaryIPAddress": "172.20.106.19",
+      "PrimaryIPAddress": "198.51.100.3",
       "Antivirus": "Non préconisé par Spie",
       "Contact": "David Etienne - +33 6 33 40 76 37 - david.etienne@emerging-it.fr",
       "Editeur": null,
@@ -44,11 +45,11 @@
       "trigramme": ""
     },
     {
-      "VM": "ASC3-BDD",
+      "VM": "vm-4",
       "CPUs": 2,
       "MemoryMiB": 16384,
       "TotalDiskCapacityMiB": 194560,
-      "PrimaryIPAddress": "172.20.103.58",
+      "PrimaryIPAddress": "198.51.100.4",
       "Antivirus": "SentinelOne",
       "Contact": "Stéphane GUTTING – 0476637655 – 0785106233 - support@coachis-sante.fr",
       "Editeur": "Alma",
@@ -58,11 +59,11 @@
       "trigramme": "ASC"
     },
     {
-      "VM": "ASC3-PROD",
+      "VM": "vm-5",
       "CPUs": 2,
       "MemoryMiB": 8192,
       "TotalDiskCapacityMiB": 92160,
-      "PrimaryIPAddress": "172.20.103.73",
+      "PrimaryIPAddress": "198.51.100.5",
       "Antivirus": "SentinelOne",
       "Contact": "Stéphane GUTTING – 0476637655 – 0785106233 - support@coachis-sante.fr",
       "Editeur": "Alma",
@@ -72,11 +73,11 @@
       "trigramme": "ASC"
     },
     {
-      "VM": "ASC3-TEST",
+      "VM": "vm-6",
       "CPUs": 2,
       "MemoryMiB": 8192,
       "TotalDiskCapacityMiB": 92160,
-      "PrimaryIPAddress": "172.20.103.74",
+      "PrimaryIPAddress": "198.51.100.6",
       "Antivirus": "SentinelOne",
       "Contact": null,
       "Editeur": "Alma",
@@ -86,7 +87,7 @@
       "trigramme": "ASC"
     },
     {
-      "VM": "CORLAB",
+      "VM": "vm-7",
       "CPUs": 2,
       "MemoryMiB": 6144,
       "TotalDiskCapacityMiB": 122880,

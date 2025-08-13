@@ -1,76 +1,267 @@
+
 {
   "etablissement": "CH Ajaccio",
   "vlans": [
     {
       "id": 103,
-      "nom": "SRVMED_MIS",
-      "description": "VLAN des serveurs médicaux Miséricorde",
-      "network": "172.20.103.0/24",
+      "nom": "VLAN-1",
+      "description": "Anonymized VLAN 1",
+      "network": "192.0.2.0/24",
       "interco": "INTERCO-NCHA",
-      "gateway": "172.21.103.254",
+      "gateway": "192.0.2.254",
       "serveurs": [
-        { "ip": "172.20.103.1", "nom": "SRV-SCANBAC-22" },
-        { "ip": "172.20.103.2", "nom": "MPL2VMSERV" },
-        { "ip": "172.20.103.3", "nom": "SRV-PACS-DCM2" },
-        { "ip": "172.20.103.4", "nom": "SRV-MYLA" },
-        { "ip": "172.20.103.7", "nom": "SRV-FOCALPOINT" },
-        { "ip": "172.20.103.8", "nom": "SRV-IBE-IMG" },
-        { "ip": "172.20.103.9", "nom": "SRV-IBE-IX" },
-        { "ip": "172.20.103.10", "nom": "SRV-OPTIMSPMWEB" },
-        { "ip": "172.20.103.11", "nom": "SRV-OPTIMSPMDB" },
-        { "ip": "172.20.103.12", "nom": "SRV-DATACEN-IMG" },
-        { "ip": "172.20.103.13", "nom": "SRV-PHILIPS-ISP" },
-        { "ip": "172.20.103.14", "nom": "SRV-SMS" },
-        { "ip": "172.20.103.15", "nom": "SRV-EPMANAGER" },
-        { "ip": "172.20.103.18", "nom": "SRV-SYSUS" },
-        { "ip": "172.20.103.19", "nom": "SRV-COAGONE" },
-        { "ip": "172.20.103.20", "nom": "SRV-URT2-22" },
-        { "ip": "172.20.103.24", "nom": "SRV-MALDI" },
-        { "ip": "172.20.103.25", "nom": "SRV-THERMOPATCH" },
-        { "ip": "172.20.103.26", "nom": "SRV-BDD-DIAMIC" },
-        { "ip": "172.20.103.27", "nom": "SRV-INT-DIAMIC" },
-        { "ip": "172.20.103.28", "nom": "SRV-PRINT-DIAMIC" },
-        { "ip": "172.20.103.29", "nom": "SRV-SCAN-DIAMIC" },
-        { "ip": "172.20.103.30", "nom": "SRV-TEST-DIAMIC" },
-        { "ip": "172.20.103.31", "nom": "SRV-SYGID" },
-        { "ip": "172.20.103.32", "nom": "SRV-XPRINT-CARD" },
-        { "ip": "172.20.103.33", "nom": "AWS-ILO", "commentaire": "Serveur Physique salle1" },
-        { "ip": "172.20.103.34", "nom": "AWS", "commentaire": "Serveur Physique salle1" },
-        { "ip": "172.20.103.35", "nom": "SRV-KALISIL" },
-        { "ip": "172.20.103.37", "nom": "SRV-EMG-24" },
-        { "ip": "172.20.103.38", "nom": "SRV-QFR-23" },
-        { "ip": "172.20.103.39", "nom": "SRV-READB-24" },
-        { "ip": "172.20.103.40", "nom": "SRV-REAWEB-24" },
-        { "ip": "172.20.103.41", "nom": "SRV-REAWEB-T-24" },
-        { "ip": "172.20.103.44", "nom": "srv-cardioimg" },
-        { "ip": "172.20.103.45", "nom": "srv-cardioreport" },
-        { "ip": "172.20.103.47", "nom": "SRV-VIGITEMP-22" },
-        { "ip": "172.20.103.48", "nom": "srv-viewpoint" },
-        { "ip": "172.20.103.49", "nom": "srv-xmedburn-19" },
-        { "ip": "172.20.103.50", "nom": "srv-xprint-19" },
-        { "ip": "172.20.103.51", "nom": "SRV-PHARMABDD" },
-        { "ip": "172.20.103.52", "nom": "SRV-PHARMAWEB" },
-        { "ip": "172.20.103.53", "nom": "SRV-PHARMAWEB-T" },
-        { "ip": "172.20.103.54", "nom": "SRV-PHARMAINT-T" },
-        { "ip": "172.20.103.55", "nom": "SRV-PHARMAINT" },
-        { "ip": "172.20.103.56", "nom": "SRV-DOSEWATCH" },
-        { "ip": "172.20.103.57", "nom": "SRV-KALISIL-TEST" },
-        { "ip": "172.20.103.58", "nom": "ASC3-BDD" },
-        { "ip": "172.20.103.59", "nom": "SRV-EEG-24" },
-        { "ip": "172.20.103.60", "nom": "SRV-INTUITIVE", "commentaire": "Robot Chrirurgical" },
-        { "ip": "172.20.103.61", "nom": "SRV-KALISIL-REP" },
-        { "ip": "172.20.103.62", "nom": "SRV-GLEAMER-24" },
-        { "ip": "172.20.103.63", "nom": "SRV-KALIRES-PREPROD", "commentaire": "Voir si a supprimer???" },
-        { "ip": "172.20.103.64", "nom": "SRV-HEMADIAL-PROD" },
-        { "ip": "172.20.103.65", "nom": "SRV-HEMADIAL-TEST" },
-        { "ip": "172.20.103.66", "nom": "SRV-KALIRES" },
-        { "ip": "172.20.103.68", "nom": "SRV-DRUGCAM" },
-        { "ip": "172.20.103.69", "nom": "SRV-DRUGCAM-T" },
-        { "ip": "172.20.103.70", "nom": "SYNAAJACCIO" },
-        { "ip": "172.20.103.71", "nom": "SYNAAJACCIO-DCM" },
-        { "ip": "172.20.103.72", "nom": "SRV-NEXUS" },
-        { "ip": "172.20.103.73", "nom": "ASC3-PROD" },
-        { "ip": "172.20.103.74", "nom": "ASC3-TEST" }
+        {
+          "ip": "192.0.2.1",
+          "nom": "server-1"
+        },
+        {
+          "ip": "192.0.2.2",
+          "nom": "server-2"
+        },
+        {
+          "ip": "192.0.2.3",
+          "nom": "server-3"
+        },
+        {
+          "ip": "192.0.2.4",
+          "nom": "server-4"
+        },
+        {
+          "ip": "192.0.2.5",
+          "nom": "server-5"
+        },
+        {
+          "ip": "192.0.2.6",
+          "nom": "server-6"
+        },
+        {
+          "ip": "192.0.2.7",
+          "nom": "server-7"
+        },
+        {
+          "ip": "192.0.2.8",
+          "nom": "server-8"
+        },
+        {
+          "ip": "192.0.2.9",
+          "nom": "server-9"
+        },
+        {
+          "ip": "192.0.2.10",
+          "nom": "server-10"
+        },
+        {
+          "ip": "192.0.2.11",
+          "nom": "server-11"
+        },
+        {
+          "ip": "192.0.2.12",
+          "nom": "server-12"
+        },
+        {
+          "ip": "192.0.2.13",
+          "nom": "server-13"
+        },
+        {
+          "ip": "192.0.2.14",
+          "nom": "server-14"
+        },
+        {
+          "ip": "192.0.2.15",
+          "nom": "server-15"
+        },
+        {
+          "ip": "192.0.2.16",
+          "nom": "server-16"
+        },
+        {
+          "ip": "192.0.2.17",
+          "nom": "server-17"
+        },
+        {
+          "ip": "192.0.2.18",
+          "nom": "server-18"
+        },
+        {
+          "ip": "192.0.2.19",
+          "nom": "server-19"
+        },
+        {
+          "ip": "192.0.2.20",
+          "nom": "server-20"
+        },
+        {
+          "ip": "192.0.2.21",
+          "nom": "server-21"
+        },
+        {
+          "ip": "192.0.2.22",
+          "nom": "server-22"
+        },
+        {
+          "ip": "192.0.2.23",
+          "nom": "server-23"
+        },
+        {
+          "ip": "192.0.2.24",
+          "nom": "server-24"
+        },
+        {
+          "ip": "192.0.2.25",
+          "nom": "server-25"
+        },
+        {
+          "ip": "192.0.2.26",
+          "nom": "server-26",
+          "commentaire": "Serveur Physique salle1"
+        },
+        {
+          "ip": "192.0.2.27",
+          "nom": "server-27",
+          "commentaire": "Serveur Physique salle1"
+        },
+        {
+          "ip": "192.0.2.28",
+          "nom": "server-28"
+        },
+        {
+          "ip": "192.0.2.29",
+          "nom": "server-29"
+        },
+        {
+          "ip": "192.0.2.30",
+          "nom": "server-30"
+        },
+        {
+          "ip": "192.0.2.31",
+          "nom": "server-31"
+        },
+        {
+          "ip": "192.0.2.32",
+          "nom": "server-32"
+        },
+        {
+          "ip": "192.0.2.33",
+          "nom": "server-33"
+        },
+        {
+          "ip": "192.0.2.34",
+          "nom": "server-34"
+        },
+        {
+          "ip": "192.0.2.35",
+          "nom": "server-35"
+        },
+        {
+          "ip": "192.0.2.36",
+          "nom": "server-36"
+        },
+        {
+          "ip": "192.0.2.37",
+          "nom": "server-37"
+        },
+        {
+          "ip": "192.0.2.38",
+          "nom": "server-38"
+        },
+        {
+          "ip": "192.0.2.39",
+          "nom": "server-39"
+        },
+        {
+          "ip": "192.0.2.40",
+          "nom": "server-40"
+        },
+        {
+          "ip": "192.0.2.41",
+          "nom": "server-41"
+        },
+        {
+          "ip": "192.0.2.42",
+          "nom": "server-42"
+        },
+        {
+          "ip": "192.0.2.43",
+          "nom": "server-43"
+        },
+        {
+          "ip": "192.0.2.44",
+          "nom": "server-44"
+        },
+        {
+          "ip": "192.0.2.45",
+          "nom": "server-45"
+        },
+        {
+          "ip": "192.0.2.46",
+          "nom": "server-46"
+        },
+        {
+          "ip": "192.0.2.47",
+          "nom": "server-47"
+        },
+        {
+          "ip": "192.0.2.48",
+          "nom": "server-48"
+        },
+        {
+          "ip": "192.0.2.49",
+          "nom": "server-49",
+          "commentaire": "Robot Chrirurgical"
+        },
+        {
+          "ip": "192.0.2.50",
+          "nom": "server-50"
+        },
+        {
+          "ip": "192.0.2.51",
+          "nom": "server-51"
+        },
+        {
+          "ip": "192.0.2.52",
+          "nom": "server-52",
+          "commentaire": "Voir si a supprimer???"
+        },
+        {
+          "ip": "192.0.2.53",
+          "nom": "server-53"
+        },
+        {
+          "ip": "192.0.2.54",
+          "nom": "server-54"
+        },
+        {
+          "ip": "192.0.2.55",
+          "nom": "server-55"
+        },
+        {
+          "ip": "192.0.2.56",
+          "nom": "server-56"
+        },
+        {
+          "ip": "192.0.2.57",
+          "nom": "server-57"
+        },
+        {
+          "ip": "192.0.2.58",
+          "nom": "server-58"
+        },
+        {
+          "ip": "192.0.2.59",
+          "nom": "server-59"
+        },
+        {
+          "ip": "192.0.2.60",
+          "nom": "server-60"
+        },
+        {
+          "ip": "192.0.2.61",
+          "nom": "server-61"
+        },
+        {
+          "ip": "192.0.2.62",
+          "nom": "server-62"
+        }
       ]
     }
   ]
