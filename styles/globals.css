@@ -232,6 +232,12 @@ body {
   padding: 10px;
 }
 .domain h3 { cursor: pointer; margin: 0 0 4px; }
+.domain > summary {
+  cursor: pointer;
+  margin: 0 0 4px;
+  font-size: 1.17em;
+  font-weight: 600;
+}
 
 .process {
   border: 1px solid #ccc;
@@ -518,6 +524,12 @@ body {
 
 .server {
   margin: 8px 0;
+}
+
+.server-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
 }
 
 .server-details {

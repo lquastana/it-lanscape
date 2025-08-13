@@ -7,20 +7,13 @@ export default async function handler(req, res) {
   }
   try {
     const dataDir = path.join(process.cwd(), 'data');
-    const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.infra.json'));
+    const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.network.json'));
     const etablissements = [];
     for (const file of files) {
       const content = await fs.readFile(path.join(dataDir, file), 'utf-8');
       const json = JSON.parse(content);
       const nom = json.etablissement || json.nom;
-      const allServers = json.serveurs || [];
-      const grouped = {};
-      for (const srv of allServers) {
-        if (!srv.trigramme) continue;
-        if (!grouped[srv.trigramme]) grouped[srv.trigramme] = [];
-        grouped[srv.trigramme].push(srv);
-      }
-      etablissements.push({ nom, applications: grouped, serveurs: allServers });
+      etablissements.push({ nom, vlans: json.vlans || [] });
     }
     res.status(200).json({ etablissements });
   } catch {

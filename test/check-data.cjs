@@ -5,7 +5,14 @@ const dataDir = path.join(__dirname, '..', 'data');
 let ok = true;
 
 for (const file of fs.readdirSync(dataDir)) {
-  if (!file.endsWith('.json') || file === 'trigrammes.json' || file.endsWith('.infra.json')) continue;
+  if (
+    !file.endsWith('.json') ||
+    file === 'trigrammes.json' ||
+    file.endsWith('.infra.json') ||
+    file.endsWith('.network.json')
+  ) {
+    continue;
+  }
   try {
     const data = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf-8'));
     if (!Array.isArray(data.etablissements)) {
