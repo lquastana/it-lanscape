@@ -175,7 +175,7 @@ export default function Admin() {
       {/* ----------- Modale édition ----------- */}
       <dialog ref={dlgRef} id="editor" onCancel={()=>setEdit(null)}>
         {edit && (
-          <form onSubmit={handleSubmit} style={{minWidth:'300px'}}>
+          <form onSubmit={handleSubmit} style={{minWidth:'300px'}} key={edit.path?.join('/')}> 
             {edit.type==='process' ? (
               <>
                 <h3>Processus</h3>
