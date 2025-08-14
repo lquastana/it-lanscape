@@ -4,8 +4,8 @@
       "nom": "CH Ajaccio",
       "domaines": [
         {
-          "nom": "Support",
-          "description": "Applications logistiques et d’approvisionnement.",
+          "nom": "Support & logistique",
+          "description": "Soutenir les activités hospitalières : achats, stocks, linge, restauration, services techniques et logistique interne.",
           "processus": [
             {
               "nom": "DMI",
@@ -33,7 +33,7 @@
             },
             {
               "nom": "Repas personnel",
-              "description": "Gestion des repas du personnel.",
+              "description": "Planifier, fournir et suivre les repas du personnel.",
               "applications": [
                 {
                   "nom": "RECO",
@@ -57,12 +57,12 @@
             },
             {
               "nom": "Portail achat PUI",
-              "description": "Portail d’achats pharmacie à usage intérieur.",
+              "description": "Approvisionner la pharmacie à usage intérieur via les marchés régionaux.",
               "applications": [
                 {
                   "nom": "GRECAPS",
                   "description": "Groupement Régional Corse d’Achats de Produits de Santé.",
-                  "editeur": null,
+                  "editeur": "GCS GRECAPS",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": false,
@@ -81,12 +81,12 @@
             },
             {
               "nom": "GEF / Inventaire",
-              "description": "Gestion des équipements et inventaire.",
+              "description": "Gérer les immobilisations, matériels et inventaires physiques.",
               "applications": [
                 {
                   "nom": "Magh2",
-                  "description": "Suivi des immobilisations et inventaires.",
-                  "editeur": null,
+                  "description": "GEF/immobilisations & inventaires.",
+                  "editeur": "Numih",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -103,7 +103,7 @@
                 },
                 {
                   "nom": "Hospitalis",
-                  "description": "Plateforme SaaS de digitalisation de la supply chain hospitalièr.",
+                  "description": "Plateforme Saas de digitalisation de la supply chain hospitalière.",
                   "editeur": "Cegedim Business Services",
                   "referent": null,
                   "hebergement": "Saas",
@@ -128,7 +128,7 @@
                 {
                   "nom": "Marco",
                   "description": "Suivi contractuel des marchés.",
-                  "editeur": null,
+                  "editeur": "AGYSOFT",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": false,
@@ -152,7 +152,7 @@
                 {
                   "nom": "Polytex",
                   "description": "Traçabilité et logistique du linge.",
-                  "editeur": null,
+                  "editeur": "Polytex Technologies",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -190,6 +190,96 @@
                     "Autre": true
                   },
                   "trigramme": "HOA"
+                }
+              ]
+            },
+            {
+              "nom": "Service Technique",
+              "description": "Traiter les demandes, maintenir et contrôler les équipements et locaux.",
+              "applications": [
+                {
+                  "nom": "Asset+",
+                  "description": "GMAO / asset management pour le service technique",
+                  "editeur": "GE",
+                  "referent": "Olivier Sillis",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "ASS"
+                }
+              ]
+            },
+            {
+              "nom": "Service Patient",
+              "description": "Fournir des services aux patients (Wi-Fi, appel malade, information).",
+              "applications": [
+                {
+                  "nom": "Ucopia",
+                  "description": "Portail captif & gestion du Wi-Fi invités/patients.",
+                  "editeur": "Weblib",
+                  "referent": "Olivier Sillis",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "UC2"
+                },
+                {
+                  "nom": "Systevo",
+                  "description": "Système d’appel malade (postes patient, combinés, lampes couloir).",
+                  "editeur": "Honeywell",
+                  "referent": "",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "SY2"
+                }
+              ]
+            },
+            {
+              "nom": "Logistique",
+              "description": "Acheminer biens/équipements (pneumatique, AGV, chariots) et tracer les flux.",
+              "applications": [
+                {
+                  "nom": "Lify",
+                  "description": "Armoire robotisée/AGV sécurisée pour transporter et tracer des produits médicaux (Poche Chimiothérapie)",
+                  "editeur": "BA Mobility",
+                  "referent": "Dume Bartoli",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "LIF"
                 }
               ]
             }
@@ -276,22 +366,46 @@
               "description": "Gestion électronique des documents.",
               "applications": [
                 {
-                  "nom": "SharePoint",
-                  "description": "Plate-forme documentaire collaborative.",
-                  "editeur": "Microsoft",
+                  "nom": "Yes - Gala",
+                  "description": "Gestion documentaire qualité.",
+                  "editeur": "Yes",
                   "referent": null,
-                  "hebergement": "Saas",
+                  "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
-                  "criticite": "Critique",
+                  "criticite": "Standard",
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
                     "Facturation": false,
                     "Administrative": false,
                     "Medicale": false,
-                    "Autre": false
+                    "Autre": true
                   },
-                  "trigramme": "SHA"
+                  "trigramme": "YES"
+                }
+              ]
+            },
+            {
+              "nom": "Parapheur",
+              "description": "Signer, viser et tracer les actes et documents numérisés.",
+              "applications": [
+                {
+                  "nom": "Parapheur",
+                  "description": "Signature électronique avec certificats",
+                  "editeur": "Numih",
+                  "referent": "",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Critique",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "PAR"
                 }
               ]
             }
@@ -308,7 +422,7 @@
                 {
                   "nom": "PH7",
                   "description": "Solution de paie hospitalière.",
-                  "editeur": null,
+                  "editeur": "Numih",
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -374,9 +488,9 @@
                 {
                   "nom": "Pastel",
                   "description": "Gestion des factures patients.",
-                  "editeur": null,
+                  "editeur": "Numih",
                   "referent": null,
-                  "hebergement": "Saas",
+                  "hebergement": "Numih",
                   "multiEtablissement": true,
                   "criticite": "Critique",
                   "lienPRTG": null,
@@ -392,7 +506,7 @@
               ]
             },
             {
-              "nom": "Formation GPMC",
+              "nom": "Formation",
               "description": "Gestion prévisionnelle des emplois et compétences.",
               "applications": [
                 {
@@ -412,6 +526,42 @@
                     "Autre": true
                   },
                   "trigramme": "GES"
+                },
+                {
+                  "nom": "Formeis",
+                  "description": "Logiciel de gestion des formations pour l'ifsi",
+                  "editeur": "Epsilon",
+                  "referent": "",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "FE2"
+                },
+                {
+                  "nom": "FormeisFC",
+                  "description": "Gestion des formations CESU",
+                  "editeur": "Epsilon",
+                  "referent": "",
+                  "hebergement": "Saas",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "FEC"
                 }
               ]
             },
@@ -444,10 +594,10 @@
               "description": "Gestion du temps des praticiens.",
               "applications": [
                 {
-                  "nom": "AGIRH GTT",
+                  "nom": "AGIRH GTA Médical",
                   "description": "Gestion du Temps de Travail (médical).",
                   "editeur": "MIPIH",
-                  "referent": "Frédéric Paccosi",
+                  "referent": "Affaires médicales",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
                   "criticite": "Standard",
@@ -476,9 +626,9 @@
                 {
                   "nom": "Pastel",
                   "description": "Module actes & RSS dans Pastel.",
-                  "editeur": null,
+                  "editeur": "Numih",
                   "referent": null,
-                  "hebergement": "Saas",
+                  "hebergement": "Numih",
                   "multiEtablissement": false,
                   "criticite": "Critique",
                   "lienPRTG": null,
@@ -566,7 +716,7 @@
                 {
                   "nom": "Magellan",
                   "description": "Suite d’outils décisionnels pour le pilotage économique.",
-                  "editeur": "SIB",
+                  "editeur": "Numih",
                   "referent": "Nina Lebeau",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -594,7 +744,7 @@
               "description": "Suivi des indicateurs qualité.",
               "applications": [
                 {
-                  "nom": "Yes",
+                  "nom": "Yes - Gala",
                   "description": "Gestion documentaire qualité.",
                   "editeur": null,
                   "referent": null,
@@ -667,8 +817,8 @@
               "applications": [
                 {
                   "nom": "Terminal Urgences",
-                  "description": "Triage Urgences : dossier médical du patient.",
-                  "editeur": "IES",
+                  "description": "Outil métier d’accueil/tri et dossier patient des urgences ; intègre les référentiels.",
+                  "editeur": "IESS",
                   "referent": "Lisandru Benedetti",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -682,25 +832,8 @@
                     "Autre": true
                   },
                   "trigramme": "TER"
-                },
-                {
-                  "nom": "ORUBox",
-                  "description": "Gestion des AVC par télémédecine (échanges HL7 ORU).",
-                  "editeur": "ORU PACA",
-                  "referent": "Lisandru Benedetti",
-                  "hebergement": "Saas",
-                  "multiEtablissement": false,
-                  "criticite": "Standard",
-                  "lienPRTG": "https://prtg-gcs.chg-aj.local/device.htm?id=30354&tabid=1",
-                  "interfaces": {
-                    "Planification": false,
-                    "Facturation": false,
-                    "Administrative": false,
-                    "Medicale": false,
-                    "Autre": false
-                  },
-                  "trigramme": "ORU"
                 }
+                
               ]
             },
             {
@@ -708,9 +841,9 @@
               "description": "Suivi clinico-biologique des patients de réanimation.",
               "applications": [
                 {
-                  "nom": "Care Suite",
+                  "nom": "Care Suite - PICIS",
                   "description": "Dossier de réanimation.",
-                  "editeur": null,
+                  "editeur": "Harris Healthcare",
                   "referent": "Chef réanimation",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -794,7 +927,7 @@
                 {
                   "nom": "Edmus",
                   "description": "Gestion des soins intensifs néonataux, pédiatriques et adultes",
-                  "editeur": null,
+                  "editeur": "EDMUS Foundation",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -810,9 +943,9 @@
                   "trigramme": "EDM"
                 },
                 {
-                  "nom": "Delta Med",
-                  "description": "Gestion des électroencéphalogrammes (EEG) enregistre l'activité électrique produite par les neurones du cerveau.",
-                  "editeur": null,
+                  "nom": "EEG",
+                  "description": "Gestion des électroencéphalogrammes (EEG).",
+                  "editeur": "Natus",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -826,6 +959,24 @@
                     "Autre": false
                   },
                   "trigramme": "DEL"
+                },
+                {
+                  "nom": "EMG",
+                  "description": "Le logiciel EMG est une solution pour la réalisation des études d’électromyographie (EMG).",
+                  "editeur": "Natus",
+                  "referent": null,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "EMG"
                 },
                 {
                   "nom": "Neurophy",
@@ -856,7 +1007,7 @@
                   "description": "Suivi centralisé des patients vaccinés.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "CH Ajaccio",
+                  "hebergement": "Saas",
                   "multiEtablissement": false,
                   "criticite": "Standard",
                   "lienPRTG": null,
@@ -870,9 +1021,9 @@
                   "trigramme": "SSP"
                 },
                 {
-                  "nom": "Suite ImmunPrévention",
-                  "description": "Gestion des campagnes vaccinales.",
-                  "editeur": null,
+                  "nom": "Damoc",
+                  "description": "Un suivi complet des cas de tuberculose.",
+                  "editeur": "Epiconcept",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": false,
@@ -885,7 +1036,43 @@
                     "Medicale": false,
                     "Autre": false
                   },
-                  "trigramme": "SUI"
+                  "trigramme": "DAM"
+                },
+                {
+                  "nom": "Cupidon",
+                  "description": "CUPIDON répond aux besoins d’Information, Dépistage et Diagnostic des infections par les virus de l’immunodéficience humaine, des hépatites virales et des IST.",
+                  "editeur": "Epiconcept",
+                  "referent": null,
+                  "hebergement": "Saas",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "CUP"
+                },
+                {
+                  "nom": "Vaxi",
+                  "description": "Gestion des campagnes vaccinales.",
+                  "editeur": "Epiconcept",
+                  "referent": null,
+                  "hebergement": "Saas",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "VAX"
                 }
               ]
             },
@@ -1014,6 +1201,31 @@
                   "trigramme": "DRU"
                 }
               ]
+            },
+            {
+              "nom": "Infectiologie",
+              "description": "Prise en charge des infections complexes : avis infectieux, prescription et suivi des anti-infectieux.",
+              "applications": [
+                {
+                  "nom": "NADIS",
+                  "description": "Dossier médical infectiologie/CEGIDD pour le suivi VIH, hépatites et IST, interfacé SIH/biologie.",
+                  "editeur": "ABL",
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "ASC"
+                }
+              
+              ]
             }
           ]
         },
@@ -1030,7 +1242,7 @@
                   "description": "Admission, identités, mouvements.",
                   "editeur": null,
                   "referent": null,
-                  "hebergement": "Saas",
+                  "hebergement": "Numih",
                   "multiEtablissement": false,
                   "criticite": "Critique",
                   "lienPRTG": null,
@@ -1042,6 +1254,24 @@
                     "Autre": false
                   },
                   "trigramme": "PAS"
+                },
+                {
+                  "nom": "Démat. BE",
+                  "description": "Démat du dossier administratif patient",
+                  "editeur": "Numih",
+                  "referent": "Elodie Arbori",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "DEB"
                 }
               ]
             },
@@ -1106,7 +1336,7 @@
                 {
                   "nom": "DxCare",
                   "description": "DPI – dossier clinique central.",
-                  "editeur": null,
+                  "editeur": "Dedalus",
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -1180,6 +1410,24 @@
                     "Autre": true
                   },
                   "trigramme": "VID"
+                },
+                {
+                  "nom": "Antibiogarde",
+                  "description": "Référentiel antibiotherapie",
+                  "editeur": "TANDEREV",
+                  "referent": "",
+                  "hebergement": "Saas",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "AN2"
                 }
               ]
             },
@@ -1345,7 +1593,7 @@
                 {
                   "nom": "Xplore (RIS)",
                   "description": "Gestion des examens radiologiques.",
-                  "editeur": null,
+                  "editeur": "EDL",
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -1395,6 +1643,24 @@
                     "Autre": false
                   },
                   "trigramme": "XDP"
+                },
+                {
+                  "nom": "Boneview & Chestview",
+                  "description": "IA interprétation imagerie traumato et pulmonaire",
+                  "editeur": "Gleamer",
+                  "referent": "Julien Versini",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "GLE"
                 }
               ]
             },
@@ -1405,7 +1671,7 @@
                 {
                   "nom": "Kalisil/Kalilab",
                   "description": "Gestion chaîne analytique.",
-                  "editeur": null,
+                  "editeur": "Dedalus",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -1421,13 +1687,13 @@
                   "trigramme": "KAL"
                 },
                 {
-                  "nom": "EpiCenter",
-                  "description": "Veille épidémiologique.",
-                  "editeur": null,
-                  "referent": null,
+                  "nom": "Maestria",
+                  "description": "Middleware de microbiologie (orchestration flux, analytics CLARION, interfaces LIS).",
+                  "editeur": "Biomerieux",
+                  "referent": "Sandrine Gaffory",
                   "hebergement": "CH Ajaccio",
-                  "multiEtablissement": false,
                   "criticite": "Standard",
+                  "multiEtablissement": false,
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,
@@ -1436,7 +1702,7 @@
                     "Medicale": false,
                     "Autre": false
                   },
-                  "trigramme": "EPI"
+                  "trigramme": "MAE"
                 },
                 {
                   "nom": "Adagio",
@@ -1476,7 +1742,7 @@
                 },
                 {
                   "nom": "CoagOne",
-                  "description": "Middleware de gestion de la coagulation (hémostase).",
+                  "description": "Middleware d’hémostase (standardisation, auto-validation, KPI).",
                   "editeur": "Stago",
                   "referent": "Clarisse Durand",
                   "hebergement": "CH Ajaccio",
@@ -1495,7 +1761,7 @@
                 {
                   "nom": "MPL Roche",
                   "description": "Serveur Roche middleware.",
-                  "editeur": null,
+                  "editeur": "Roche Diagnostics",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -1509,6 +1775,24 @@
                     "Autre": false
                   },
                   "trigramme": "MPL"
+                },
+                {
+                  "nom": "Kalires",
+                  "description": "Serveur de résultats patients",
+                  "editeur": "Dedalus",
+                  "referent": "Sandrine Gaffory",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "KA2"
                 }
               ]
             },
@@ -1518,8 +1802,8 @@
               "applications": [
                 {
                   "nom": "Diamic",
-                  "description": "Gestion des examens anapath.",
-                  "editeur": null,
+                  "description": "Système d’information d’anatomopathologie (flux labo, comptes-rendus).",
+                  "editeur": "Dedalus",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -1542,9 +1826,9 @@
               "applications": [
                 {
                   "nom": "Optim",
-                  "description": "Gestion et traçabilité du circuit de stérilisation.",
+                  "description": "Traçabilité & pilotage temps réel du circuit de stérilisation (Optim/SPM).",
                   "editeur": "NEXUS",
-                  "referent": null,
+                  "referent": "NEXUS",
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
                   "criticite": "Standard",
@@ -1585,7 +1869,7 @@
                 {
                   "nom": "DxBloc",
                   "description": "Gestion informatisée du bloc.",
-                  "editeur": null,
+                  "editeur": "Dedalus",
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -1602,8 +1886,8 @@
                 },
                 {
                   "nom": "SMS",
-                  "description": "SMS : Surgical Multimedia System ... Affichage des examens sur les moniteurs du bloc opératoire via un DICOM viewer adapté pour renforcer les contrastes.",
-                  "editeur": null,
+                  "description": "Intégration/gestion vidéo du bloc (acquisition, routage, affichage 4K, enregistrement).",
+                  "editeur": "ICN Metris",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -1619,9 +1903,9 @@
                   "trigramme": "SMS"
                 },
                 {
-                  "nom": "Induitive",
-                  "description": "Intuitive : Serveur  pilotage et archivage (PACS) du Robot ",
-                  "editeur": null,
+                  "nom": "DaVinci",
+                  "description": "Plateforme d’enregistrement/streaming des vidéos opératoires du robot Da Vinci, marquage automatique, stockage sécurisé et diffusion live (télé-mentorat).",
+                  "editeur": "Intuitive",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -1634,11 +1918,11 @@
                     "Medicale": false,
                     "Autre": false
                   },
-                  "trigramme": "IND"
+                  "trigramme": "DAV"
                 },
                 {
                   "nom": "EP Manager",
-                  "description": "Pilotage entretien des endoscopes",
+                  "description": "Traçabilité électronique, suivi temps réel et maintenance du parc d’endoscopes",
                   "editeur": null,
                   "referent": null,
                   "hebergement": "CH Ajaccio",
@@ -1655,6 +1939,48 @@
                   "trigramme": "EPM"
                 }
               ]
+            },
+            {
+              "nom": "Radioprotection",
+              "description": "",
+              "applications": [
+                {
+                  "nom": "DoseWatch",
+                  "description": "Suivi de dose patient multi-modèles : capture, analyse, alertes.",
+                  "editeur": "GE",
+                  "referent": "Xavier Carrolaggi",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "DOW"
+                },
+                {
+                  "nom": "Sygid",
+                  "description": "Dosimétrie opérateur : gestion des doses reçues, supervision parc.",
+                  "editeur": "APVL",
+                  "referent": "Xavier Carrolaggi",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "SYG"
+                }
+              ]
             }
           ]
         },
@@ -1669,7 +1995,7 @@
                 {
                   "nom": "Medimail",
                   "description": "MSS pour échanges externes sécurisés.",
-                  "editeur": null,
+                  "editeur": "Numih",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": false,
@@ -1693,7 +2019,7 @@
                 {
                   "nom": "Cloverleaf",
                   "description": "EAI hospitalier principal.",
-                  "editeur": null,
+                  "editeur": "Infor",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -1753,7 +2079,7 @@
                 {
                   "nom": "CIODC",
                   "description": "Cadre de référence standardisé pour décrire et classifier les objets d'information en santé. Le CIODC facilite l’interopérabilité en structurant les données échangées entre applications, au service de la coordination des soins et de la cohérence du SI.",
-                  "editeur": null,
+                  "editeur": "PHAST",
                   "referent": null,
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -1801,7 +2127,7 @@
                 {
                   "nom": "Splashtop",
                   "description": "Accès bureau distant sécurisé.",
-                  "editeur": null,
+                  "editeur": "Splashtop Inc.",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": true,
@@ -1819,7 +2145,7 @@
                 {
                   "nom": "Systancia Cyber Element",
                   "description": "Bastion d’administration.",
-                  "editeur": null,
+                  "editeur": "Systancia",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": true,
@@ -1837,7 +2163,7 @@
                 {
                   "nom": "Lockself",
                   "description": "Coffre-fort mots de passe.",
-                  "editeur": null,
+                  "editeur": "LockSelf",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": false,
@@ -1861,7 +2187,7 @@
                 {
                   "nom": "Board of Cybere",
                   "description": "Tableaux de bord cyber.",
-                  "editeur": null,
+                  "editeur": "Board of Cyber",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": true,
@@ -1921,7 +2247,7 @@
                 {
                   "nom": "Vade Cloud",
                   "description": "Antispam Exchange.",
-                  "editeur": null,
+                  "editeur": "Vade",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": true,
@@ -1939,7 +2265,7 @@
                 {
                   "nom": "Sentinel anti-virus",
                   "description": "Protection endpoints.",
-                  "editeur": null,
+                  "editeur": "SentinelOne",
                   "referent": null,
                   "hebergement": "Saas",
                   "multiEtablissement": true,
@@ -1995,6 +2321,42 @@
                     "Autre": false
                   },
                   "trigramme": "SEK"
+                },
+                {
+                  "nom": "FortiAnalyzer Local",
+                  "description": "FortiAnalyzer offre une journalisation, des analyses et une automatisation centralisées pour le Fortinet local",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "FA2"
+                },
+                {
+                  "nom": "FortiAnalyzer SDWAN",
+                  "description": "FortiAnalyzer offre une journalisation, des analyses et une automatisation centralisées pour le Fortinet SDWAN.",
+                  "editeur": null,
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "FO2"
                 }
               ]
             },
@@ -2059,7 +2421,7 @@
                 {
                   "nom": "Transponet",
                   "description": "Pilotage transport pneumatique.",
-                  "editeur": null,
+                  "editeur": "Swisslog Healthcare",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
@@ -2073,6 +2435,48 @@
                     "Autre": true
                   },
                   "trigramme": "TRA"
+                }
+              ]
+            },
+            {
+              "nom": "Anti fugue",
+              "description": "",
+              "applications": [
+                {
+                  "nom": "Carecom",
+                  "description": "Anti fugue eugenie",
+                  "editeur": "Tunstall",
+                  "referent": "",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "CA2"
+                },
+                {
+                  "nom": "Omni",
+                  "description": "Anti-rapt",
+                  "editeur": "Centrak",
+                  "referent": "",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "OM3"
                 }
               ]
             }

@@ -4,7 +4,7 @@
       "nom": "GHT Haute Corse",
       "domaines": [
         {
-          "nom": "Support",
+          "nom": "Support & logistique",
           "description": "Applications logistiques et d'approvisionnement.",
           "processus": [
             {
@@ -33,7 +33,7 @@
             },
             {
               "nom": "Repas personnel",
-              "description": "Gestion des repas du personnel.",
+              "description": "Planifier, fournir et suivre les repas du personnel.",
               "applications": [
                 {
                   "nom": "RECO",
@@ -81,7 +81,7 @@
             },
             {
               "nom": "GEF / Inventaire",
-              "description": "Gestion des équipements et inventaire.",
+              "description": "Gérer les immobilisations, matériels et inventaires physiques.",
               "applications": [
                 {
                   "nom": "Magh2",
@@ -836,6 +836,31 @@
                   },
                   "trigramme": "ICC"
                 }
+              ]
+            },
+                        {
+              "nom": "Infectiologie",
+              "description": "Prise en charge des infections complexes : avis infectieux, prescription et suivi des anti-infectieux.",
+              "applications": [
+                {
+                  "nom": "NADIS",
+                  "description": "Dossier médical infectiologie/CEGIDD pour le suivi VIH, hépatites et IST, interfacé SIH/biologie.",
+                  "editeur": "ABL",
+                  "referent": null,
+                  "hebergement": "SITEC",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "ASC"
+                }
+              
               ]
             }
           ]
