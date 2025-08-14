@@ -14,7 +14,8 @@ const IFACE_KEYS = ['Planification','Facturation','Administrative','Medicale','A
 const EMPTY_APP = {
   nom:'', description:'', editeur:'', referent:'', hebergement:'',
   criticite:'Standard', multiEtablissement:false, lienPRTG:null,
-  interfaces: Object.fromEntries(IFACE_KEYS.map(k=>[k,false]))
+  interfaces: Object.fromEntries(IFACE_KEYS.map(k=>[k,false])),
+  trigramme:''
 };
 
 export default function Admin() {
@@ -30,7 +31,13 @@ export default function Admin() {
   useEffect(() => {
     fetch('/api/files')
       .then(r => r.json())
-      .then(({ files }) => setFiles(files))
+      .then(({ files }) =>
+        setFiles(
+          files.filter(
+            f => !f.endsWith('.infra.json') && !f.endsWith('.network.json') && f !== 'trigrammes.json'
+          )
+        )
+      )
       .catch(() => setStatus('Erreur de chargement de la liste des fichiers'));
   }, []);
 
@@ -101,7 +108,8 @@ export default function Admin() {
         editeur:fd.get('editeur'), referent:fd.get('referent'),
         hebergement:fd.get('hebergement'), criticite:fd.get('criticite'),
         multiEtablissement:fd.get('multi')==='on', lienPRTG:edit.obj.lienPRTG,
-        interfaces:interfacesObj
+        interfaces:interfacesObj,
+        trigramme:(fd.get('trigramme')||'').toUpperCase()
       };
       if (edit.isNew) patchAtPath(edit.path.slice(0,-1), arr=>[...arr,newApp]);
       else patchAtPath(edit.path, ()=>newApp);
@@ -167,7 +175,7 @@ export default function Admin() {
       {/* ----------- Modale édition ----------- */}
       <dialog ref={dlgRef} id="editor" onCancel={()=>setEdit(null)}>
         {edit && (
-          <form onSubmit={handleSubmit} style={{minWidth:'300px'}}>
+          <form onSubmit={handleSubmit} style={{minWidth:'300px'}} key={edit.path?.join('/')}> 
             {edit.type==='process' ? (
               <>
                 <h3>Processus</h3>
@@ -182,6 +190,7 @@ export default function Admin() {
                 <label>Éditeur<br/><input name="editeur" defaultValue={edit.obj.editeur||''} style={{width:'100%'}}/></label><br/>
                 <label>Référent<br/><input name="referent" defaultValue={edit.obj.referent||''} style={{width:'100%'}}/></label><br/>
                 <label>Hébergement<br/><input name="hebergement" defaultValue={edit.obj.hebergement||''} style={{width:'100%'}}/></label><br/>
+                <label>Trigramme<br/><input name="trigramme" defaultValue={edit.obj.trigramme||''} style={{width:'100%'}}/></label><br/>
                 <label>Criticité <select name="criticite" defaultValue={edit.obj.criticite||'Standard'}><option>Standard</option><option>Critique</option></select></label><br/>
                 <label><input type="checkbox" name="multi" defaultChecked={edit.obj.multiEtablissement}/> Multi‑établissement</label>
                 <fieldset style={{border:'1px solid #ccc',padding:'6px',marginTop:'10px'}}>

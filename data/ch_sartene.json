@@ -155,8 +155,8 @@
           ]
         },
         {
-          "nom": "Support",
-          "description": "Applications logistiques et d’approvisionnement.",
+          "nom": "Support & logistique",
+          "description": "Soutenir les activités hospitalières : achats, stocks, linge, restauration, services techniques et logistique interne.",
           "processus": [
             {
               "nom": "GEF / Inventaire",
