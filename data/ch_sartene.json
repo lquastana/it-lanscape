@@ -27,7 +27,7 @@
                     "Medicale": false,
                     "Autre": false
                   },
-                  "trigramme": "TRB"
+                  "trigramme": "TRC"
                 }
               ]
             }
@@ -94,7 +94,7 @@
                     "Facturation": true,
                     "Autre": true
                   },
-                  "trigramme": "GEB"
+                  "trigramme": "GEN"
                 }
               ]
             }
@@ -417,7 +417,7 @@
               "description": "GED et évènements indésirables",
               "applications": [
                 {
-                  "nom": "Yes",
+                  "nom": "Yes - Gala",
                   "description": "Gestion documentaire qualité & événements indésirables",
                   "hebergement": "CH Sartène",
                   "multiEtablissement": false,

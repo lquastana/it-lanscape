@@ -158,7 +158,7 @@
                     "Medicale": false,
                     "Autre": true
                   },
-                  "trigramme": "TRB"
+                  "trigramme": "TRC"
                 }
               ]
             },
@@ -540,7 +540,7 @@
                     "Medicale": false,
                     "Autre": true
                   },
-                  "trigramme": "TRB"
+                  "trigramme": "TRC"
                 }
               ]
             },
@@ -597,7 +597,7 @@
               "description": "Gestion du temps de travail des praticiens.",
               "applications": [
                 {
-                  "nom": "AGIRH GTT",
+                  "nom": "AGIRH GTA Médical",
                   "description": "Module AGIRH pour le suivi du temps médical.",
                   "editeur": null,
                   "referent": null,
@@ -627,7 +627,7 @@
               "description": "Gestion documentaire qualité et suivi des indicateurs.",
               "applications": [
                 {
-                  "nom": "Yes",
+                  "nom": "Yes - Gala",
                   "description": "Solution de gestion documentaire qualité et gestion des risques.",
                   "editeur": null,
                   "referent": null,
@@ -677,7 +677,7 @@
                     "Medicale": false,
                     "Autre": true
                   },
-                  "trigramme": "TRB"
+                  "trigramme": "TRC"
                 }
               ]
             },

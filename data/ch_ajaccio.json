@@ -166,6 +166,24 @@
                     "Autre": true
                   },
                   "trigramme": "POL"
+                },
+                {
+                  "nom": "Thermopatch linge",
+                  "description": "Thermopatch propose des solutions d’étiquetage, transferts et patchs thermofixés pour le linge (uniformes, linge plat, travail, hôtel), durables, résistants aux lavages industriels (jusqu’à 95 °C) et très fiables.",
+                  "editeur": "Thermopatch",
+                  "referent": null,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "TH2"
                 }
               ]
             },
@@ -917,6 +935,24 @@
                     "Autre": false
                   },
                   "trigramme": "INB"
+                },
+                {
+                  "nom": "QFR angio 3D",
+                  "description": "QFR 3D est un logiciel qui reconstruit en 3D les coronaires à partir d’angiographies et calcule, sans cathéter ni mesure invasive, l’impact fonctionnel des sténoses pour guider la décision clinique.",
+                  "editeur": "Medis",
+                  "referent": "Julien Versini",
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "QF3"
                 }
               ]
             },
@@ -926,7 +962,7 @@
               "applications": [
                 {
                   "nom": "Edmus",
-                  "description": "Gestion des soins intensifs néonataux, pédiatriques et adultes",
+                  "description": "EDMUS est une logiciel qui contient une base de données pour vos patients atteints de sclérose en plaque, pour la pratique médicale, mais aussi scientifique.",
                   "editeur": "EDMUS Foundation",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
@@ -958,7 +994,7 @@
                     "Medicale": false,
                     "Autre": false
                   },
-                  "trigramme": "DEL"
+                  "trigramme": "EEG"
                 },
                 {
                   "nom": "EMG",
@@ -977,6 +1013,24 @@
                     "Autre": false
                   },
                   "trigramme": "EMG"
+                },
+                {
+                  "nom": "RELVID",
+                  "description": "Gestion des électroencéphalogrammes (EEG), avant EEG Natus conservé pour antériorité des données.",
+                  "editeur": "Natus",
+                  "referent": null,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "REL"
                 },
                 {
                   "nom": "Neurophy",
@@ -1222,7 +1276,7 @@
                     "Medicale": false,
                     "Autre": false
                   },
-                  "trigramme": "ASC"
+                  "trigramme": "NAD"
                 }
               
               ]
@@ -1452,6 +1506,24 @@
                     "Autre": true
                   },
                   "trigramme": "WIN"
+                },
+                {
+                  "nom": "SOCAMEL",
+                  "description": "Logiciel de supervision et de traçabilité des équipements de distribution de repas, permettant le suivi en temps réel, la gestion des cycles (chauffe, refroidissement, nettoyage) et la remontée d’alertes pour sécuriser et optimiser la logistique alimentaire.",
+                  "editeur": "SOCAMEL",
+                  "referent": null,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "SO3"
                 }
               ]
             },
@@ -1793,6 +1865,78 @@
                     "Autre": false
                   },
                   "trigramme": "KA2"
+                },
+                {
+                  "nom": "Aqure",
+                  "description": "Serveur de résultats patients",
+                  "editeur": "Radiometer",
+                  "referent": "Sandrine Gaffory",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "AQ3"
+                },
+                {
+                  "nom": "ScanBac",
+                  "description": "Scan’Bac est un ensemble de logiciels de lecture automatique de documents par scanner, conçu pour simplifier et fiabiliser les flux de données dans les laboratoires (analyses, paillasses, prescriptions)",
+                  "editeur": "3SI",
+                  "referent": "Sandrine Gaffory",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "SC2"
+                },
+                {
+                  "nom": "MALDI Biotyper",
+                  "description": "MALDI Biotyper est un logiciel associé à la spectrométrie de masse MALDI‑TOF. Il permet d’identifier rapidement et de manière fiable des micro-organismes (bactéries, levures, champignons), en comparant leur empreinte protéique à une base de données complète",
+                  "editeur": "Bruker",
+                  "referent": "Sandrine Gaffory",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "MA4"
+                },
+                                {
+                  "nom": "URT2",
+                  "description": "URT2 – gestion avancée et en temps réel des contrôles qualité internes (CQ) en laboratoire",
+                  "editeur": "Steinberg",
+                  "referent": "Sandrine Gaffory",
+                  "hebergement": "CH Ajaccio",
+                  "criticite": "Standard",
+                  "multiEtablissement": false,
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "UR2"
                 }
               ]
             },
@@ -2511,6 +2655,31 @@
               ]
             },
             {
+              "nom": "Supervision Température",
+              "description": "Surveillance des capteurs et seuils de température avec alertes automatiques.",
+              "applications": [
+                {
+                  "nom": "VigiTemp",
+                  "description": "SVigiTemp est un logiciel de supervision multiparamètres (température, pression, CO₂, hygrométrie...).",
+                  "editeur": "mc2lab",
+                  "referent": "",
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": "",
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "VG2"
+                }
+              ]
+            },
+
+            {
               "nom": "GLPI",
               "description": "Gestion de parc et support.",
               "applications": [
@@ -2534,6 +2703,7 @@
                 }
               ]
             }
+
           ]
         },
         {
