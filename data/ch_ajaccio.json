@@ -496,7 +496,26 @@
                     "Autre": true
                   },
                   "trigramme": "HUB"
+                },
+                {
+                  "nom": "Reporting RH",
+                  "description": "Gestion modules RHLook + SAE + Bilan Social + CGA.",
+                  "editeur": "Numih",
+                  "referent": null,
+                  "hebergement": "CH Ajaccio",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Facturation": false,
+                    "Autre": true
+                  },
+                  "trigramme": "RH8"
                 }
+
               ]
             },
             {
@@ -614,7 +633,7 @@
                 {
                   "nom": "AGIRH GTA Médical",
                   "description": "Gestion du Temps de Travail (médical).",
-                  "editeur": "MIPIH",
+                  "editeur": "Numih",
                   "referent": "Affaires médicales",
                   "hebergement": "SITEC",
                   "multiEtablissement": true,
@@ -2741,7 +2760,7 @@
                 {
                   "nom": "Prodige (GDR)",
                   "description": "Nomenclature services et UF.",
-                  "editeur": "MIPIH",
+                  "editeur": "Numih",
                   "referent": null,
                   "hebergement": "CH Ajaccio",
                   "multiEtablissement": false,
