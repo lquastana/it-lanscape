@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DOMAIN_COLORS } from '../lib/constants';
 
-export default function Cartography({ data, colors }) {
+export default function Cartography({ data, colors, search }) {
   if (!data) return <main id="content">Chargement…</main>;
 
   const [openDomain, setOpenDomain] = useState({});
@@ -14,13 +14,54 @@ export default function Cartography({ data, colors }) {
   const toggleProcess = (d, p) =>
     setOpenProcess(o => ({ ...o, [`${d}::${p}`]: !(o[`${d}::${p}`] ?? true) }));
 
+  const etablissements = useMemo(() => {
+    const term = (search || '').toLowerCase();
+    if (!term) return data.etablissements;
+
+    return data.etablissements
+      .map(e => {
+        const domaines = e.domaines
+          .map(d => {
+            const processus = d.processus
+              .map(p => {
+                const applications = p.applications.filter(app => {
+                  const nom = app.nom.toLowerCase();
+                  const desc = (app.description || '').toLowerCase();
+                  const tri = (app.trigramme || '').toLowerCase();
+                  return (
+                    nom.includes(term) || desc.includes(term) || tri.includes(term)
+                  );
+                });
+                return { ...p, applications };
+              })
+              .filter(
+                p =>
+                  p.applications.length > 0 ||
+                  p.nom.toLowerCase().includes(term) ||
+                  (p.description || '').toLowerCase().includes(term),
+              );
+            return { ...d, processus };
+          })
+          .filter(
+            d =>
+              d.processus.length > 0 ||
+              d.nom.toLowerCase().includes(term) ||
+              (d.description || '').toLowerCase().includes(term),
+          );
+        return { ...e, domaines };
+      })
+      .filter(
+        e => e.domaines.length > 0 || e.nom.toLowerCase().includes(term),
+      );
+  }, [data, search]);
+
   return (
     <main id="content">
       <div className="carto-container">
 
       {condensedPrintView ? (
         <div className="print-grid">
-   {data.etablissements.map((etab, i) => (
+   {etablissements.map((etab, i) => (
     <div key={etab.nom}>
       <div className="etab-header">
       <h2>{etab.nom}</h2>
@@ -99,7 +140,7 @@ export default function Cartography({ data, colors }) {
   ))}
 </div>
       ) : (
-        data.etablissements.map((etab, i) => (
+        etablissements.map((etab, i) => (
           <div key={etab.nom}>
             <div className="etab-header">
             <h2>{etab.nom}</h2>

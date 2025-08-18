@@ -34,7 +34,7 @@ export default function Home() {
         <Legend colors={interfaceColors} />
         <Filters sets={sets} filters={filters} onChange={updateFilter} />
       </section>
-      <Cartography data={data} colors={interfaceColors} />
+      <Cartography data={data} colors={interfaceColors} search={filters.search} />
       <Report metrics={metrics} visible={reportVisible} onClose={() => setReportVisible(false)} />
       <button id="report-toggle" onClick={() => setReportVisible(v => !v)}>🧠</button>
     </>
