@@ -7,6 +7,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 
 /* ---------- structures vides ---------- */
 const EMPTY_PROCESS = { nom: '', description: '', applications: [] };
@@ -128,6 +129,7 @@ export default function Admin() {
           <option value="">— Sélectionner un fichier —</option>
           {files.map(f=> <option key={f}>{f}</option>)}
         </select>
+        <Link className="primary" href="/infrastructure-import">Importer une infra Excel</Link>
         <button className="primary" disabled={!data} onClick={handleSave}>💾 Enregistrer</button>
         <span className="status">{status}</span>
       </section>
