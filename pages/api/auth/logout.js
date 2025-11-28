@@ -1,5 +1,8 @@
-export default function handler(_req, res) {
-  res.setHeader('Set-Cookie', 'user=; Path=/; Max-Age=0');
-  res.writeHead(302, { Location: '/login.html' });
-  res.end();
+import { getIronSession } from 'iron-session';
+import { sessionOptions } from '../../../lib/session';
+
+export default async function logoutRoute(req, res) {
+  const session = await getIronSession(req, res, sessionOptions);
+  session.destroy();
+  res.status(200).json({ ok: true });
 }

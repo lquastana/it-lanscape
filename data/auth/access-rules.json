@@ -1,11 +1,11 @@
 {
-  "allowedIps": ["127.0.0.1"],
+  "allowedIps": ["185.15.24.118"],
   "allowedCidrs": ["10.0.0.0/8", "192.168.0.0/16"],
   "establishments": [
     {
       "id": "ch_ajaccio",
       "username": "ajaccio",
-      "password": "$2b$10$rnO4xmaBkd2ZJSpQN40qje7zNyhUH87truQyzjyFlFSI9OV1KGloG"
+      "password": "$2b$10$Wf9C0cGvpuReMivnnNACqezLmg55G0T4hwDOf8jwvhzP3Cf1Zng.m"
     },
     {
       "id": "chg_haute_corse",

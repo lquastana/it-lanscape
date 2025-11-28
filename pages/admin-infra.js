@@ -339,7 +339,7 @@ export default function InfrastructureImport() {
           gap: 20px;
           padding: 26px 0 60px;
           grid-template-columns: 1fr;
-          margin-top: -34px;
+          margin-top: 20px;
           position: relative;
           z-index: 1;
         }

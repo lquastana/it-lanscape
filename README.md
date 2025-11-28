@@ -73,9 +73,9 @@ docker-compose build
 docker-compose up
 ```
 
-### 🛂 Authentification locale (Passport.js)
-Le formulaire `/login.html` utilise la stratégie `passport-local`.
-Les comptes sont définis dans `data/users.json` avec des mots de passe hachés via `bcrypt`.
+### 🛂 Authentification locale
+Le formulaire `/login.html` utilise une stratégie locale.
+Les comptes sont définis dans `data/auth/access-rules.json` avec des mots de passe hachés via `bcrypt`.
 
 Variables d'environnement utiles :
 

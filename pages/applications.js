@@ -5,9 +5,8 @@ import Legend from '../components/Legend';
 import Filters from '../components/Filters';
 import ApplicativeView from '../components/ApplicativeView';
 import { useLandscapeData } from '../hooks/useLandscapeData';
-import { evaluateAccess } from '../lib/accessControl';
 
-export default function ApplicationsPage({ authorized = true }) {
+export default function ApplicationsPage() {
   const { data, sets, filters, updateFilter, interfaceColors } = useLandscapeData();
   return (
     <>
@@ -46,18 +45,4 @@ export default function ApplicationsPage({ authorized = true }) {
       </div>
     </>
   );
-}
-
-export async function getServerSideProps({ req }) {
-  const access = await evaluateAccess(req);
-  if (!access.allowed) {
-    return {
-      redirect: {
-        destination: '/login.html',
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: { authorized: true } };
 }

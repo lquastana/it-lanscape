@@ -4,9 +4,8 @@ import { motion } from 'framer-motion';
 import NetworkFilters from '../components/NetworkFilters';
 import NetworkView from '../components/NetworkView';
 import useNetworkData from '../hooks/useNetworkData';
-import { evaluateAccess } from '../lib/accessControl';
 
-export default function NetworkPage({ authorized = true }) {
+export default function NetworkPage() {
   const { data, filters, updateFilter } = useNetworkData();
   return (
     <>
@@ -43,18 +42,4 @@ export default function NetworkPage({ authorized = true }) {
       </div>
     </>
   );
-}
-
-export async function getServerSideProps({ req }) {
-  const access = await evaluateAccess(req);
-  if (!access.allowed) {
-    return {
-      redirect: {
-        destination: '/login.html',
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: { authorized: true } };
 }

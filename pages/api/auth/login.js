@@ -1,23 +1,52 @@
-import fs from 'fs/promises';
-import path from 'path';
+import { getIronSession } from 'iron-session';
+import { loadAccessRules, extractClientIp, isIpAllowed } from '../../../lib/accessControl';
 import bcrypt from 'bcrypt';
+import { sessionOptions } from '../../../lib/session';
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+async function findUser(username) {
+  const rules = await loadAccessRules();
+  return rules.establishments?.find(e => e.username === username);
+}
+
+export default async function loginRoute(req, res) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 
   const { username, password } = req.body;
+
   try {
-    const data = await fs.readFile(path.join(process.cwd(), 'data', 'auth', 'users.json'), 'utf-8');
-    const users = JSON.parse(data);
-    const user = users.find(u => u.username === username);
-    if (!user) throw new Error('No user');
-    const ok = await bcrypt.compare(password, user.password);
-    if (!ok) throw new Error('Bad password');
-    res.setHeader('Set-Cookie', `user=${user.id}; Path=/; HttpOnly`);
-    res.writeHead(302, { Location: '/' });
-    res.end();
-  } catch {
-    res.writeHead(302, { Location: '/login.html?error=1' });
-    res.end();
+    const rules = await loadAccessRules();
+    const clientIp = extractClientIp(req);
+
+    if (!isIpAllowed(clientIp, rules)) {
+      return res.status(403).json({ message: 'IP address not allowed' });
+    }
+
+    const user = await findUser(username);
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+
+    if (!passwordIsValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const session = await getIronSession(req, res, sessionOptions);
+    session.user = {
+      username: user.username,
+      id: user.id,
+      isLoggedIn: true,
+    };
+    await session.save();
+
+    res.status(200).json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An internal server error occurred' });
   }
 }
