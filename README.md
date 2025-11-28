@@ -101,6 +101,27 @@ Ce test vérifie que le fichier JSON respecte la structure fonctionnelle attendu
 
 ---
 
+## Scripts
+
+Le projet inclut des scripts pour vérifier la cohérence des données.
+
+### `npm run check:trigrammes`
+
+Ce script analyse le fichier `data/trigrammes.json` et les autres fichiers d'application pour :
+- Détecter les libellés d'application en double.
+- Vérifier la cohérence entre les trigrammes et les noms d'applications.
+- Identifier les applications sans trigramme ou avec un trigramme inconnu.
+- Exporter un rapport `rapport-trigrammes.csv` dans le dossier `data`.
+
+### `npm run check:infra-missing-trigramme`
+
+Ce script parcourt tous les fichiers `*infra.json` dans le dossier `data` pour :
+- Lister les serveurs qui n'ont pas de trigramme défini.
+- Suggérer une application possible en se basant sur le nom du serveur, son rôle ou son éditeur.
+- Exporter les résultats dans `serveurs-sans-trigramme.csv` et `serveurs-sans-trigramme.json` dans le dossier `data`.
+
+---
+
 ## 🧬 Structure du JSON
 
 ```json
