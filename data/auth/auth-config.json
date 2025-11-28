@@ -1,0 +1,4 @@
+{
+  "protectedPages": ["/applications", "/network"],
+  "protectedApiRoutes": ["/api/infrastructure", "/api/network", "/api/files"]
+}

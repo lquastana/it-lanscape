@@ -43,6 +43,6 @@ export default function ApplicationsPage() {
       <div className="page-shell">
         <ApplicativeView data={data} search={filters.search} />
       </div>
-  </>
+    </>
   );
 }
