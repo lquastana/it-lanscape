@@ -5,8 +5,9 @@ import Legend from '../components/Legend';
 import Filters from '../components/Filters';
 import ApplicativeView from '../components/ApplicativeView';
 import { useLandscapeData } from '../hooks/useLandscapeData';
+import { evaluateAccess, sendUnauthorizedPage } from '../lib/accessControl';
 
-export default function ApplicationsPage() {
+export default function ApplicationsPage({ authorized = true }) {
   const { data, sets, filters, updateFilter, interfaceColors } = useLandscapeData();
   return (
     <>
@@ -43,6 +44,16 @@ export default function ApplicationsPage() {
       <div className="page-shell">
         <ApplicativeView data={data} search={filters.search} />
       </div>
-  </>
+    </>
   );
+}
+
+export async function getServerSideProps({ req, res }) {
+  const access = await evaluateAccess(req);
+  if (!access.allowed) {
+    sendUnauthorizedPage(res);
+    return { props: { authorized: false } };
+  }
+
+  return { props: { authorized: true } };
 }

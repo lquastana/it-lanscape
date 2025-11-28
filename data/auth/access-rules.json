@@ -1,0 +1,21 @@
+{
+  "allowedIps": ["127.0.0.1"],
+  "allowedCidrs": ["10.0.0.0/8", "192.168.0.0/16"],
+  "establishments": [
+    {
+      "id": "ch_ajaccio",
+      "username": "ajaccio",
+      "password": "$2b$10$rnO4xmaBkd2ZJSpQN40qje7zNyhUH87truQyzjyFlFSI9OV1KGloG"
+    },
+    {
+      "id": "chg_haute_corse",
+      "username": "bastia",
+      "password": "$2b$10$8sYLbRRZ5iuaKV9a.Mvc6.tIoF5AgUTpzB/N6U.0dP.M4xxbrTZ3u"
+    },
+    {
+      "id": "ch_sartene",
+      "username": "sartene",
+      "password": "$2b$10$I0PCqPgigrDiRCx.mHkMcus5aF05vyVQ2ur.g3WiHPcHTKOPQBVoK"
+    }
+  ]
+}
