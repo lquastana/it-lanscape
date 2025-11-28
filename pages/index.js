@@ -19,22 +19,34 @@ export default function Home() {
         <meta charSet="UTF-8" />
       </Head>
       <header className="hero">
-        <div className="view-switch">
-          <Link href="/" className="active">Vue Métier</Link>
-          <Link href="/applications">Vue Applicative</Link>
-          <Link href="/network">Vue Réseau</Link>
+        <div className="page-shell hero-grid">
+          <div className="hero-brand">
+            <div className="brand-mark">
+              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+            </div>
+            <div>
+              <p className="eyebrow">GCS E-santé Corse</p>
+              <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                Cartographie des Hôpitaux Publics de Corse
+              </motion.h1>
+              <p className="hero-subtitle">Explorez les domaines, processus et applications.</p>
+            </div>
+          </div>
+          <nav className="view-switch" aria-label="Navigation des vues">
+            <Link href="/" className="active">Vue Métier</Link>
+            <Link href="/applications">Vue Applicative</Link>
+            <Link href="/network">Vue Réseau</Link>
+          </nav>
         </div>
-        <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          Cartographie des Hôpitaux Publics de Corse
-        </motion.h1>
-        <p>Explorez les domaines, processus et applications.</p>
       </header>
-      <section className="legend-wrapper">
+      <section className="legend-wrapper page-shell">
         <h2 className="legend-title">Légende &amp; Filtres</h2>
         <Legend colors={interfaceColors} />
         <Filters sets={sets} filters={filters} onChange={updateFilter} />
       </section>
-      <Cartography data={data} colors={interfaceColors} search={filters.search} />
+      <div className="page-shell">
+        <Cartography data={data} colors={interfaceColors} search={filters.search} />
+      </div>
       <Report metrics={metrics} visible={reportVisible} onClose={() => setReportVisible(false)} />
       <button id="report-toggle" onClick={() => setReportVisible(v => !v)}>🧠</button>
     </>
