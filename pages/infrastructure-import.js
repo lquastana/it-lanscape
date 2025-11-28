@@ -144,6 +144,11 @@ export default function InfrastructureImport() {
     });
   }, [excelRows, mapping, trigrammes]);
 
+  const unknownTrigramRows = useMemo(
+    () => mappedRows.filter(({ srv }) => srv.trigramme && !trigrammes[srv.trigramme]),
+    [mappedRows, trigrammes],
+  );
+
   const incoherences = useMemo(() => {
     let unknownTrigram = 0;
     let missingKey = 0;
@@ -260,6 +265,18 @@ export default function InfrastructureImport() {
               {incoherences.unknownTrigram ? `${incoherences.unknownTrigram} trigramme(s) non reconnus` : 'Tous les trigrammes sont connus'}
             </span>
           </div>
+          {unknownTrigramRows.length > 0 && (
+            <div className="unknowns">
+              <p>Trigrammes inconnus détectés :</p>
+              <ul>
+                {unknownTrigramRows.map(({ srv }, idx) => (
+                  <li key={`${srv.trigramme}-${idx}`}>
+                    <strong>{srv.trigramme}</strong> — {srv.VM || 'VM manquante'} / {srv.PrimaryIPAddress || 'IP manquante'}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
 
         <section className="card">
@@ -281,7 +298,7 @@ export default function InfrastructureImport() {
                     </tr>
                   </thead>
                   <tbody>
-                    {mappedRows.slice(0, 30).map(({ srv, application }, idx) => (
+                    {mappedRows.map(({ srv, application }, idx) => (
                       <tr key={idx}>
                         {previewHeaders.map(h => {
                           const value = h === 'Application' ? application : srv[h] ?? '';
@@ -331,6 +348,8 @@ export default function InfrastructureImport() {
         .chip { background:#eef2ff; color:#4338ca; padding:4px 10px; border-radius:999px; font-weight:600; font-size:.9rem; }
         .chip.ok { background:#ecfdf3; color:#15803d; }
         .chip.warn { background:#fef2f2; color:#b91c1c; }
+        .unknowns { border:1px dashed #fca5a5; padding:10px 12px; border-radius:8px; background:#fff7ed; }
+        .unknowns ul { margin:8px 0 0 18px; color:#b91c1c; }
         .preview { display:flex; flex-direction:column; gap:10px; }
         .table-wrapper { overflow:auto; }
         table { width:100%; border-collapse:collapse; }
