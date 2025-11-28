@@ -135,7 +135,7 @@ export default function Admin() {
             </div>
           </div>
           <nav className="view-switch" aria-label="Navigation des vues">
-            <Link className="active" href="/admin">Gestion vue métier</Link>
+            <Link className="active" href="/admin-metier">Gestion vue métier</Link>
             <Link href="/admin-infra">Gestion vue infrastructure</Link>
           </nav>
         </div>
