@@ -1,222 +1,60 @@
 # 🗺️ it-landscape
 
-**Visualisation simple et modulaire d'une cartographie applicative hospitalière**  
-Basé sur un fichier JSON, ce projet propose un tableau de bord léger pour représenter les domaines, processus et applications d’un établissement de santé.
-Une interface **React 19** avec **Next.js 15** compose le front-end pour afficher la cartographie, avec Tailwind CSS, shadcn/ui et Framer Motion pour les animations.
+Tableau de bord Next.js pour visualiser la cartographie applicative et technique des hôpitaux publics de Corse. L’interface est construite avec **Next.js 15** et **React 18**, et s’appuie sur des fichiers JSON pour représenter les domaines, processus, applications et infrastructures.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Node](https://img.shields.io/badge/node-%3E%3D18.0-brightgreen)
+## Fonctionnalités principales
+- **Vue métier** : navigation par domaines et processus, filtres multi-critères, recherche clavier (/), légende des interfaces et panneau de synthèse (alignement, mutualisation, complétude…).
+- **Vue applicative** : regroupement des applications par trigramme, affichage des serveurs logiques associés et mode « vue paysage » imprimable.
+- **Vue réseau** : exploration des VLANs et des serveurs, filtrage par identifiant, description, réseau ou IP.
+- **Administration des données** :
+  - `/admin-metier` pour éditer les domaines, processus et applications d’un fichier JSON.
+  - `/admin-infra` pour mapper une extraction Excel vers les fichiers `*.infra.json` (mode remplacement ou incrémental, vérification des trigrammes).
+- **Contrôles d’accès** : middleware `iron-session` + règles IP et Basic Auth définies dans `data/auth`. La page `/login` permet d’ouvrir une session utilisateur avant d’accéder aux pages protégées (`/applications`, `/network`) et aux APIs sensibles.
 
----
+## Structure des données
+- `data/*.json` : vue fonctionnelle (`etablissements → domaines → processus → applications`).
+- `data/*.infra.json` : inventaire des serveurs (`serveurs[]`) reliés aux applications par le champ `trigramme`.
+- `data/*.network.json` : informations réseau par établissement (`vlans[]`).
+- `data/trigrammes.json` : dictionnaire trigramme → application (utilisé pour les imports infra et les scripts).
+- `data/auth/access-rules.json` : IP autorisées, comptes Basic Auth (mots de passe hachés `bcrypt`).
+- `data/auth/auth-config.json` : liste des pages et routes API protégées par session.
 
-## 🚀 Démo
+## Prérequis
+- Node.js 18 ou version supérieure.
 
-> 🧪 [Lien vers la démo](https://votresite.vercel.app) *(optionnel)*  
-> 📊 Exemple de jeu de données : [`landscape_sample_clean.json`](./data/landscape_sample.json)
-
----
-
-## 🏥 Contexte
-
-Conçu à partir de cas d’usage hospitaliers fictifs (ex. `Institut Alta`), ce projet permet de :
-
-- Visualiser rapidement les processus couverts par le système d'information
-- Identifier les redondances et mutualisations d'applications
-- Piloter la couverture fonctionnelle et technique de l’établissement
-
----
-
-## 🧩 Fonctionnalités
-
-- 📋 Lecture d’un fichier JSON structuré (`data/landscape.json`)
-- 📈 Dashboard CSS (aucune lib graphique) avec 7 indicateurs clés :
-  - Alignement processus / applications
-  - Taux de mutualisation
-  - Répartition par criticité / hébergement
-  - Complétude des données
-  - Couverture fonctionnelle par type d’interface
-- 💬 Chat IA intégré, activé en un clic
-- 🧪 Tests de conformité JSON (`npm test`)
-
----
-
-## ⚙️ Installation
-
-Le projet est maintenant unifié : un seul `package.json` contient toutes les dépendances
-du front-end et des routes API Next.js situées dans `./frontend`.
-
+## Installation
 ```bash
 npm install
-````
+```
 
-### ▶️ Lancer le serveur
-
+## Lancement
+Développement :
 ```bash
-npm install
+npm run dev
+```
+
+Production locale :
+```bash
+npm run build
 npm start
 ```
+L’application est accessible sur http://localhost:3000.
 
-Cette commande lance Next.js ainsi que les routes API intégrées.
-L'interface et l'API sont disponibles sur http://localhost:3000
-
-### 🐳 Déploiement Docker avec Nginx
-
-Un fichier `docker-compose.yml` est fourni pour exécuter l'application derrière
-un serveur **Nginx**. Les adresses autorisées sont définies via la variable
-`ALLOWED_IPS` dans `.env` (voir le fichier exemple `.env.local.example`).
-Nginx génère sa configuration au démarrage en utilisant cette valeur et expose
-également un accès **HTTPS** : placez vos certificats dans `./certs/cert.pem` et
-`./certs/key.pem` pour activer la connexion sécurisée sur le port `443`.
-
-```bash
-docker-compose build
-docker-compose up
-```
-
-### 🛂 Authentification locale
-Le formulaire `/login.html` utilise une stratégie locale.
-Les comptes sont définis dans `data/auth/access-rules.json` avec des mots de passe hachés via `bcrypt`.
-
-Variables d'environnement utiles :
-
-```
-SESSION_SECRET="votre_secret"
-# Pour désactiver l'authentification (mode développement uniquement)
-# La valeur par défaut est "false" pour activer la connexion
-DISABLE_AUTH="false"
-# Liste des IP autorisées (exemple)
-ALLOWED_IPS="allow 185.15.24.118; allow 172.18.0.1;"
-```
-
-Les données (y compris les comptes) sont persistées dans le volume `data` défini dans `docker-compose.yml`.
----
-
-## 🧪 Tests
-
+## Tests
 ```bash
 npm test
 ```
+Le test vérifie la cohérence des fichiers JSON fonctionnels.
 
-Ce test vérifie que le fichier JSON respecte la structure fonctionnelle attendue.
+## Scripts utilitaires
+- `npm run check:trigrammes` : contrôle les trigrammes et génère `data/rapport-trigrammes.csv`.
+- `npm run check:infra-missing-trigramme` : liste les serveurs sans trigramme et propose une application probable.
+- `node generate_hash.js <motdepasse>` : génère un hachage `bcrypt` pour `data/auth/access-rules.json`.
 
----
+## Configuration
+Variables d’environnement utiles :
+- `SESSION_SECRET` : secret pour la session `iron-session`.
+- `DISABLE_AUTH=true` : désactive l’authentification (développement uniquement).
+- `ACCESS_CONTROL_ENABLED=false` : contourne le filtrage IP/Basic Auth défini dans `access-rules.json`.
 
-## Scripts
-
-Le projet inclut des scripts pour vérifier la cohérence des données.
-
-### `npm run check:trigrammes`
-
-Ce script analyse le fichier `data/trigrammes.json` et les autres fichiers d'application pour :
-- Détecter les libellés d'application en double.
-- Vérifier la cohérence entre les trigrammes et les noms d'applications.
-- Identifier les applications sans trigramme ou avec un trigramme inconnu.
-- Exporter un rapport `rapport-trigrammes.csv` dans le dossier `data`.
-
-### `npm run check:infra-missing-trigramme`
-
-Ce script parcourt tous les fichiers `*infra.json` dans le dossier `data` pour :
-- Lister les serveurs qui n'ont pas de trigramme défini.
-- Suggérer une application possible en se basant sur le nom du serveur, son rôle ou son éditeur.
-- Exporter les résultats dans `serveurs-sans-trigramme.csv` et `serveurs-sans-trigramme.json` dans le dossier `data`.
-
----
-
-## 🧬 Structure du JSON
-
-```json
-{
-  "etablissements": [
-    {
-      "nom": "Institut Alta",
-      "domaines": [
-        {
-          "nom": "Support",
-          "description": "...",
-          "processus": [
-            {
-              "nom": "DMI",
-              "description": "...",
-              "applications": [
-                {
-                  "nom": "AquaFlow31",
-                  "description": "...",
-                  "editeur": null,
-                  "referent": null,
-                  "hebergement": "Hébergement Central",
-                  "multiEtablissement": false,
-                  "criticite": "Critique",
-                  "lienPRTG": null,
-                  "interfaces": {
-                    "Planification": false,
-                    "Facturation": true,
-                    "Administrative": false,
-                    "Medicale": true,
-                    "Autre": true
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
-
----
-
-## 📈 Indicateurs affichés
-
-1. **⚙️ Alignement des processus** : % de processus avec au moins une application
-2. **🖥️ Alignement des applications** : homogénéité entre établissements
-3. **🏗️ Mutualisation** : taux d'applications partagées
-4. **🔥 Criticité** : Standard / Haute / Critique
-5. **🏢 Hébergement** : lieux d'hébergement anonymisés
-6. **📑 Complétude des champs** : éditeur, référent, supervision
-7. **🧩 Couverture des interfaces** : par domaines DPI
-
----
-
-## 📄 Exemples d’usage
-
-> Sur un ensemble fictif de 192 applications :
-
-* 94,9 % des processus sont couverts par au moins une application
-* 44,2 % sont homogènes entre établissements
-* 40,1 % des applications sont mutualisées
-* 12 % sont critiques
-
----
-
-## 🛠️ Roadmap
-
-* 🧠 Assistant IA contextuel
-* 🧪 Simulateur d’impact (ajout/retrait d’appli)
-* 🔁 Suivi des projets de convergence
-* 📡 Vue graphe des dépendances applicatives
-* 📤 Export PDF/Excel du dashboard
-
----
-
-## 🙌 Contribution
-
-Les contributions sont bienvenues !
-
-```bash
-git clone https://github.com/votre_user/it-landscape.git
-cd it-landscape
-npm install
-```
-
-Consulte le fichier [`CONTRIBUTING.md`](./CONTRIBUTING.md) pour plus de détails.
-
----
-
-## 📄 Licence
-
-Distribué sous licence MIT – libre d’usage et de modification.
-
----
-
+Les règles d’accès et les données sont chargées depuis le dossier `data`; adaptez-les avant un déploiement.
