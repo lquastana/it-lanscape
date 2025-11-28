@@ -122,9 +122,29 @@ export default function Admin() {
   return (
     <>
       <Head><title>Administration données SIH</title></Head>
-      <header className="hd"><h1>Administration des données SIH</h1></header>
+      <header className="hero">
+        <div className="page-shell hero-grid">
+          <div className="hero-brand">
+            <div className="brand-mark">
+              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+            </div>
+            <div>
+              <p className="eyebrow">GCS E-santé Corse</p>
+              <h1>Administration des données SIH</h1>
+              <p className="hero-subtitle">Gestion centralisée des établissements, domaines et applications.</p>
+            </div>
+          </div>
+          <nav className="view-switch" aria-label="Navigation des vues">
+            <Link href="/">Vue Métier</Link>
+            <Link href="/applications">Vue Applicative</Link>
+            <Link href="/network">Vue Réseau</Link>
+            <Link className="active" href="/admin">Admin</Link>
+            <Link href="/infrastructure-import">Import Infra</Link>
+          </nav>
+        </div>
+      </header>
 
-      <section className="toolbar">
+      <section className="toolbar page-shell">
         <select value={currentFile} onChange={e=>setCurrent(e.target.value)}>
           <option value="">— Sélectionner un fichier —</option>
           {files.map(f=> <option key={f}>{f}</option>)}
@@ -134,7 +154,7 @@ export default function Admin() {
         <span className="status">{status}</span>
       </section>
 
-      <main className="content">
+      <main className="content page-shell">
         {!data && <p className="hint">Choisissez un fichier à éditer…</p>}
         {data && data.etablissements?.map((etab,eIdx)=>(
           <details key={eIdx} open>
@@ -214,27 +234,100 @@ export default function Admin() {
       </dialog>
 
       {/* ----------- styles ----------- */}
-      <style jsx global>{`
-        body { margin:0; font-family: "Segoe UI", Roboto, sans-serif; background:#f8fbfe; }
-        .hd { background:#0d6efd; color:#fff; padding:14px 30px; box-shadow:0 2px 6px #0003; }
-        h1 { margin:0; font-weight:600; font-size:1.5rem; }
-        .toolbar { display:flex; gap:14px; align-items:center; padding:16px 30px; background:#fff; box-shadow:0 2px 4px #0001; }
-        select { font-size:1rem; padding:4px 8px; }
-        .primary { background:#0d6efd; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:500; }
-        .primary:disabled { opacity:.4; cursor:default; }
-        .status { font-weight:600; min-width:160px; }
-        .content { padding:20px 30px 60px; }
-        details { border:1px solid #dde1e6; border-radius:6px; margin-bottom:10px; background:#fff; }
-        summary { padding:8px 12px; cursor:pointer; list-style:none; user-select:none; font-weight:600; display:flex; align-items:center; justify-content:space-between; }
-        details.lvl2 { margin-left:18px; }
-        details.lvl3 { margin-left:36px; }
-        .badge { background:#adb5bd; color:#fff; border-radius:12px; padding:0 6px; font-size:.75rem; margin-left:6px; }
-        ul.apps { margin:6px 0 12px 20px; padding-left:0; }
-        ul.apps li { list-style:"1F4E6 "; margin:4px 0; display:flex; justify-content:space-between; align-items:center; }
-        .sm { font-size:.9rem; background:transparent; border:none; cursor:pointer; margin-left:6px; }
-        .act { display:inline-flex; gap:4px; }
-        .hint { opacity:.6; margin:40px 30px; }
-        dialog#editor { border:none; padding:24px; border-radius:10px; box-shadow:0 4px 20px #0005; }
+      <style jsx>{`
+        .toolbar {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          padding: 14px 20px;
+          background: var(--color-white);
+          box-shadow: var(--shadow-card);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-lg);
+          margin-top: -30px;
+          position: relative;
+          z-index: 1;
+        }
+        select {
+          font-size: 1rem;
+          padding: 8px 10px;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+        }
+        .primary {
+          background: var(--color-accent);
+          color: var(--color-white);
+          border: none;
+          padding: 10px 14px;
+          border-radius: var(--radius-md);
+          cursor: pointer;
+          font-weight: 600;
+          text-decoration: none;
+          box-shadow: 0 6px 14px rgba(40, 166, 191, 0.25);
+          transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .primary:hover { transform: translateY(-1px); }
+        .primary:disabled { opacity: .5; cursor: not-allowed; }
+        .status { font-weight: 600; min-width: 180px; color: var(--color-primary); }
+        .content { padding: 20px 0 60px; }
+        details {
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+          margin-bottom: 12px;
+          background: var(--color-white);
+          box-shadow: var(--shadow-card);
+          overflow: hidden;
+        }
+        summary {
+          padding: 10px 14px;
+          cursor: pointer;
+          list-style: none;
+          user-select: none;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          color: var(--color-primary);
+          background: linear-gradient(90deg, rgba(0,51,102,0.04), rgba(40,166,191,0.08));
+        }
+        details.lvl2 { margin-left: 18px; }
+        details.lvl3 { margin-left: 36px; }
+        .badge {
+          background: var(--color-accent);
+          color: var(--color-white);
+          border-radius: 12px;
+          padding: 0 8px;
+          font-size: .75rem;
+          margin-left: 6px;
+        }
+        ul.apps {
+          margin: 6px 0 12px 20px;
+          padding-left: 0;
+        }
+        ul.apps li {
+          list-style: "📦 ";
+          margin: 4px 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: var(--color-text);
+        }
+        .sm {
+          font-size: .9rem;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          margin-left: 6px;
+          color: var(--color-primary);
+        }
+        .act { display: inline-flex; gap: 4px; }
+        .hint { opacity: .7; margin: 30px 0; }
+        dialog#editor {
+          border: none;
+          padding: 24px;
+          border-radius: 12px;
+          box-shadow: var(--shadow-soft);
+        }
       `}</style>
     </>
   );
