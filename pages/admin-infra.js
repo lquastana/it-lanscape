@@ -208,18 +208,25 @@ export default function InfrastructureImport() {
         <title>Import infrastructure</title>
       </Head>
       <header className="hero">
-        <div className="view-switch">
-          <Link href="/">Vue Métier</Link>
-          <Link href="/applications">Vue Applicative</Link>
-          <Link href="/network">Vue Réseau</Link>
-          <Link href="/admin">Admin</Link>
-          <Link className="active" href="/infrastructure-import">Import Infra</Link>
+        <div className="page-shell hero-grid">
+          <div className="hero-brand">
+            <div className="brand-mark">
+              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+            </div>
+            <div>
+              <p className="eyebrow">GCS E-santé Corse</p>
+              <h1>Import Excel infrastructure</h1>
+              <p className="hero-subtitle">Chargez un extrait, mappez les colonnes et choisissez le mode d'intégration.</p>
+            </div>
+          </div>
+          <nav className="view-switch" aria-label="Navigation des vues">
+            <Link href="/admin-metier">Gestion vue métier</Link>
+            <Link className="active" href="/admin-infra">Gestion vue infrastructure</Link>
+          </nav>
         </div>
-        <h1>Import Excel infrastructure</h1>
-        <p>Chargez un extrait Excel, mappez les colonnes et choisissez le mode d\'intégration.</p>
       </header>
 
-      <main className="import-layout">
+      <main className="import-layout page-shell">
         <section className="card">
           <h2>1. Sélection du périmètre</h2>
           <label>Fichier infrastructure cible
@@ -327,22 +334,37 @@ export default function InfrastructureImport() {
       </main>
 
       <style jsx>{`
-        .hero { background:#0d6efd; color:#fff; padding:24px 30px; box-shadow:0 2px 4px #0002; }
-        .hero h1 { margin:8px 0 4px; }
-        .hero p { margin:0; opacity:.9; }
-        .view-switch { display:flex; gap:10px; }
-        .view-switch a { color:#cfe2ff; text-decoration:none; padding:6px 10px; border-radius:6px; }
-        .view-switch a.active, .view-switch a:hover { background:#fff; color:#0d6efd; }
-        .import-layout { display:grid; gap:20px; padding:20px 30px 60px; grid-template-columns:1fr; }
-        .card { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:16px 18px; box-shadow:0 2px 8px #0001; }
-        .card h2 { margin-top:0; }
-        label { display:block; margin-bottom:12px; font-weight:600; }
-        select, input[type=file] { width:100%; padding:8px; margin-top:6px; }
+        .import-layout {
+          display: grid;
+          gap: 20px;
+          padding: 26px 0 60px;
+          grid-template-columns: 1fr;
+          margin-top: -34px;
+          position: relative;
+          z-index: 1;
+        }
+        .card {
+          background: var(--color-white);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-lg);
+          padding: 18px 20px;
+          box-shadow: var(--shadow-card);
+        }
+        .card h2 { margin-top: 0; }
+        label { display:block; margin-bottom:12px; font-weight:600; color: var(--color-primary); }
+        select, input[type=file] {
+          width: 100%;
+          padding: 10px;
+          margin-top: 6px;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+          font-family: var(--font-body);
+        }
         .mapping-grid { display:flex; flex-direction:column; gap:12px; }
         .map-line { display:flex; justify-content:space-between; align-items:center; gap:10px; }
         .map-line select { max-width:260px; }
         .hint { color:#6b7280; font-weight:400; margin-top:2px; }
-        .status { font-weight:600; }
+        .status { font-weight:600; color: var(--color-primary); }
         .warning { color:#b91c1c; }
         .chips { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
         .chip { background:#eef2ff; color:#4338ca; padding:4px 10px; border-radius:999px; font-weight:600; font-size:.9rem; }
@@ -356,7 +378,16 @@ export default function InfrastructureImport() {
         th, td { padding:6px 8px; border-bottom:1px solid #e5e7eb; text-align:left; }
         td.warn { background:#fff1f2; }
         .mode p { margin:4px 0 12px 26px; color:#4b5563; }
-        .primary { background:#0d6efd; color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; }
+        .primary {
+          background: var(--color-accent);
+          color: var(--color-white);
+          border: none;
+          padding: 10px 14px;
+          border-radius: var(--radius-md);
+          cursor: pointer;
+          font-weight: 600;
+          box-shadow: 0 6px 14px rgba(40, 166, 191, 0.25);
+        }
         .primary:disabled { opacity:.5; cursor:not-allowed; }
       `}</style>
     </>
