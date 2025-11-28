@@ -14,20 +14,32 @@ export default function NetworkPage() {
         <meta charSet="UTF-8" />
       </Head>
       <header className="hero">
-        <div className="view-switch">
-          <Link href="/">Vue Métier</Link>
-          <Link href="/applications">Vue Applicative</Link>
-          <Link href="/network" className="active">Vue Réseau</Link>
+        <div className="page-shell hero-grid">
+          <div className="hero-brand">
+            <div className="brand-mark">
+              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+            </div>
+            <div>
+              <p className="eyebrow">GCS E-santé Corse</p>
+              <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                Cartographie des Hôpitaux Publics de Corse
+              </motion.h1>
+              <p className="hero-subtitle">Explorez les VLANs et leurs serveurs.</p>
+            </div>
+          </div>
+          <nav className="view-switch" aria-label="Navigation des vues">
+            <Link href="/">Vue Métier</Link>
+            <Link href="/applications">Vue Applicative</Link>
+            <Link href="/network" className="active">Vue Réseau</Link>
+          </nav>
         </div>
-        <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          Cartographie des Hôpitaux Publics de Corse
-        </motion.h1>
-        <p>Explorez les VLANs et leurs serveurs.</p>
       </header>
-      <section className="legend-wrapper">
+      <section className="legend-wrapper page-shell">
         <NetworkFilters filters={filters} onChange={updateFilter} />
       </section>
-      <NetworkView data={data} />
+      <div className="page-shell">
+        <NetworkView data={data} />
+      </div>
     </>
   );
 }
