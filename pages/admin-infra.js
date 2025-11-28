@@ -220,11 +220,8 @@ export default function InfrastructureImport() {
             </div>
           </div>
           <nav className="view-switch" aria-label="Navigation des vues">
-            <Link href="/">Vue Métier</Link>
-            <Link href="/applications">Vue Applicative</Link>
-            <Link href="/network">Vue Réseau</Link>
-            <Link href="/admin">Admin</Link>
-            <Link className="active" href="/infrastructure-import">Import Infra</Link>
+            <Link href="/admin-metier">Gestion vue métier</Link>
+            <Link className="active" href="/admin-infra">Gestion vue infrastructure</Link>
           </nav>
         </div>
       </header>

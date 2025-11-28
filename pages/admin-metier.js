@@ -135,11 +135,8 @@ export default function Admin() {
             </div>
           </div>
           <nav className="view-switch" aria-label="Navigation des vues">
-            <Link href="/">Vue Métier</Link>
-            <Link href="/applications">Vue Applicative</Link>
-            <Link href="/network">Vue Réseau</Link>
-            <Link className="active" href="/admin">Admin</Link>
-            <Link href="/infrastructure-import">Import Infra</Link>
+            <Link className="active" href="/admin">Gestion vue métier</Link>
+            <Link href="/admin-infra">Gestion vue infrastructure</Link>
           </nav>
         </div>
       </header>
@@ -149,7 +146,6 @@ export default function Admin() {
           <option value="">— Sélectionner un fichier —</option>
           {files.map(f=> <option key={f}>{f}</option>)}
         </select>
-        <Link className="primary" href="/infrastructure-import">Importer une infra Excel</Link>
         <button className="primary" disabled={!data} onClick={handleSave}>💾 Enregistrer</button>
         <span className="status">{status}</span>
       </section>
@@ -244,7 +240,7 @@ export default function Admin() {
           box-shadow: var(--shadow-card);
           border: 1px solid var(--color-border);
           border-radius: var(--radius-lg);
-          margin-top: -30px;
+          margin-top: 20px;
           position: relative;
           z-index: 1;
         }
