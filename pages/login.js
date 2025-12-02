@@ -196,7 +196,7 @@ export default function LoginPage() {
       </header>
       
       <section className="page-shell" style={styles.pageSection}>
-        <h2 style={styles.h2}>Se connecter</h2>
+        <h2 style={styles.h3}>Se connecter</h2>
         
         <form onSubmit={handleSubmit}>
           
