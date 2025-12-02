@@ -7,6 +7,12 @@ import useNetworkData from '../hooks/useNetworkData';
 
 export default function NetworkPage() {
   const { data, filters, updateFilter } = useNetworkData();
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout');
+    window.location.href = '/login';
+  };
+
   return (
     <>
       <Head>
@@ -31,6 +37,7 @@ export default function NetworkPage() {
             <Link href="/">Vue Métier</Link>
             <Link href="/applications">Vue Applicative</Link>
             <Link href="/network" className="active">Vue Réseau</Link>
+            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>
       </header>

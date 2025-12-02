@@ -12,6 +12,12 @@ import { useLandscapeData } from '../hooks/useLandscapeData';
 export default function Home() {
   const { data, sets, filters, updateFilter, interfaceColors, metrics } = useLandscapeData();
   const [reportVisible, setReportVisible] = useState(false);
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout');
+    window.location.href = '/login';
+  };
+
   return (
     <>
       <Head>
@@ -36,6 +42,7 @@ export default function Home() {
             <Link href="/" className="active">Vue Métier</Link>
             <Link href="/applications">Vue Applicative</Link>
             <Link href="/network">Vue Réseau</Link>
+            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>
       </header>

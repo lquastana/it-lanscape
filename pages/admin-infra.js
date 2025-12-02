@@ -83,6 +83,11 @@ export default function InfrastructureImport() {
   const [libReady, setLibReady] = useState(false);
   const [libError, setLibError] = useState('');
 
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout');
+    window.location.href = '/login';
+  };
+
   useEffect(() => {
     fetch('/api/files')
       .then(r => r.json())
@@ -222,6 +227,7 @@ export default function InfrastructureImport() {
           <nav className="view-switch" aria-label="Navigation des vues">
             <Link href="/admin-metier">Gestion vue métier</Link>
             <Link className="active" href="/admin-infra">Gestion vue infrastructure</Link>
+            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>
       </header>

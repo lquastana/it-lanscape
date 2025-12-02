@@ -28,6 +28,11 @@ export default function Admin() {
   const [edit,  setEdit]            = useState(null);   // { type, path[], obj, isNew }
   const dlgRef = useRef(null);
 
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout');
+    window.location.href = '/login';
+  };
+
   /* ---------------- chargement liste fichiers ---------------- */
   useEffect(() => {
     fetch('/api/files')
@@ -137,6 +142,7 @@ export default function Admin() {
           <nav className="view-switch" aria-label="Navigation des vues">
             <Link className="active" href="/admin-metier">Gestion vue métier</Link>
             <Link href="/admin-infra">Gestion vue infrastructure</Link>
+            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>
       </header>
