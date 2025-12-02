@@ -595,7 +595,7 @@ export default function TrigrammeAdmin() {
           color: #0f172a;
         }
 
-        h1, h2, h3, h4 {
+        h2, h3, h4 {
           font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
           color: #003366;
         }
