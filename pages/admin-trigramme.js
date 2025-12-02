@@ -394,25 +394,31 @@ export default function TrigrammeAdmin() {
 
               <form className="add-trigram" onSubmit={handleAddTrigram}>
                 <div>
-                  <label>Trigramme<br/><input value={newTri} onChange={e => setNewTri(e.target.value)} maxLength={10} placeholder="EXE" /></label>
+                  <label>Trigramme</label>
+                  <input value={newTri} onChange={e => setNewTri(e.target.value)} maxLength={10} placeholder="EXE" className="input" />
                 </div>
                 <div>
-                  <label>Libellé<br/><input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé applicatif" /></label>
+                  <label>Libellé</label>
+                  <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé applicatif" className="input" />
                 </div>
-                <button className="primary" type="submit">Ajouter</button>
+                <button className="btn primary" type="submit">Ajouter</button>
               </form>
 
               <div className="table-controls">
-                <input
-                  type="search"
-                  placeholder="Recherche (trigramme ou libellé)"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                />
+                <div className="field">
+                  <label>Recherche</label>
+                  <input
+                    className="input"
+                    type="search"
+                    placeholder="Trigramme ou libellé"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                  />
+                </div>
                 <div className="pagination">
                   <span className="muted">Page {currentPage}/{totalPages}</span>
-                  <button type="button" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
-                  <button type="button" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
+                  <button className="btn ghost" type="button" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
+                  <button className="btn ghost" type="button" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
                 </div>
               </div>
 
@@ -437,7 +443,7 @@ export default function TrigrammeAdmin() {
                         <td>{stat.infra}</td>
                         <td>{stat.etablissements}</td>
                         <td>
-                          <button className="ghost" onClick={(e) => { e.stopPropagation(); handleDeleteTrigram(stat.tri); }}>🗑️</button>
+                          <button className="btn ghost danger" onClick={(e) => { e.stopPropagation(); handleDeleteTrigram(stat.tri); }}>🗑️</button>
                         </td>
                       </tr>
                     ))}
@@ -450,7 +456,6 @@ export default function TrigrammeAdmin() {
               <h2>Contrôles automatiques</h2>
               <div className="checks">
                 <div>
-                  <h3>check-trigrammes.js</h3>
                   {trigramCheck.duplicates.length === 0 ? (
                     <p className="ok">Aucun doublon de libellé détecté.</p>
                   ) : (
@@ -497,7 +502,6 @@ export default function TrigrammeAdmin() {
                 </div>
 
                 <div>
-                  <h3>check-infra-missing-trigramme.js</h3>
                   {infraMissing.length === 0 ? (
                     <p className="ok">✅ Aucun serveur sans trigramme détecté.</p>
                   ) : (
@@ -540,58 +544,71 @@ export default function TrigrammeAdmin() {
       </main>
 
       {!!detailTri && (
-        <dialog open className="modal" onClose={() => setDetailTri('')}>
-          <div className="modal-head">
-            <div>
-              <p className="eyebrow">Détail trigramme</p>
-              <h3><code>{detailTri}</code> — {trigramDetails[detailTri]?.label || trigrammes[detailTri] || '—'}</h3>
-            </div>
-            <button className="ghost" onClick={() => setDetailTri('')}>✖</button>
-          </div>
-          <div className="modal-body">
-            <p className="muted">Établissements concernés : {trigramDetails[detailTri]?.etablissements?.join(', ') || '—'}</p>
-            <div className="grid">
+        <div className="backdrop" onClick={() => setDetailTri('')}>
+          <dialog open className="modal" onClose={() => setDetailTri('')} onClick={e => e.stopPropagation()}>
+            <div className="modal-head">
               <div>
-                <h4>Applications (métier)</h4>
-                {trigramDetails[detailTri]?.applications?.length ? (
-                  <ul className="list">
-                    {trigramDetails[detailTri].applications.map((app, idx) => (
-                      <li key={idx}>
-                        <strong>{app.application}</strong> — {app.description || '—'}
-                        <div className="muted">{app.etab} • {app.domaine} • {app.processus}</div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : <p className="muted">Aucune application rattachée.</p>}
+                <p className="eyebrow">Détail trigramme</p>
+                <h3><code>{detailTri}</code> — {trigramDetails[detailTri]?.label || trigrammes[detailTri] || '—'}</h3>
               </div>
-              <div>
-                <h4>Serveurs (infra)</h4>
-                {trigramDetails[detailTri]?.serveurs?.length ? (
-                  <ul className="list">
-                    {trigramDetails[detailTri].serveurs.map((srv, idx) => (
-                      <li key={idx}>
-                        <strong>{srv.vm || 'VM inconnue'}</strong> — {srv.role || 'Rôle inconnu'}
-                        <div className="muted">{srv.ip || 'IP ?'} • {srv.os || 'OS ?'} • {srv.etab}</div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : <p className="muted">Aucun serveur rattaché.</p>}
+              <button className="btn ghost" onClick={() => setDetailTri('')}>✖</button>
+            </div>
+            <div className="modal-body">
+              <p className="muted">Établissements concernés : {trigramDetails[detailTri]?.etablissements?.join(', ') || '—'}</p>
+              <div className="grid">
+                <div>
+                  <h4>Applications (métier)</h4>
+                  {trigramDetails[detailTri]?.applications?.length ? (
+                    <ul className="list">
+                      {trigramDetails[detailTri].applications.map((app, idx) => (
+                        <li key={idx}>
+                          <strong>{app.application}</strong> — {app.description || '—'}
+                          <div className="muted">{app.etab} • {app.domaine} • {app.processus}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : <p className="muted">Aucune application rattachée.</p>}
+                </div>
+                <div>
+                  <h4>Serveurs (infra)</h4>
+                  {trigramDetails[detailTri]?.serveurs?.length ? (
+                    <ul className="list">
+                      {trigramDetails[detailTri].serveurs.map((srv, idx) => (
+                        <li key={idx}>
+                          <strong>{srv.vm || 'VM inconnue'}</strong> — {srv.role || 'Rôle inconnu'}
+                          <div className="muted">{srv.ip || 'IP ?'} • {srv.os || 'OS ?'} • {srv.etab}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : <p className="muted">Aucun serveur rattaché.</p>}
+                </div>
               </div>
             </div>
-          </div>
-        </dialog>
+          </dialog>
+        </div>
       )}
 
       <style jsx>{`
+        :global(body) {
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
+          background: #f8fafc;
+          color: #0f172a;
+        }
+
+        h1, h2, h3, h4 {
+          font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+          color: #003366;
+        }
+
         .layout { padding: 26px 0 60px; display: flex; flex-direction: column; gap: 18px; }
-        .card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow-card); }
-        .table-wrapper { overflow: auto; }
+        .card { background: #ffffff; border: 1px solid #d6e2f0; border-radius: 14px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 51, 102, 0.06); }
+        .table-wrapper { overflow: auto; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px 10px; border-bottom: 1px solid #e5e7eb; text-align: left; }
-        th { background: #f3f4f6; }
-        code { background: #eef2ff; padding: 2px 6px; border-radius: 6px; }
-        .hint { color: #6b7280; margin: 6px 0 12px; }
-        .muted { color: #6b7280; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; }
+        th { background: #f1f5f9; color: #003366; letter-spacing: 0.01em; }
+        code { background: #e0ecff; padding: 3px 7px; border-radius: 8px; font-weight: 600; color: #003366; }
+        .hint { color: #475569; margin: 6px 0 12px; }
+        .muted { color: #64748b; }
         .warn { color: #b91c1c; font-weight: 600; }
         .status { font-weight: 600; }
         .ok { color: #15803d; font-weight: 600; }
@@ -601,18 +618,32 @@ export default function TrigrammeAdmin() {
         .warn-list { color: #b91c1c; margin: 8px 0; padding-left: 18px; }
         .view-switch a.active { font-weight: 700; text-decoration: underline; }
         .sortable { cursor: pointer; user-select: none; }
-        .table-controls { display: flex; gap: 12px; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+        .table-controls { display: flex; gap: 12px; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; flex-wrap: wrap; }
         .table-controls input { min-width: 220px; }
         .pagination { display: flex; align-items: center; gap: 6px; }
-        .pagination button { padding: 4px 8px; }
-        .add-trigram { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; align-items: end; margin: 10px 0 18px; }
+        .add-trigram { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; margin: 10px 0 18px; }
         .add-trigram input { width: 100%; }
         .clickable { cursor: pointer; }
-        .ghost { background: none; border: none; cursor: pointer; }
-        dialog.modal { border: 1px solid var(--color-border); border-radius: 14px; padding: 0; max-width: 820px; width: 90%; }
-        .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--color-border); }
-        .modal-body { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+
+        .field label, .add-trigram label { display: block; margin-bottom: 6px; font-weight: 600; color: #0f172a; }
+        .input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #d6e2f0; background: #ffffff; transition: border-color 0.2s ease, box-shadow 0.2s ease; font-size: 14px; }
+        .input:focus { outline: none; border-color: #28a6bf; box-shadow: 0 0 0 3px rgba(40, 166, 191, 0.25); }
+
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 12px; border: 1px solid transparent; font-weight: 600; cursor: pointer; transition: transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn.primary { background: #003366; color: #ffffff; box-shadow: 0 8px 18px rgba(0, 51, 102, 0.18); }
+        .btn.primary:hover { transform: translateY(-1px); background: #0a4275; }
+        .btn.ghost { background: #ffffff; color: #003366; border: 1px solid #d6e2f0; }
+        .btn.ghost:hover { background: #f1f5f9; }
+        .btn.ghost.danger { color: #b91c1c; border-color: #fca5a5; }
+        .btn.ghost.danger:hover { background: #fee2e2; }
+
+        dialog.modal { border: 1px solid #d6e2f0; border-radius: 16px; padding: 0; max-width: 860px; width: 92%; box-shadow: 0 24px 50px rgba(0, 17, 51, 0.25); }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 16px 16px 0 0; }
+        .modal-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; }
         .list { list-style: disc; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
+        .backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.35); display: grid; place-items: center; z-index: 999; }
+
         @media (min-width: 900px) { .checks { grid-template-columns: 1fr 1fr; } }
       `}</style>
     </>
