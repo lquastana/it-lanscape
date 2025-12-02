@@ -39,6 +39,15 @@ export default function TrigrammeAdmin() {
   const [metierData, setMetierData] = useState([]); // { file, data }
   const [infraData, setInfraData] = useState([]); // { file, data }
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [sortKey, setSortKey] = useState('tri');
+  const [sortDir, setSortDir] = useState('asc');
+  const [page, setPage] = useState(1);
+  const [newTri, setNewTri] = useState('');
+  const [newLabel, setNewLabel] = useState('');
+  const [detailTri, setDetailTri] = useState('');
+
+  const PAGE_SIZE = 20;
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -85,6 +94,48 @@ export default function TrigrammeAdmin() {
     loadAll();
   }, []);
 
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
+
+  const persistTrigrammes = async (next) => {
+    setStatus('Enregistrement du référentiel…');
+    setTrigrammes(next);
+    try {
+      const res = await fetch('/api/file/trigrammes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(next, null, 2),
+      });
+      setStatus(res.ok ? '✅ Référentiel mis à jour' : '❌ Erreur lors de la sauvegarde');
+    } catch (err) {
+      console.error(err);
+      setStatus('❌ Erreur lors de la sauvegarde');
+    }
+  };
+
+  const handleAddTrigram = async (e) => {
+    e.preventDefault();
+    const tri = normalizeTri(newTri);
+    const label = newLabel.trim();
+    if (!tri || !label) {
+      setStatus('Merci de renseigner un trigramme et un libellé.');
+      return;
+    }
+    const next = { ...trigrammes, [tri]: label };
+    setNewTri('');
+    setNewLabel('');
+    setPage(1);
+    await persistTrigrammes(next);
+  };
+
+  const handleDeleteTrigram = async (tri) => {
+    if (!confirm(`Supprimer le trigramme ${tri} ?`)) return;
+    const next = { ...trigrammes };
+    delete next[tri];
+    await persistTrigrammes(next);
+  };
+
   const trigramStats = useMemo(() => {
     const counts = {};
     Object.entries(trigrammes).forEach(([tri, label]) => {
@@ -129,19 +180,90 @@ export default function TrigrammeAdmin() {
       .sort((a, b) => a.tri.localeCompare(b.tri));
   }, [trigrammes, metierData, infraData]);
 
-  const infraSummary = useMemo(() => infraData.map(({ file, data }) => {
-    const triCounts = {};
-    let missing = 0;
-    (data.serveurs || []).forEach(srv => {
-      const tri = normalizeTri(srv.trigramme);
-      if (!tri) {
-        missing += 1;
-        return;
-      }
-      triCounts[tri] = (triCounts[tri] || 0) + 1;
+  const trigramDetails = useMemo(() => {
+    const map = {};
+    const ensure = (tri) => {
+      if (!map[tri]) map[tri] = { tri, label: trigrammes[tri] || '', applications: [], serveurs: [], etablissements: new Set() };
+      return map[tri];
+    };
+
+    metierData.forEach(({ data }) => {
+      data.etablissements?.forEach(etab => {
+        etab.domaines?.forEach(dom => {
+          dom.processus?.forEach(proc => {
+            proc.applications?.forEach(app => {
+              const tri = normalizeTri(app.trigramme);
+              if (!tri) return;
+              const entry = ensure(tri);
+              entry.applications.push({
+                application: app.nom,
+                description: app.description || '',
+                domaine: dom.nom,
+                processus: proc.nom,
+                etab: etab.nom,
+              });
+              entry.etablissements.add(etab.nom || '');
+            });
+          });
+        });
+      });
     });
-    return { file, etablissement: data.etablissement || file, triCounts, missing };
-  }), [infraData]);
+
+    infraData.forEach(({ data }) => {
+      const etabName = data.etablissement || '';
+      (data.serveurs || []).forEach(srv => {
+        const tri = normalizeTri(srv.trigramme);
+        if (!tri) return;
+        const entry = ensure(tri);
+        entry.serveurs.push({
+          vm: srv.VM || srv.Nom || srv.Hostname || '',
+          ip: srv.PrimaryIPAddress || srv.IP || srv.Ip || '',
+          role: srv.RoleServeur || srv.Role || srv.Description || '',
+          os: srv.OS || srv.Os || '',
+          etab: etabName,
+        });
+        entry.etablissements.add(etabName);
+      });
+    });
+
+    return Object.fromEntries(
+      Object.entries(map).map(([tri, val]) => [tri, { ...val, etablissements: Array.from(val.etablissements).filter(Boolean) }])
+    );
+  }, [infraData, metierData, trigrammes]);
+
+  const filteredStats = useMemo(() => {
+    const term = normalizeName(search || '');
+    const filtered = trigramStats.filter(stat => {
+      if (!term) return true;
+      const label = normalizeName(stat.label || '');
+      return stat.tri.includes(term) || label.includes(term);
+    });
+
+    const sorted = [...filtered].sort((a, b) => {
+      const dir = sortDir === 'asc' ? 1 : -1;
+      if (sortKey === 'tri') return dir * a.tri.localeCompare(b.tri);
+      if (sortKey === 'label') return dir * (a.label || '').localeCompare(b.label || '');
+      if (sortKey === 'metier') return dir * (a.metier - b.metier);
+      if (sortKey === 'infra') return dir * (a.infra - b.infra);
+      if (sortKey === 'etablissements') return dir * (a.etablissements - b.etablissements);
+      return 0;
+    });
+
+    return sorted;
+  }, [search, trigramStats, sortDir, sortKey]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredStats.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginatedStats = filteredStats.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  const setSort = (key) => {
+    if (sortKey === key) {
+      setSortDir(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
 
   const metierUsage = useMemo(() => {
     const usages = [];
@@ -249,7 +371,6 @@ export default function TrigrammeAdmin() {
             <div>
               <p className="eyebrow">GCS E-santé Corse</p>
               <h1>Référentiel des trigrammes</h1>
-              <p className="hero-subtitle">Vision consolidée des trigrammes, usages métier et rattachements infrastructure.</p>
             </div>
           </div>
           <nav className="view-switch" aria-label="Navigation des vues">
@@ -270,82 +391,58 @@ export default function TrigrammeAdmin() {
             <section className="card">
               <h2>Référentiel</h2>
               <p className="hint">{Object.keys(trigrammes).length} trigrammes déclarés dans trigrammes.json.</p>
+
+              <form className="add-trigram" onSubmit={handleAddTrigram}>
+                <div>
+                  <label>Trigramme<br/><input value={newTri} onChange={e => setNewTri(e.target.value)} maxLength={10} placeholder="EXE" /></label>
+                </div>
+                <div>
+                  <label>Libellé<br/><input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé applicatif" /></label>
+                </div>
+                <button className="primary" type="submit">Ajouter</button>
+              </form>
+
+              <div className="table-controls">
+                <input
+                  type="search"
+                  placeholder="Recherche (trigramme ou libellé)"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+                <div className="pagination">
+                  <span className="muted">Page {currentPage}/{totalPages}</span>
+                  <button type="button" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
+                  <button type="button" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
+                </div>
+              </div>
+
               <div className="table-wrapper">
                 <table>
                   <thead>
                     <tr>
-                      <th>Trigramme</th>
-                      <th>Libellé</th>
-                      <th>Applications (métier)</th>
-                      <th>Serveurs (infra)</th>
-                      <th>Établissements concernés</th>
+                      <th onClick={() => setSort('tri')} className="sortable">Trigramme {sortKey === 'tri' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th onClick={() => setSort('label')} className="sortable">Libellé {sortKey === 'label' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th onClick={() => setSort('metier')} className="sortable">Applications (métier) {sortKey === 'metier' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th onClick={() => setSort('infra')} className="sortable">Serveurs (infra) {sortKey === 'infra' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th onClick={() => setSort('etablissements')} className="sortable">Établissements concernés {sortKey === 'etablissements' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {trigramStats.map(stat => (
-                      <tr key={stat.tri}>
+                    {paginatedStats.map(stat => (
+                      <tr key={stat.tri} className="clickable" onClick={() => setDetailTri(stat.tri)}>
                         <td><code>{stat.tri}</code></td>
                         <td>{stat.label || '—'}</td>
                         <td>{stat.metier}</td>
                         <td>{stat.infra}</td>
                         <td>{stat.etablissements}</td>
+                        <td>
+                          <button className="ghost" onClick={(e) => { e.stopPropagation(); handleDeleteTrigram(stat.tri); }}>🗑️</button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
-            </section>
-
-            <section className="card">
-              <h2>Usage métier</h2>
-              <p className="hint">Liste consolidée des applications et trigrammes sur l'ensemble des établissements.</p>
-              <div className="table-wrapper">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Établissement</th>
-                      <th>Domaine</th>
-                      <th>Processus</th>
-                      <th>Application</th>
-                      <th>Trigramme</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {metierUsage.map((row, idx) => (
-                      <tr key={idx}>
-                        <td>{row.etab}</td>
-                        <td>{row.domaine}</td>
-                        <td>{row.processus}</td>
-                        <td>{row.application}</td>
-                        <td className={!row.trigramme ? 'warn' : (!trigrammes[row.trigramme] ? 'warn' : '')}>{row.trigramme || '—'}</td>
-                        <td className="muted">{row.description || '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-
-            <section className="card">
-              <h2>Infrastructure par établissement</h2>
-              <p className="hint">Comptage des serveurs rattachés à chaque trigramme dans les fichiers *infra.json.</p>
-              <div className="grid">
-                {infraSummary.map(item => (
-                  <div key={item.file} className="mini-card">
-                    <h3>{item.etablissement}</h3>
-                    {Object.keys(item.triCounts).length === 0 && item.missing === 0 && <p className="muted">Aucun serveur déclaré.</p>}
-                    {Object.entries(item.triCounts).map(([tri, count]) => (
-                      <div key={tri} className="pill-line">
-                        <span className="pill">{tri}</span>
-                        <span className="muted">{count} serveur(s)</span>
-                      </div>
-                    ))}
-                    {item.missing > 0 && (
-                      <p className="warn">{item.missing} serveur(s) sans trigramme</p>
-                    )}
-                  </div>
-                ))}
               </div>
             </section>
 
@@ -354,7 +451,6 @@ export default function TrigrammeAdmin() {
               <div className="checks">
                 <div>
                   <h3>check-trigrammes.js</h3>
-                  <p className="muted">{trigramCheck.total} applications analysées.</p>
                   {trigramCheck.duplicates.length === 0 ? (
                     <p className="ok">Aucun doublon de libellé détecté.</p>
                   ) : (
@@ -443,6 +539,49 @@ export default function TrigrammeAdmin() {
         )}
       </main>
 
+      {!!detailTri && (
+        <dialog open className="modal" onClose={() => setDetailTri('')}>
+          <div className="modal-head">
+            <div>
+              <p className="eyebrow">Détail trigramme</p>
+              <h3><code>{detailTri}</code> — {trigramDetails[detailTri]?.label || trigrammes[detailTri] || '—'}</h3>
+            </div>
+            <button className="ghost" onClick={() => setDetailTri('')}>✖</button>
+          </div>
+          <div className="modal-body">
+            <p className="muted">Établissements concernés : {trigramDetails[detailTri]?.etablissements?.join(', ') || '—'}</p>
+            <div className="grid">
+              <div>
+                <h4>Applications (métier)</h4>
+                {trigramDetails[detailTri]?.applications?.length ? (
+                  <ul className="list">
+                    {trigramDetails[detailTri].applications.map((app, idx) => (
+                      <li key={idx}>
+                        <strong>{app.application}</strong> — {app.description || '—'}
+                        <div className="muted">{app.etab} • {app.domaine} • {app.processus}</div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : <p className="muted">Aucune application rattachée.</p>}
+              </div>
+              <div>
+                <h4>Serveurs (infra)</h4>
+                {trigramDetails[detailTri]?.serveurs?.length ? (
+                  <ul className="list">
+                    {trigramDetails[detailTri].serveurs.map((srv, idx) => (
+                      <li key={idx}>
+                        <strong>{srv.vm || 'VM inconnue'}</strong> — {srv.role || 'Rôle inconnu'}
+                        <div className="muted">{srv.ip || 'IP ?'} • {srv.os || 'OS ?'} • {srv.etab}</div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : <p className="muted">Aucun serveur rattaché.</p>}
+              </div>
+            </div>
+          </div>
+        </dialog>
+      )}
+
       <style jsx>{`
         .layout { padding: 26px 0 60px; display: flex; flex-direction: column; gap: 18px; }
         .card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow-card); }
@@ -456,14 +595,24 @@ export default function TrigrammeAdmin() {
         .warn { color: #b91c1c; font-weight: 600; }
         .status { font-weight: 600; }
         .ok { color: #15803d; font-weight: 600; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-        .mini-card { border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; background: #f9fafb; }
-        .pill-line { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-        .pill { background: #eef2ff; color: #4338ca; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
         .checks { display: grid; grid-template-columns: 1fr; gap: 16px; }
         .warn-row td { background: #fff1f2; }
         .warn-list { color: #b91c1c; margin: 8px 0; padding-left: 18px; }
         .view-switch a.active { font-weight: 700; text-decoration: underline; }
+        .sortable { cursor: pointer; user-select: none; }
+        .table-controls { display: flex; gap: 12px; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+        .table-controls input { min-width: 220px; }
+        .pagination { display: flex; align-items: center; gap: 6px; }
+        .pagination button { padding: 4px 8px; }
+        .add-trigram { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; align-items: end; margin: 10px 0 18px; }
+        .add-trigram input { width: 100%; }
+        .clickable { cursor: pointer; }
+        .ghost { background: none; border: none; cursor: pointer; }
+        dialog.modal { border: 1px solid var(--color-border); border-radius: 14px; padding: 0; max-width: 820px; width: 90%; }
+        .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--color-border); }
+        .modal-body { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+        .list { list-style: disc; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
         @media (min-width: 900px) { .checks { grid-template-columns: 1fr 1fr; } }
       `}</style>
     </>
