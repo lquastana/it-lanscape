@@ -3,18 +3,18 @@
   "allowedCidrs": ["10.0.0.0/8", "192.168.0.0/16"],
   "establishments": [
     {
-      "id": "ch_ajaccio",
-      "username": "ajaccio",
+      "id": "ch_val_de_lys",
+      "username": "valdellys",
       "password": "$2b$10$yJuf5SiRIK0sUtjgBE9ee.OfLq5Y460WqT6nZylKH72PqsYDkNn.u"
     },
     {
-      "id": "chg_haute_corse",
-      "username": "bastia",
+      "id": "clinique_des_dunes",
+      "username": "dunes",
       "password": "$2b$10$YVF0LQb3GPeV169loTyIJOpILLP.BULhHmya2/DykxsYqBcbfyxNm"
     },
     {
-      "id": "ch_sartene",
-      "username": "sartene",
+      "id": "hopital_saint_roch",
+      "username": "saintroch",
       "password": "$2b$10$I0PCqPgigrDiRCx.mHkMcus5aF05vyVQ2ur.g3WiHPcHTKOPQBVoK"
     }
   ]

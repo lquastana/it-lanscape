@@ -1,0 +1,71 @@
+{
+  "etablissement": "Clinique des Dunes",
+  "flux": [
+    {
+      "id": "CDN-FLX-001",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Admissions et mouvements vers le DPI"
+    },
+    {
+      "id": "CDN-FLX-002",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "IFC",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Actes médicaux vers la facturation"
+    },
+    {
+      "id": "CDN-FLX-003",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "CRS",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ORM",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Demandes d'examens d'imagerie"
+    },
+    {
+      "id": "CDN-FLX-004",
+      "sourceTrigramme": "CRS",
+      "targetTrigramme": "SEC",
+      "protocol": "DICOM",
+      "port": 104,
+      "messageType": "DICOM",
+      "interfaceType": "Medicale",
+      "eaiName": "Direct",
+      "description": "Transfert des images vers le PACS"
+    },
+    {
+      "id": "CDN-FLX-005",
+      "sourceTrigramme": "SIL",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "RDE",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Ordonnances et délivrances médicaments"
+    },
+    {
+      "id": "CDN-FLX-006",
+      "sourceTrigramme": "ENO",
+      "targetTrigramme": "MAI",
+      "protocol": "SMTP/TLS",
+      "port": 587,
+      "messageType": "MSS",
+      "interfaceType": "Administrative",
+      "eaiName": "Passerelle MSS",
+      "description": "Envoi de messages sécurisés vers Mailiz"
+    }
+  ]
+}

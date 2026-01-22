@@ -28,5 +28,16 @@ function anonymizeInfra(filePath) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-anonymizeNetwork('data/ch_ajaccio.network.json');
-anonymizeInfra('data/ch_ajaccio.infra.json');
+const networkFiles = [
+  'data/ch_val_de_lys.network.json',
+  'data/clinique_des_dunes.network.json',
+  'data/hopital_saint_roch.network.json',
+];
+const infraFiles = [
+  'data/ch_val_de_lys.infra.json',
+  'data/clinique_des_dunes.infra.json',
+  'data/hopital_saint_roch.infra.json',
+];
+
+networkFiles.forEach(anonymizeNetwork);
+infraFiles.forEach(anonymizeInfra);
