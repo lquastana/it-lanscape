@@ -892,16 +892,6 @@ export default function IncidentSimulationPage() {
                         </div>
                       </div>
                     )}
-                    <div className="graph-list">
-                      {analysis.propagationEdges.map(edge => (
-                        <div key={`${edge.source}-${edge.target}`} className="graph-edge">
-                          <span className={`graph-node status-${edge.status}`}>{edge.sourceLabel}</span>
-                          <span className="graph-arrow">→</span>
-                          <span className={`graph-node status-${edge.status}`}>{edge.targetLabel}</span>
-                          <span className="muted">{edge.interfaceType || 'Dépendance'}</span>
-                        </div>
-                      ))}
-                    </div>
                   </>
                 )}
               </div>
