@@ -29,5 +29,8 @@
   "GLP": "GLPI",
   "CCM": "Cisco Unified Communications Manager",
   "MIL": "Milestone XProtect",
-  "SFR": "Sage FRP 1000"
+  "SFR": "Sage FRP 1000",
+  "CAR": "CardioReport",
+  "ONC": "OncoSuite",
+  "BLO": "BlocManager"
 }

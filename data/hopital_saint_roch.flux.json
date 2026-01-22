@@ -25,8 +25,8 @@
     },
     {
       "id": "HSR-FLX-003",
-      "sourceTrigramme": "ORB",
-      "targetTrigramme": "CRS",
+      "sourceTrigramme": "CRS",
+      "targetTrigramme": "ORB",
       "protocol": "HL7",
       "port": 2575,
       "messageType": "ORM",
@@ -80,14 +80,14 @@
     },
     {
       "id": "HSR-FLX-008",
-      "sourceTrigramme": "ORP",
-      "targetTrigramme": "ORB",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "ORP",
       "protocol": "API",
       "port": 443,
       "messageType": "Planning",
       "interfaceType": "Planification",
       "eaiName": "API interne",
-      "description": "Synchronisation planning et lits"
+      "description": "Synchronisation planning et lits vers ORBIS Planning"
     },
     {
       "id": "HSR-FLX-009",
@@ -102,8 +102,8 @@
     },
     {
       "id": "HSR-FLX-010",
-      "sourceTrigramme": "ORB",
-      "targetTrigramme": "DOC",
+      "sourceTrigramme": "DOC",
+      "targetTrigramme": "ORB",
       "protocol": "HTTPS",
       "port": 443,
       "messageType": "Téléconsultation",
@@ -113,8 +113,8 @@
     },
     {
       "id": "HSR-FLX-011",
-      "sourceTrigramme": "ORB",
-      "targetTrigramme": "HAD",
+      "sourceTrigramme": "HAD",
+      "targetTrigramme": "ORB",
       "protocol": "FHIR",
       "port": 443,
       "messageType": "CarePlan",
@@ -125,7 +125,7 @@
     {
       "id": "HSR-FLX-012",
       "sourceTrigramme": "HAD",
-      "targetTrigramme": "NOM",
+      "targetTrigramme": "ORB",
       "protocol": "HTTPS",
       "port": 443,
       "messageType": "Visites",
@@ -135,8 +135,8 @@
     },
     {
       "id": "HSR-FLX-013",
-      "sourceTrigramme": "ORB",
-      "targetTrigramme": "URG",
+      "sourceTrigramme": "URG",
+      "targetTrigramme": "ORB",
       "protocol": "HL7",
       "port": 2575,
       "messageType": "ADT",
@@ -146,8 +146,8 @@
     },
     {
       "id": "HSR-FLX-014",
-      "sourceTrigramme": "ORB",
-      "targetTrigramme": "MAI",
+      "sourceTrigramme": "MAI",
+      "targetTrigramme": "ORB",
       "protocol": "SMTP/TLS",
       "port": 587,
       "messageType": "MSS",
@@ -209,6 +209,72 @@
       "interfaceType": "Autre",
       "eaiName": "API",
       "description": "Supervision des services DPI"
+    },
+    {
+      "id": "HSR-FLX-020",
+      "sourceTrigramme": "CAR",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification CAR vers ORBIS Planning"
+    },
+    {
+      "id": "HSR-FLX-021",
+      "sourceTrigramme": "ONC",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification ONC vers ORBIS Planning"
+    },
+    {
+      "id": "HSR-FLX-022",
+      "sourceTrigramme": "BLO",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification BLO vers ORBIS Planning"
+    },
+    {
+      "id": "HSR-FLX-023",
+      "sourceTrigramme": "CAR",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité CAR vers Maincare iGAP"
+    },
+    {
+      "id": "HSR-FLX-024",
+      "sourceTrigramme": "ONC",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité ONC vers Maincare iGAP"
+    },
+    {
+      "id": "HSR-FLX-025",
+      "sourceTrigramme": "BLO",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité BLO vers Maincare iGAP"
     }
   ]
 }

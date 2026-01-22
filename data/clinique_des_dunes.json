@@ -192,6 +192,66 @@
                   "trigramme": "NOM"
                 }
               ]
+            },
+            {
+              "nom": "Spécialités médicales",
+              "description": "Applications dédiées aux spécialités médicales.",
+              "applications": [
+                {
+                  "nom": "CardioReport",
+                  "description": "Dossier de spécialité cardiologie et comptes rendus.",
+                  "editeur": "GE Healthcare",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "CAR"
+                },
+                {
+                  "nom": "OncoSuite",
+                  "description": "Dossier de spécialité oncologie, suivi des protocoles.",
+                  "editeur": "Varian",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "ONC"
+                },
+                {
+                  "nom": "BlocManager",
+                  "description": "Gestion du bloc opératoire et traçabilité.",
+                  "editeur": "Cegedim",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": true
+                  },
+                  "trigramme": "BLO"
+                }
+              ]
             }
           ]
         },
