@@ -635,6 +635,22 @@ small { font-size: 12px; line-height: 16px; }
   margin-bottom: 20px;
 }
 
+.propagation-diagram {
+  margin: 12px 0 16px;
+}
+
+.propagation-canvas {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
+  overflow: hidden;
+}
+
+.propagation-canvas svg {
+  display: block;
+}
+
 .graph-list {
   display: grid;
   gap: 8px;

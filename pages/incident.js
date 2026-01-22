@@ -24,6 +24,13 @@ const STATUS_RANK = {
   latence: 1,
 };
 
+const STATUS_COLORS = {
+  hs: '#b91c1c',
+  degrade: '#f97316',
+  latence: '#2563eb',
+  intermittent: '#7c3aed',
+};
+
 const CRITICITE_RANK = {
   Critique: 2,
   Standard: 1,
@@ -462,6 +469,71 @@ export default function IncidentSimulationPage() {
   ), [appMeta]);
 
   const statusBadge = (status) => `status-badge status-${status}`;
+  const propagationDiagram = useMemo(() => {
+    if (!analysis?.propagationEdges?.length) return null;
+    const nodesMap = new Map();
+    analysis.impactedApps.forEach(app => {
+      nodesMap.set(app.trigramme, {
+        id: app.trigramme,
+        label: app.label,
+        depth: app.depth ?? 0,
+        status: app.status,
+      });
+    });
+    analysis.propagationEdges.forEach(edge => {
+      if (!nodesMap.has(edge.source)) {
+        nodesMap.set(edge.source, {
+          id: edge.source,
+          label: edge.sourceLabel,
+          depth: 0,
+          status: edge.status,
+        });
+      }
+      if (!nodesMap.has(edge.target)) {
+        nodesMap.set(edge.target, {
+          id: edge.target,
+          label: edge.targetLabel,
+          depth: 1,
+          status: edge.status,
+        });
+      }
+    });
+
+    const nodes = Array.from(nodesMap.values());
+    const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
+    const columnWidth = 260;
+    const rowGap = 110;
+    const nodeSize = { width: 210, height: 64 };
+    const layout = [];
+
+    for (let depth = 0; depth <= maxDepth; depth += 1) {
+      const column = nodes
+        .filter(node => node.depth === depth)
+        .sort((a, b) => a.label.localeCompare(b.label));
+      const startY = 80;
+      column.forEach((node, rowIdx) => {
+        layout.push({
+          ...node,
+          x: depth * columnWidth,
+          y: startY + rowIdx * rowGap,
+        });
+      });
+    }
+
+    const width = (maxDepth + 1) * columnWidth + nodeSize.width;
+    const height = Math.max(
+      ...layout.map(node => node.y + nodeSize.height),
+      320,
+    );
+
+    return {
+      nodes: layout,
+      links: analysis.propagationEdges,
+      width,
+      height,
+      nodeSize,
+    };
+  }, [analysis]);
 
   return (
     <>
@@ -654,16 +726,94 @@ export default function IncidentSimulationPage() {
                 {analysis.propagationEdges.length === 0 ? (
                   <p className="muted">Aucune propagation détectée.</p>
                 ) : (
-                  <div className="graph-list">
-                    {analysis.propagationEdges.map(edge => (
-                      <div key={`${edge.source}-${edge.target}`} className="graph-edge">
-                        <span className={`graph-node status-${edge.status}`}>{edge.sourceLabel}</span>
-                        <span className="graph-arrow">→</span>
-                        <span className={`graph-node status-${edge.status}`}>{edge.targetLabel}</span>
-                        <span className="muted">{edge.interfaceType || 'Dépendance'}</span>
+                  <>
+                    <p className="muted">Survolez une flèche pour connaître la cause de la propagation.</p>
+                    {propagationDiagram && (
+                      <div className="propagation-diagram">
+                        <div className="propagation-canvas">
+                          <svg width={propagationDiagram.width} height={propagationDiagram.height}>
+                            <defs>
+                              {Object.entries(STATUS_COLORS).map(([key, color]) => (
+                                <marker key={key} id={`prop-arrow-${key}`} markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                                  <path d="M0,0 L0,6 L9,3 z" fill={color} />
+                                </marker>
+                              ))}
+                            </defs>
+                            {propagationDiagram.links.map(edge => {
+                              const sourceNode = propagationDiagram.nodes.find(node => node.id === edge.source);
+                              const targetNode = propagationDiagram.nodes.find(node => node.id === edge.target);
+                              if (!sourceNode || !targetNode) return null;
+                              const startX = sourceNode.x + propagationDiagram.nodeSize.width;
+                              const startY = sourceNode.y + propagationDiagram.nodeSize.height / 2;
+                              const endX = targetNode.x;
+                              const endY = targetNode.y + propagationDiagram.nodeSize.height / 2;
+                              const midX = (startX + endX) / 2;
+                              const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
+                              const stroke = STATUS_COLORS[edge.status] || '#64748b';
+                              const title = [
+                                `Propagation depuis ${edge.sourceLabel}`,
+                                `Impact source: ${formatStatus(edge.status)}`,
+                                `Cible: ${edge.targetLabel}`,
+                                `Type: ${edge.interfaceType || 'Dépendance'}`,
+                              ].join('\n');
+                              return (
+                                <g key={`${edge.source}-${edge.target}`}>
+                                  <path
+                                    d={pathD}
+                                    fill="none"
+                                    stroke="transparent"
+                                    strokeWidth="16"
+                                    style={{ pointerEvents: 'stroke' }}
+                                  >
+                                    <title>{title}</title>
+                                  </path>
+                                  <path
+                                    d={pathD}
+                                    fill="none"
+                                    stroke={stroke}
+                                    strokeWidth="2"
+                                    markerEnd={`url(#prop-arrow-${edge.status})`}
+                                    style={{ pointerEvents: 'none' }}
+                                  />
+                                </g>
+                              );
+                            })}
+                            {propagationDiagram.nodes.map(node => (
+                              <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
+                                <rect
+                                  width={propagationDiagram.nodeSize.width}
+                                  height={propagationDiagram.nodeSize.height}
+                                  rx="14"
+                                  fill="#f8fafc"
+                                  stroke={STATUS_COLORS[node.status] || '#dbe3f0'}
+                                  strokeWidth="2"
+                                />
+                                <text
+                                  x={propagationDiagram.nodeSize.width / 2}
+                                  y={propagationDiagram.nodeSize.height / 2 + 4}
+                                  textAnchor="middle"
+                                  fontSize="12"
+                                  fill="#1f2937"
+                                >
+                                  {node.label}
+                                </text>
+                              </g>
+                            ))}
+                          </svg>
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                    )}
+                    <div className="graph-list">
+                      {analysis.propagationEdges.map(edge => (
+                        <div key={`${edge.source}-${edge.target}`} className="graph-edge">
+                          <span className={`graph-node status-${edge.status}`}>{edge.sourceLabel}</span>
+                          <span className="graph-arrow">→</span>
+                          <span className={`graph-node status-${edge.status}`}>{edge.targetLabel}</span>
+                          <span className="muted">{edge.interfaceType || 'Dépendance'}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
 
