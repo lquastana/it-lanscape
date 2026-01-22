@@ -477,18 +477,27 @@ export default function FluxPage() {
                   const endY = targetNode.y + diagramData.nodeSize.height / 2;
                   const stroke = INTERFACE_COLORS[link.type] || '#64748b';
                   const midX = (startX + endX) / 2;
+                  const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
                   return (
-                    <path
-                      key={link.id}
-                      d={`M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`}
-                      fill="none"
-                      stroke={stroke}
-                      strokeWidth="2"
-                      markerEnd="url(#arrow)"
-                      style={{ pointerEvents: 'stroke' }}
-                    >
-                      <title>{`Source: ${formatLabel(link.source)}\nCible: ${formatLabel(link.target)}\nType: ${link.type}\nProtocole: ${link.protocol || '-'}\nMessage: ${link.label || '-'}\nPort: ${link.port ?? '-'}\nEAI: ${link.eaiName || 'Direct'}\nÉtablissement: ${link.etablissement}`}</title>
-                    </path>
+                    <g key={link.id}>
+                      <path
+                        d={pathD}
+                        fill="none"
+                        stroke="transparent"
+                        strokeWidth="16"
+                        style={{ pointerEvents: 'stroke' }}
+                      >
+                        <title>{`Source: ${formatLabel(link.source)}\nCible: ${formatLabel(link.target)}\nType: ${link.type}\nProtocole: ${link.protocol || '-'}\nMessage: ${link.label || '-'}\nPort: ${link.port ?? '-'}\nEAI: ${link.eaiName || 'Direct'}\nÉtablissement: ${link.etablissement}`}</title>
+                      </path>
+                      <path
+                        d={pathD}
+                        fill="none"
+                        stroke={stroke}
+                        strokeWidth="2"
+                        markerEnd="url(#arrow)"
+                        style={{ pointerEvents: 'none' }}
+                      />
+                    </g>
                   );
                 })}
                 {diagramData.nodes.map(node => (
