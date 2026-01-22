@@ -476,15 +476,21 @@ export default function IncidentSimulationPage() {
       nodesMap.set(app.trigramme, {
         id: app.trigramme,
         label: app.label,
+        etablissement: app.etablissement,
+        process: app.processus,
         depth: app.depth ?? 0,
         status: app.status,
       });
     });
     analysis.propagationEdges.forEach(edge => {
+      const sourceMeta = appMeta.get(edge.source);
+      const targetMeta = appMeta.get(edge.target);
       if (!nodesMap.has(edge.source)) {
         nodesMap.set(edge.source, {
           id: edge.source,
           label: edge.sourceLabel,
+          etablissement: sourceMeta?.etablissement,
+          process: sourceMeta?.processus,
           depth: 0,
           status: edge.status,
         });
@@ -493,6 +499,8 @@ export default function IncidentSimulationPage() {
         nodesMap.set(edge.target, {
           id: edge.target,
           label: edge.targetLabel,
+          etablissement: targetMeta?.etablissement,
+          process: targetMeta?.processus,
           depth: 1,
           status: edge.status,
         });
@@ -502,8 +510,8 @@ export default function IncidentSimulationPage() {
     const nodes = Array.from(nodesMap.values());
     const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
     const columnWidth = 260;
-    const rowGap = 110;
-    const nodeSize = { width: 210, height: 64 };
+    const rowGap = 130;
+    const nodeSize = { width: 210, height: 92 };
     const layout = [];
 
     for (let depth = 0; depth <= maxDepth; depth += 1) {
@@ -533,7 +541,7 @@ export default function IncidentSimulationPage() {
       height,
       nodeSize,
     };
-  }, [analysis]);
+  }, [analysis, appMeta]);
 
   return (
     <>
@@ -692,35 +700,6 @@ export default function IncidentSimulationPage() {
             <p className="muted">Lancez une analyse pour afficher les impacts.</p>
           ) : (
             <>
-              <div className="impact-summary">
-                <div>
-                  <h3>Services &amp; processus touchés</h3>
-                  {analysis.impactedProcesses.length === 0 ? (
-                    <p className="muted">Aucun processus identifié.</p>
-                  ) : (
-                    <ul className="impact-list">
-                      {analysis.impactedProcesses.map(item => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div>
-                  <h3>Flux bloqués / dégradés</h3>
-                  {analysis.blockedFlows.length === 0 ? (
-                    <p className="muted">Aucun flux impacté.</p>
-                  ) : (
-                    <ul className="impact-list">
-                      {analysis.blockedFlows.map(flow => (
-                        <li key={`${flow.id}-${flow.source}-${flow.target}`}>
-                          {flow.sourceLabel} → {flow.targetLabel} ({flow.interfaceType || 'Flux'})
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
-
               <div className="impact-graph">
                 <h3>Propagation</h3>
                 {analysis.propagationEdges.length === 0 ? (
@@ -790,12 +769,22 @@ export default function IncidentSimulationPage() {
                                 />
                                 <text
                                   x={propagationDiagram.nodeSize.width / 2}
-                                  y={propagationDiagram.nodeSize.height / 2 + 4}
+                                  y={propagationDiagram.nodeSize.height / 2 - (node.process || node.etablissement ? 10 : -2)}
                                   textAnchor="middle"
                                   fontSize="12"
                                   fill="#1f2937"
                                 >
-                                  {node.label}
+                                  <tspan x={propagationDiagram.nodeSize.width / 2}>{node.label}</tspan>
+                                  {node.process && (
+                                    <tspan x={propagationDiagram.nodeSize.width / 2} dy="14" fontSize="10" fill="#6b7280">
+                                      {node.process}
+                                    </tspan>
+                                  )}
+                                  {node.etablissement && (
+                                    <tspan x={propagationDiagram.nodeSize.width / 2} dy="14" fontSize="9" fill="#94a3b8">
+                                      {node.etablissement}
+                                    </tspan>
+                                  )}
                                 </text>
                               </g>
                             ))}
@@ -882,6 +871,35 @@ export default function IncidentSimulationPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              <div className="impact-summary">
+                <div>
+                  <h3>Services &amp; processus touchés</h3>
+                  {analysis.impactedProcesses.length === 0 ? (
+                    <p className="muted">Aucun processus identifié.</p>
+                  ) : (
+                    <ul className="impact-list">
+                      {analysis.impactedProcesses.map(item => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <div>
+                  <h3>Flux bloqués / dégradés</h3>
+                  {analysis.blockedFlows.length === 0 ? (
+                    <p className="muted">Aucun flux impacté.</p>
+                  ) : (
+                    <ul className="impact-list">
+                      {analysis.blockedFlows.map(flow => (
+                        <li key={`${flow.id}-${flow.source}-${flow.target}`}>
+                          {flow.sourceLabel} → {flow.targetLabel} ({flow.interfaceType || 'Flux'})
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </>
