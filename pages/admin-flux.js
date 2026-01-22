@@ -275,7 +275,7 @@ export default function AdminFlux() {
         }
         .form-grid {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
           gap: 12px 16px;
         }
         label {
@@ -283,11 +283,14 @@ export default function AdminFlux() {
           flex-direction: column;
           gap: 6px;
           font-size: 0.9rem;
+          min-width: 0;
         }
         input, select, textarea {
           padding: 8px 10px;
           border-radius: 8px;
           border: 1px solid #d6dbe6;
+          width: 100%;
+          box-sizing: border-box;
         }
         textarea {
           resize: vertical;
