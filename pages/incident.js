@@ -508,7 +508,7 @@ export default function IncidentSimulationPage() {
     if (!analysis?.propagationEdges?.length) return null;
     const nodesMap = new Map();
     analysis.impactedApps.forEach(app => {
-      const nodeId = app.multiEtablissement ? `mutual-${app.trigramme}` : `${app.trigramme}-${app.etablissement}`;
+      const nodeId = `${app.trigramme}-${app.etablissement}`;
       if (nodesMap.has(nodeId)) return;
       nodesMap.set(nodeId, {
         id: nodeId,
@@ -518,38 +518,43 @@ export default function IncidentSimulationPage() {
         process: app.processus,
         depth: app.depth ?? 0,
         status: app.status,
-        isMutualized: Boolean(app.multiEtablissement),
       });
     });
     analysis.propagationEdges.forEach(edge => {
       const sourceMeta = appMeta.get(edge.source);
       const targetMeta = appMeta.get(edge.target);
-      const sourceId = sourceMeta?.multiEtablissement ? `mutual-${edge.source}` : `${edge.source}-${sourceMeta?.entries?.[0]?.etablissement || edge.source}`;
-      const targetId = targetMeta?.multiEtablissement ? `mutual-${edge.target}` : `${edge.target}-${targetMeta?.entries?.[0]?.etablissement || edge.target}`;
-      if (!nodesMap.has(sourceId)) {
+      const sourceEntries = sourceMeta?.entries?.length
+        ? sourceMeta.entries
+        : [{ etablissement: edge.source, processus: 'Processus non renseigné' }];
+      const targetEntries = targetMeta?.entries?.length
+        ? targetMeta.entries
+        : [{ etablissement: edge.target, processus: 'Processus non renseigné' }];
+      sourceEntries.forEach(entry => {
+        const sourceId = `${edge.source}-${entry.etablissement}`;
+        if (nodesMap.has(sourceId)) return;
         nodesMap.set(sourceId, {
           id: sourceId,
           trigramme: edge.source,
           label: edge.sourceLabel,
-          etablissement: sourceMeta?.entries?.[0]?.etablissement,
-          process: sourceMeta?.entries?.[0]?.processus,
+          etablissement: entry.etablissement,
+          process: entry.processus,
           depth: 0,
           status: edge.status,
-          isMutualized: Boolean(sourceMeta?.multiEtablissement),
         });
-      }
-      if (!nodesMap.has(targetId)) {
+      });
+      targetEntries.forEach(entry => {
+        const targetId = `${edge.target}-${entry.etablissement}`;
+        if (nodesMap.has(targetId)) return;
         nodesMap.set(targetId, {
           id: targetId,
           trigramme: edge.target,
           label: edge.targetLabel,
-          etablissement: targetMeta?.entries?.[0]?.etablissement,
-          process: targetMeta?.entries?.[0]?.processus,
+          etablissement: entry.etablissement,
+          process: entry.processus,
           depth: 1,
           status: edge.status,
-          isMutualized: Boolean(targetMeta?.multiEtablissement),
         });
-      }
+      });
     });
 
     const nodes = Array.from(nodesMap.values());
@@ -558,20 +563,15 @@ export default function IncidentSimulationPage() {
     const nodeGap = 12;
     const processGap = 20;
     const establishmentGap = 28;
-    const mutualizedGap = 24;
     const processPadding = 16;
     const establishmentPadding = 18;
-    const mutualizedPadding = 18;
     const processLabelHeight = 16;
     const establishmentLabelHeight = 18;
-    const mutualizedLabelHeight = 18;
     const establishmentWidth = nodeSize.width + processPadding * 2 + establishmentPadding * 2;
-    const mutualizedWidth = nodeSize.width + mutualizedPadding * 2;
-    const columnWidth = Math.max(establishmentWidth, mutualizedWidth) + 120;
+    const columnWidth = establishmentWidth + 120;
     const layout = [];
     const processBlocks = [];
     const establishmentBlocks = [];
-    const mutualizedBlocks = [];
 
     for (let depth = 0; depth <= maxDepth; depth += 1) {
       const column = nodes
@@ -591,36 +591,9 @@ export default function IncidentSimulationPage() {
       const startY = 80;
       const columnX = depth * columnWidth;
       let currentY = startY;
-      const mutualizedNodes = column.filter(node => node.isMutualized);
-      const regularNodes = column.filter(node => !node.isMutualized);
-      if (mutualizedNodes.length) {
-        const mutualizedStartY = currentY;
-        currentY += mutualizedLabelHeight + mutualizedPadding;
-        mutualizedNodes.forEach(node => {
-          layout.push({
-            ...node,
-            x: columnX + mutualizedPadding,
-            y: currentY,
-          });
-          currentY += nodeSize.height + nodeGap;
-        });
-        if (mutualizedNodes.length) {
-          currentY -= nodeGap;
-        }
-        currentY += mutualizedPadding;
-        mutualizedBlocks.push({
-          id: `${depth}-mutualized`,
-          label: 'Applications mutualisées',
-          x: columnX,
-          y: mutualizedStartY,
-          width: mutualizedWidth,
-          height: currentY - mutualizedStartY,
-        });
-        currentY += mutualizedGap;
-      }
-      const establishments = Array.from(new Set(regularNodes.map(node => node.etablissement)));
+      const establishments = Array.from(new Set(column.map(node => node.etablissement)));
       establishments.forEach(establishment => {
-        const establishmentNodes = regularNodes.filter(node => node.etablissement === establishment);
+        const establishmentNodes = column.filter(node => node.etablissement === establishment);
         const processes = Array.from(new Set(establishmentNodes.map(node => node.process)));
         const establishmentStartY = currentY;
         currentY += establishmentLabelHeight + establishmentPadding;
@@ -671,16 +644,39 @@ export default function IncidentSimulationPage() {
       ...layout.map(node => node.y + nodeSize.height),
       ...processBlocks.map(block => block.y + block.height),
       ...establishmentBlocks.map(block => block.y + block.height),
-      ...mutualizedBlocks.map(block => block.y + block.height),
       320,
     );
+
+    const expandedLinks = [];
+    analysis.propagationEdges.forEach(edge => {
+      const sourceMeta = appMeta.get(edge.source);
+      const targetMeta = appMeta.get(edge.target);
+      const sourceEntries = sourceMeta?.entries?.length
+        ? sourceMeta.entries
+        : [{ etablissement: edge.source, processus: 'Processus non renseigné' }];
+      const targetEntries = targetMeta?.entries?.length
+        ? targetMeta.entries
+        : [{ etablissement: edge.target, processus: 'Processus non renseigné' }];
+      const sourceScoped = sourceMeta?.multiEtablissement ? sourceEntries : sourceEntries.slice(0, 1);
+      const targetScoped = targetMeta?.multiEtablissement ? targetEntries : targetEntries.slice(0, 1);
+      sourceScoped.forEach(sourceEntry => {
+        const sourceId = `${edge.source}-${sourceEntry.etablissement}`;
+        targetScoped.forEach(targetEntry => {
+          const targetId = `${edge.target}-${targetEntry.etablissement}`;
+          expandedLinks.push({
+            ...edge,
+            sourceId,
+            targetId,
+          });
+        });
+      });
+    });
 
     return {
       nodes: layout,
       processBlocks,
       establishmentBlocks,
-      mutualizedBlocks,
-      links: analysis.propagationEdges,
+      links: expandedLinks,
       width,
       height,
       nodeSize,
@@ -863,29 +859,6 @@ export default function IncidentSimulationPage() {
                                 </marker>
                               ))}
                             </defs>
-                            {propagationDiagram.mutualizedBlocks.map(block => (
-                              <g key={block.id}>
-                                <rect
-                                  x={block.x}
-                                  y={block.y}
-                                  width={block.width}
-                                  height={block.height}
-                                  rx="18"
-                                  fill="#fef3c7"
-                                  stroke="#f59e0b"
-                                  strokeWidth="1.5"
-                                />
-                                <text
-                                  x={block.x + 16}
-                                  y={block.y + 22}
-                                  fontSize="12"
-                                  fontWeight="600"
-                                  fill="#92400e"
-                                >
-                                  {block.label}
-                                </text>
-                              </g>
-                            ))}
                             {propagationDiagram.establishmentBlocks.map(block => (
                               <g key={block.id}>
                                 <rect
@@ -933,8 +906,8 @@ export default function IncidentSimulationPage() {
                               </g>
                             ))}
                             {propagationDiagram.links.map(edge => {
-                              const sourceNode = propagationDiagram.nodes.find(node => node.trigramme === edge.source);
-                              const targetNode = propagationDiagram.nodes.find(node => node.trigramme === edge.target);
+                              const sourceNode = propagationDiagram.nodes.find(node => node.id === edge.sourceId);
+                              const targetNode = propagationDiagram.nodes.find(node => node.id === edge.targetId);
                               if (!sourceNode || !targetNode) return null;
                               const startX = sourceNode.x + propagationDiagram.nodeSize.width;
                               const startY = sourceNode.y + propagationDiagram.nodeSize.height / 2;
@@ -950,7 +923,7 @@ export default function IncidentSimulationPage() {
                                 `Type: ${edge.interfaceType || 'Dépendance'}`,
                               ].join('\n');
                               return (
-                                <g key={`${edge.source}-${edge.target}`}>
+                                <g key={`${edge.sourceId}-${edge.targetId}`}>
                                   <path
                                     d={pathD}
                                     fill="none"
