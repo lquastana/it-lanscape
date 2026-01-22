@@ -162,11 +162,18 @@ export default function IncidentSimulationPage() {
               if (!appIndex.has(app.trigramme)) {
                 appIndex.set(app.trigramme, {
                   app,
-                  etablissement: etab.nom,
-                  domaine: dom.nom,
-                  processus: proc.nom,
+                  entries: [],
+                  multiEtablissement: false,
                 });
               }
+              const entry = appIndex.get(app.trigramme);
+              entry.entries.push({
+                etablissement: etab.nom,
+                domaine: dom.nom,
+                processus: proc.nom,
+                hebergement: app.hebergement,
+              });
+              entry.multiEtablissement = entry.multiEtablissement || Boolean(app.multiEtablissement);
               if (app.hebergement) {
                 hebergeurs.add(app.hebergement);
               }
@@ -241,17 +248,18 @@ export default function IncidentSimulationPage() {
 
     let item = null;
     if (selectionType === 'application') {
-      const meta = appMeta.get(selectionValue);
-      item = {
-        id: `${selectionType}-${selectionValue}-${Date.now()}`,
-        type: selectionType,
-        status: selectionStatus,
-        label: meta ? `${meta.app.nom} (${selectionValue})` : selectionValue,
-        trigramme: selectionValue,
-        etablissement: meta?.etablissement || 'Inconnu',
-        detail: meta ? `${meta.domaine} / ${meta.processus}` : '',
-      };
-    }
+        const meta = appMeta.get(selectionValue);
+        const primaryEntry = meta?.entries?.[0];
+        item = {
+          id: `${selectionType}-${selectionValue}-${Date.now()}`,
+          type: selectionType,
+          status: selectionStatus,
+          label: meta ? `${meta.app.nom} (${selectionValue})` : selectionValue,
+          trigramme: selectionValue,
+          etablissement: meta?.multiEtablissement ? 'Multi-établissements' : primaryEntry?.etablissement || 'Inconnu',
+          detail: primaryEntry ? `${primaryEntry.domaine} / ${primaryEntry.processus}` : '',
+        };
+      }
     if (selectionType === 'serveur') {
       const server = serverOptions.find(opt => opt.value === selectionValue);
       item = {
@@ -408,17 +416,39 @@ export default function IncidentSimulationPage() {
       });
     }
 
-    const impactedAppsList = Array.from(impactedApps.values()).map(item => {
+    const impactedAppsList = Array.from(impactedApps.values()).flatMap(item => {
       const meta = appMeta.get(item.trigramme);
-      return {
+      const entries = meta?.entries?.length
+        ? meta.entries
+        : [{
+            etablissement: 'Inconnu',
+            domaine: 'Non renseigné',
+            processus: 'Non renseigné',
+            hebergement: meta?.app?.hebergement,
+          }];
+      const shared = {
         ...item,
         label: meta ? meta.app.nom : item.trigramme,
-        etablissement: meta?.etablissement || 'Inconnu',
-        domaine: meta?.domaine || 'Non renseigné',
-        processus: meta?.processus || 'Non renseigné',
-        criticite: meta?.app.criticite || 'Standard',
-        hebergement: meta?.app.hebergement || 'Non renseigné',
+        criticite: meta?.app?.criticite || 'Standard',
+        multiEtablissement: Boolean(meta?.multiEtablissement),
       };
+      if (meta?.multiEtablissement) {
+        return entries.map(entry => ({
+          ...shared,
+          etablissement: entry.etablissement,
+          domaine: entry.domaine,
+          processus: entry.processus,
+          hebergement: entry.hebergement || meta?.app?.hebergement || 'Non renseigné',
+        }));
+      }
+      const entry = entries[0];
+      return [{
+        ...shared,
+        etablissement: entry.etablissement,
+        domaine: entry.domaine,
+        processus: entry.processus,
+        hebergement: entry.hebergement || meta?.app?.hebergement || 'Non renseigné',
+      }];
     }).sort(prioritySort);
 
     const impactedProcesses = Array.from(new Set(impactedAppsList.map(app => `${app.etablissement} • ${app.domaine} / ${app.processus}`)));
@@ -462,10 +492,15 @@ export default function IncidentSimulationPage() {
   };
 
   const appOptions = useMemo(() => (
-    Array.from(appMeta.entries()).map(([tri, meta]) => ({
-      value: tri,
-      label: `${meta.app.nom} (${tri}) • ${meta.etablissement}`,
-    })).sort((a, b) => a.label.localeCompare(b.label))
+    Array.from(appMeta.entries()).map(([tri, meta]) => {
+      const etablissementLabel = meta.multiEtablissement
+        ? 'Multi-établissements'
+        : meta.entries?.[0]?.etablissement || 'Établissement non renseigné';
+      return {
+        value: tri,
+        label: `${meta.app.nom} (${tri}) • ${etablissementLabel}`,
+      };
+    }).sort((a, b) => a.label.localeCompare(b.label))
   ), [appMeta]);
 
   const statusBadge = (status) => `status-badge status-${status}`;
@@ -473,36 +508,46 @@ export default function IncidentSimulationPage() {
     if (!analysis?.propagationEdges?.length) return null;
     const nodesMap = new Map();
     analysis.impactedApps.forEach(app => {
-      nodesMap.set(app.trigramme, {
-        id: app.trigramme,
+      const nodeId = app.multiEtablissement ? `mutual-${app.trigramme}` : `${app.trigramme}-${app.etablissement}`;
+      if (nodesMap.has(nodeId)) return;
+      nodesMap.set(nodeId, {
+        id: nodeId,
+        trigramme: app.trigramme,
         label: app.label,
         etablissement: app.etablissement,
         process: app.processus,
         depth: app.depth ?? 0,
         status: app.status,
+        isMutualized: Boolean(app.multiEtablissement),
       });
     });
     analysis.propagationEdges.forEach(edge => {
       const sourceMeta = appMeta.get(edge.source);
       const targetMeta = appMeta.get(edge.target);
-      if (!nodesMap.has(edge.source)) {
-        nodesMap.set(edge.source, {
-          id: edge.source,
+      const sourceId = sourceMeta?.multiEtablissement ? `mutual-${edge.source}` : `${edge.source}-${sourceMeta?.entries?.[0]?.etablissement || edge.source}`;
+      const targetId = targetMeta?.multiEtablissement ? `mutual-${edge.target}` : `${edge.target}-${targetMeta?.entries?.[0]?.etablissement || edge.target}`;
+      if (!nodesMap.has(sourceId)) {
+        nodesMap.set(sourceId, {
+          id: sourceId,
+          trigramme: edge.source,
           label: edge.sourceLabel,
-          etablissement: sourceMeta?.etablissement,
-          process: sourceMeta?.processus,
+          etablissement: sourceMeta?.entries?.[0]?.etablissement,
+          process: sourceMeta?.entries?.[0]?.processus,
           depth: 0,
           status: edge.status,
+          isMutualized: Boolean(sourceMeta?.multiEtablissement),
         });
       }
-      if (!nodesMap.has(edge.target)) {
-        nodesMap.set(edge.target, {
-          id: edge.target,
+      if (!nodesMap.has(targetId)) {
+        nodesMap.set(targetId, {
+          id: targetId,
+          trigramme: edge.target,
           label: edge.targetLabel,
-          etablissement: targetMeta?.etablissement,
-          process: targetMeta?.processus,
+          etablissement: targetMeta?.entries?.[0]?.etablissement,
+          process: targetMeta?.entries?.[0]?.processus,
           depth: 1,
           status: edge.status,
+          isMutualized: Boolean(targetMeta?.multiEtablissement),
         });
       }
     });
@@ -513,14 +558,20 @@ export default function IncidentSimulationPage() {
     const nodeGap = 12;
     const processGap = 20;
     const establishmentGap = 28;
+    const mutualizedGap = 24;
     const processPadding = 16;
     const establishmentPadding = 18;
+    const mutualizedPadding = 18;
     const processLabelHeight = 16;
     const establishmentLabelHeight = 18;
-    const columnWidth = nodeSize.width + processPadding * 2 + establishmentPadding * 2 + 120;
+    const mutualizedLabelHeight = 18;
+    const establishmentWidth = nodeSize.width + processPadding * 2 + establishmentPadding * 2;
+    const mutualizedWidth = nodeSize.width + mutualizedPadding * 2;
+    const columnWidth = Math.max(establishmentWidth, mutualizedWidth) + 120;
     const layout = [];
     const processBlocks = [];
     const establishmentBlocks = [];
+    const mutualizedBlocks = [];
 
     for (let depth = 0; depth <= maxDepth; depth += 1) {
       const column = nodes
@@ -540,9 +591,36 @@ export default function IncidentSimulationPage() {
       const startY = 80;
       const columnX = depth * columnWidth;
       let currentY = startY;
-      const establishments = Array.from(new Set(column.map(node => node.etablissement)));
+      const mutualizedNodes = column.filter(node => node.isMutualized);
+      const regularNodes = column.filter(node => !node.isMutualized);
+      if (mutualizedNodes.length) {
+        const mutualizedStartY = currentY;
+        currentY += mutualizedLabelHeight + mutualizedPadding;
+        mutualizedNodes.forEach(node => {
+          layout.push({
+            ...node,
+            x: columnX + mutualizedPadding,
+            y: currentY,
+          });
+          currentY += nodeSize.height + nodeGap;
+        });
+        if (mutualizedNodes.length) {
+          currentY -= nodeGap;
+        }
+        currentY += mutualizedPadding;
+        mutualizedBlocks.push({
+          id: `${depth}-mutualized`,
+          label: 'Applications mutualisées',
+          x: columnX,
+          y: mutualizedStartY,
+          width: mutualizedWidth,
+          height: currentY - mutualizedStartY,
+        });
+        currentY += mutualizedGap;
+      }
+      const establishments = Array.from(new Set(regularNodes.map(node => node.etablissement)));
       establishments.forEach(establishment => {
-        const establishmentNodes = column.filter(node => node.etablissement === establishment);
+        const establishmentNodes = regularNodes.filter(node => node.etablissement === establishment);
         const processes = Array.from(new Set(establishmentNodes.map(node => node.process)));
         const establishmentStartY = currentY;
         currentY += establishmentLabelHeight + establishmentPadding;
@@ -581,7 +659,7 @@ export default function IncidentSimulationPage() {
           label: establishment,
           x: columnX,
           y: establishmentStartY,
-          width: nodeSize.width + processPadding * 2 + establishmentPadding * 2,
+          width: establishmentWidth,
           height: currentY - establishmentStartY,
         });
         currentY += establishmentGap;
@@ -593,6 +671,7 @@ export default function IncidentSimulationPage() {
       ...layout.map(node => node.y + nodeSize.height),
       ...processBlocks.map(block => block.y + block.height),
       ...establishmentBlocks.map(block => block.y + block.height),
+      ...mutualizedBlocks.map(block => block.y + block.height),
       320,
     );
 
@@ -600,6 +679,7 @@ export default function IncidentSimulationPage() {
       nodes: layout,
       processBlocks,
       establishmentBlocks,
+      mutualizedBlocks,
       links: analysis.propagationEdges,
       width,
       height,
@@ -709,6 +789,7 @@ export default function IncidentSimulationPage() {
                     <div>
                       <strong>{item.label}</strong>
                       <span className="muted"> • {item.type}</span>
+                      {item.etablissement && <span className="muted"> • {item.etablissement}</span>}
                       {item.detail && <span className="muted"> • {item.detail}</span>}
                     </div>
                     <span className={statusBadge(item.status)}>{formatStatus(item.status)}</span>
@@ -782,6 +863,29 @@ export default function IncidentSimulationPage() {
                                 </marker>
                               ))}
                             </defs>
+                            {propagationDiagram.mutualizedBlocks.map(block => (
+                              <g key={block.id}>
+                                <rect
+                                  x={block.x}
+                                  y={block.y}
+                                  width={block.width}
+                                  height={block.height}
+                                  rx="18"
+                                  fill="#fef3c7"
+                                  stroke="#f59e0b"
+                                  strokeWidth="1.5"
+                                />
+                                <text
+                                  x={block.x + 16}
+                                  y={block.y + 22}
+                                  fontSize="12"
+                                  fontWeight="600"
+                                  fill="#92400e"
+                                >
+                                  {block.label}
+                                </text>
+                              </g>
+                            ))}
                             {propagationDiagram.establishmentBlocks.map(block => (
                               <g key={block.id}>
                                 <rect
@@ -829,8 +933,8 @@ export default function IncidentSimulationPage() {
                               </g>
                             ))}
                             {propagationDiagram.links.map(edge => {
-                              const sourceNode = propagationDiagram.nodes.find(node => node.id === edge.source);
-                              const targetNode = propagationDiagram.nodes.find(node => node.id === edge.target);
+                              const sourceNode = propagationDiagram.nodes.find(node => node.trigramme === edge.source);
+                              const targetNode = propagationDiagram.nodes.find(node => node.trigramme === edge.target);
                               if (!sourceNode || !targetNode) return null;
                               const startX = sourceNode.x + propagationDiagram.nodeSize.width;
                               const startY = sourceNode.y + propagationDiagram.nodeSize.height / 2;
@@ -900,7 +1004,7 @@ export default function IncidentSimulationPage() {
                 <h3>Impacts priorisés</h3>
                 <div className="impact-cards">
                   {analysis.impactedApps.map(app => (
-                    <details key={app.trigramme} className="impact-card">
+                    <details key={`${app.trigramme}-${app.etablissement}`} className="impact-card">
                       <summary>
                         <div>
                           <strong>{app.label}</strong>
