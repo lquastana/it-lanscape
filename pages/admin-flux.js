@@ -201,9 +201,9 @@ export default function FluxImport() {
             <div className="brand-mark">
               <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
             </div>
-            <div>
+            <div style={{width:'250px'}}>
               <p className="eyebrow">GCS E-santé Corse</p>
-              <h1>Import Excel des flux</h1>
+              <h1>Import Excel flux</h1>
               <p className="hero-subtitle">Chargez un extrait, mappez les colonnes et importez les flux applicatifs.</p>
             </div>
           </div>
