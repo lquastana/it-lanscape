@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -112,6 +112,7 @@ export default function IncidentSimulationPage() {
   const [analysis, setAnalysis] = useState(null);
   const [scenarioName, setScenarioName] = useState('');
   const [savedScenarios, setSavedScenarios] = useState([]);
+  const printDetailsStateRef = useRef(null);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -149,6 +150,32 @@ export default function IncidentSimulationPage() {
     if (typeof window === 'undefined') return;
     window.localStorage.setItem('incident-scenarios', JSON.stringify(savedScenarios));
   }, [savedScenarios]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const selector = '.impact-details details.impact-report';
+    const handleBeforePrint = () => {
+      const detailsList = Array.from(document.querySelectorAll(selector));
+      printDetailsStateRef.current = detailsList.map(detail => detail.open);
+      detailsList.forEach(detail => {
+        detail.open = true;
+      });
+    };
+    const handleAfterPrint = () => {
+      const detailsList = Array.from(document.querySelectorAll(selector));
+      detailsList.forEach((detail, index) => {
+        const previous = printDetailsStateRef.current?.[index];
+        detail.open = Boolean(previous);
+      });
+    };
+
+    window.addEventListener('beforeprint', handleBeforePrint);
+    window.addEventListener('afterprint', handleAfterPrint);
+    return () => {
+      window.removeEventListener('beforeprint', handleBeforePrint);
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, []);
 
   const { appMeta, serverOptions, flowOptions, links, serversByApp, hebergeurOptions } = useMemo(() => {
     const appIndex = new Map();
@@ -861,10 +888,13 @@ export default function IncidentSimulationPage() {
                   <p className="muted">Aucun impact identifié.</p>
                 ) : (
                   <div className="impact-cards">
-                    {reportByEtablissement.map(report => {
+                    {reportByEtablissement.map((report, index) => {
                       const diagram = propagationDiagrams.get(report.etablissement);
                       return (
-                      <details key={report.etablissement} className="impact-card">
+                      <details
+                        key={report.etablissement}
+                        className={`impact-card impact-report${index > 0 ? ' print-page-break' : ''}`}
+                      >
                         <summary>
                           <div>
                             <strong>{report.etablissement}</strong>

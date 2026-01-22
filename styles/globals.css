@@ -771,6 +771,23 @@ small { font-size: 12px; line-height: 16px; }
     box-shadow: none;
     border: none;
   }
+
+  .impact-report {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .propagation-diagram,
+  .impact-card,
+  .impact-meta {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }
 
 
