@@ -334,4 +334,3 @@ export default function ApplicativeView({ data, colors = INTERFACE_COLORS, searc
     </main>
   );
 }
-

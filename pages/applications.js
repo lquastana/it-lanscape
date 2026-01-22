@@ -39,6 +39,7 @@ export default function ApplicationsPage() {
             <Link href="/applications" className="active">Vue Applicative</Link>
             <Link href="/flux">Vue Flux</Link>
             <Link href="/network">Vue Réseau</Link>
+            <Link href="/incident">Simulation d'incident</Link>
             <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>
