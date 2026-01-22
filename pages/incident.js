@@ -432,23 +432,13 @@ export default function IncidentSimulationPage() {
         criticite: meta?.app?.criticite || 'Standard',
         multiEtablissement: Boolean(meta?.multiEtablissement),
       };
-      if (meta?.multiEtablissement) {
-        return entries.map(entry => ({
-          ...shared,
-          etablissement: entry.etablissement,
-          domaine: entry.domaine,
-          processus: entry.processus,
-          hebergement: entry.hebergement || meta?.app?.hebergement || 'Non renseigné',
-        }));
-      }
-      const entry = entries[0];
-      return [{
+      return entries.map(entry => ({
         ...shared,
         etablissement: entry.etablissement,
         domaine: entry.domaine,
         processus: entry.processus,
         hebergement: entry.hebergement || meta?.app?.hebergement || 'Non renseigné',
-      }];
+      }));
     }).sort(prioritySort);
 
     const impactedProcesses = Array.from(new Set(impactedAppsList.map(app => `${app.etablissement} • ${app.domaine} / ${app.processus}`)));
