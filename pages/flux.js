@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { INTERFACE_COLORS } from '../lib/constants';
 
 const INTERFACE_TYPES = ['Administrative', 'Medicale', 'Facturation', 'Planification', 'Autre'];
 
-const normalize = (value = '') => value.toString().trim().toLowerCase();
+const normalize = (value = '') => (value ?? '').toString().trim().toLowerCase();
 
 export default function FluxPage() {
   const [data, setData] = useState([]);
@@ -18,6 +19,7 @@ export default function FluxPage() {
   const [interfaceType, setInterfaceType] = useState('');
   const [protocol, setProtocol] = useState('');
   const [eaiName, setEaiName] = useState('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -88,17 +90,17 @@ export default function FluxPage() {
   const sourceOptions = useMemo(() => {
     const items = sources.map(tri => ({
       tri,
-      label: trigrammes[tri],
+      label: trigrammes[tri] || tri,
     }));
-    return items.sort((a, b) => a.tri.localeCompare(b.tri));
+    return items.sort((a, b) => a.label.localeCompare(b.label));
   }, [sources, trigrammes]);
 
   const targetOptions = useMemo(() => {
     const items = targets.map(tri => ({
       tri,
-      label: trigrammes[tri],
+      label: trigrammes[tri] || tri,
     }));
-    return items.sort((a, b) => a.tri.localeCompare(b.tri));
+    return items.sort((a, b) => a.label.localeCompare(b.label));
   }, [targets, trigrammes]);
 
   const resolveTrigram = (value) => {
@@ -108,14 +110,27 @@ export default function FluxPage() {
     if (exact) return exact;
     const match = Object.entries(trigrammes).find(([, label]) => label?.toLowerCase() === trimmed.toLowerCase());
     if (match) return match[0];
-    const composite = trimmed.split(' - ')[0]?.trim();
-    return composite || trimmed;
+    return trimmed;
   };
 
   const formatLabel = (tri) => {
-    const label = trigrammes[tri];
-    return label ? `${label} (${tri})` : tri;
+    return trigrammes[tri] || tri;
   };
+
+  const resetFilters = () => {
+    setSearch('');
+    setEtablissement('');
+    setSource('');
+    setTarget('');
+    setInterfaceType('');
+    setProtocol('');
+    setEaiName('');
+  };
+
+  const getInterfaceStyle = (type) => ({
+    background: INTERFACE_COLORS[type] || '#e5e7eb',
+    color: type === 'Administrative' ? '#1f2937' : '#fff',
+  });
 
   const filtered = useMemo(() => {
     const term = normalize(search);
@@ -130,8 +145,8 @@ export default function FluxPage() {
       if (eaiName && flow.eaiName !== eaiName) return false;
       if (!term) return true;
       const haystack = [
-        flow.sourceTrigramme,
-        flow.targetTrigramme,
+        formatLabel(flow.sourceTrigramme),
+        formatLabel(flow.targetTrigramme),
         flow.protocol,
         flow.messageType,
         flow.eaiName,
@@ -174,81 +189,95 @@ export default function FluxPage() {
 
       <section className="legend-wrapper page-shell">
         <h2 className="legend-title">Légende &amp; Filtres</h2>
-        <div className="filters-grid">
+        <div className="search-row">
           <label className="wide">
             Recherche
             <input
               type="search"
-              placeholder="Trigramme, libellé, protocole, message, EAI..."
+              placeholder="Rechercher un flux..."
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
           </label>
-          <label>
-            Établissement
-            <select value={etablissement} onChange={e => setEtablissement(e.target.value)}>
-              <option value="">Tous</option>
-              {etablissements.map(item => (
-                <option key={item} value={item}>{item}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Source
-            <input
-              list="sources-list"
-              placeholder="Rechercher une source..."
-              value={source}
-              onChange={e => setSource(e.target.value)}
-            />
-            <datalist id="sources-list">
-              {sourceOptions.map(item => (
-                <option key={item.tri} value={item.label ? `${item.tri} - ${item.label}` : item.tri} />
-              ))}
-            </datalist>
-          </label>
-          <label>
-            Cible
-            <input
-              list="targets-list"
-              placeholder="Rechercher une cible..."
-              value={target}
-              onChange={e => setTarget(e.target.value)}
-            />
-            <datalist id="targets-list">
-              {targetOptions.map(item => (
-                <option key={item.tri} value={item.label ? `${item.tri} - ${item.label}` : item.tri} />
-              ))}
-            </datalist>
-          </label>
-          <label>
-            Type d'interface
-            <select value={interfaceType} onChange={e => setInterfaceType(e.target.value)}>
-              <option value="">Tous</option>
-              {INTERFACE_TYPES.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Protocole
-            <select value={protocol} onChange={e => setProtocol(e.target.value)}>
-              <option value="">Tous</option>
-              {protocols.map(item => (
-                <option key={item} value={item}>{item}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            EAI
-            <select value={eaiName} onChange={e => setEaiName(e.target.value)}>
-              <option value="">Tous</option>
-              {eaiNames.map(item => (
-                <option key={item} value={item}>{item}</option>
-              ))}
-            </select>
-          </label>
+          <div className="search-actions">
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => setShowAdvanced(v => !v)}
+            >
+              Filtres avancés {showAdvanced ? '▲' : '▼'}
+            </button>
+            <button type="button" className="primary" onClick={resetFilters}>Réinitialiser</button>
+          </div>
         </div>
+        {showAdvanced && (
+          <div className="filters-grid">
+            <label>
+              Établissement
+              <select value={etablissement} onChange={e => setEtablissement(e.target.value)}>
+                <option value="">Tous</option>
+                {etablissements.map(item => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Source
+              <input
+                list="sources-list"
+                placeholder="Rechercher une source..."
+                value={source}
+                onChange={e => setSource(e.target.value)}
+              />
+              <datalist id="sources-list">
+                {sourceOptions.map(item => (
+                  <option key={item.tri} value={item.label} />
+                ))}
+              </datalist>
+            </label>
+            <label>
+              Cible
+              <input
+                list="targets-list"
+                placeholder="Rechercher une cible..."
+                value={target}
+                onChange={e => setTarget(e.target.value)}
+              />
+              <datalist id="targets-list">
+                {targetOptions.map(item => (
+                  <option key={item.tri} value={item.label} />
+                ))}
+              </datalist>
+            </label>
+            <label>
+              Type d'interface
+              <select value={interfaceType} onChange={e => setInterfaceType(e.target.value)}>
+                <option value="">Tous</option>
+                {INTERFACE_TYPES.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Protocole
+              <select value={protocol} onChange={e => setProtocol(e.target.value)}>
+                <option value="">Tous</option>
+                {protocols.map(item => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              EAI
+              <select value={eaiName} onChange={e => setEaiName(e.target.value)}>
+                <option value="">Tous</option>
+                {eaiNames.map(item => (
+                  <option key={item} value={item}>{item}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
         {status && <p className="status">{status}</p>}
       </section>
 
@@ -277,7 +306,11 @@ export default function FluxPage() {
                     <td>{flow.etablissement}</td>
                     <td>{formatLabel(flow.sourceTrigramme)}</td>
                     <td>{formatLabel(flow.targetTrigramme)}</td>
-                    <td><span className="pill">{flow.interfaceType}</span></td>
+                    <td>
+                      <span className="pill" style={getInterfaceStyle(flow.interfaceType)}>
+                        {flow.interfaceType}
+                      </span>
+                    </td>
                     <td>{flow.protocol}</td>
                     <td>{flow.port ?? '-'}</td>
                     <td>{flow.messageType || '-'}</td>
@@ -298,6 +331,18 @@ export default function FluxPage() {
       </main>
 
       <style jsx>{`
+        .search-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          align-items: flex-end;
+          margin-bottom: 12px;
+        }
+        .search-actions {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+        }
         .filters-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -305,7 +350,8 @@ export default function FluxPage() {
           align-items: end;
         }
         .wide {
-          grid-column: 1 / -1;
+          flex: 1;
+          min-width: 280px;
         }
         label {
           display: flex;
@@ -318,6 +364,22 @@ export default function FluxPage() {
           border-radius: 8px;
           border: 1px solid #d6dbe6;
           background: #fff;
+        }
+        .primary {
+          background: #002b6f;
+          color: #fff;
+          border: none;
+          padding: 10px 14px;
+          border-radius: 10px;
+          cursor: pointer;
+        }
+        .secondary {
+          background: #fff;
+          color: #002b6f;
+          border: 1px solid #002b6f;
+          padding: 10px 14px;
+          border-radius: 10px;
+          cursor: pointer;
         }
         .table-wrapper {
           margin-top: 20px;
@@ -350,8 +412,6 @@ export default function FluxPage() {
           align-items: center;
           padding: 4px 10px;
           border-radius: 999px;
-          background: #e7efff;
-          color: #1b4dd8;
           font-weight: 600;
           font-size: 0.75rem;
         }
