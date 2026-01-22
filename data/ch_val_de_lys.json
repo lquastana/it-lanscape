@@ -47,7 +47,7 @@
                   "editeur": "Dedalus",
                   "referent": null,
                   "hebergement": "CH Val-de-Lys",
-                  "multiEtablissement": false,
+                  "multiEtablissement": true,
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {

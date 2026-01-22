@@ -47,7 +47,7 @@
                   "editeur": "Dedalus",
                   "referent": null,
                   "hebergement": "Clinique des Dunes",
-                  "multiEtablissement": false,
+                  "multiEtablissement": true,
                   "criticite": "Critique",
                   "lienPRTG": null,
                   "interfaces": {
