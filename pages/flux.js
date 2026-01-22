@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -21,6 +21,9 @@ export default function FluxPage() {
   const [eaiName, setEaiName] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [viewMode, setViewMode] = useState('liste');
+  const [diagramTransform, setDiagramTransform] = useState({ x: 0, y: 0, scale: 1 });
+  const [isPanning, setIsPanning] = useState(false);
+  const panStartRef = useRef({ x: 0, y: 0 });
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -128,10 +131,98 @@ export default function FluxPage() {
     setEaiName('');
   };
 
+  const resetDiagramView = () => {
+    setDiagramTransform({ x: 0, y: 0, scale: 1 });
+  };
+
   const getInterfaceStyle = (type) => ({
     background: INTERFACE_COLORS[type] || '#e5e7eb',
     color: type === 'Administrative' ? '#1f2937' : '#fff',
   });
+
+  const diagramData = useMemo(() => {
+    const nodesMap = new Map();
+    const links = filtered.map(flow => {
+      const source = flow.sourceTrigramme;
+      const target = flow.targetTrigramme;
+      nodesMap.set(source, { id: source, label: formatLabel(source) });
+      nodesMap.set(target, { id: target, label: formatLabel(target) });
+      return {
+        id: flow.id,
+        source,
+        target,
+        type: flow.interfaceType,
+        label: flow.messageType || flow.protocol || '',
+      };
+    });
+    const nodes = Array.from(nodesMap.values());
+
+    const roles = nodes.map(node => {
+      const hasSource = links.some(link => link.source === node.id);
+      const hasTarget = links.some(link => link.target === node.id);
+      return { ...node, role: hasSource && hasTarget ? 'both' : hasSource ? 'source' : 'target' };
+    });
+
+    const columns = {
+      source: roles.filter(node => node.role === 'source'),
+      both: roles.filter(node => node.role === 'both'),
+      target: roles.filter(node => node.role === 'target'),
+    };
+
+    const columnOrder = ['source', 'both', 'target'];
+    const columnWidth = 360;
+    const rowGap = 120;
+    const nodeSize = { width: 220, height: 64 };
+
+    const layout = {};
+    columnOrder.forEach((key, colIdx) => {
+      const column = columns[key];
+      const startY = 120;
+      column.forEach((node, rowIdx) => {
+        layout[node.id] = {
+          ...node,
+          x: colIdx * columnWidth,
+          y: startY + rowIdx * rowGap,
+        };
+      });
+    });
+
+    const width = columnOrder.length * columnWidth + nodeSize.width;
+    const height = Math.max(
+      ...Object.values(layout).map(node => node.y + nodeSize.height),
+      400,
+    );
+
+    return { nodes: Object.values(layout), links, width, height, nodeSize };
+  }, [filtered, formatLabel, trigrammes]);
+
+  const handleWheel = (event) => {
+    event.preventDefault();
+    const delta = event.deltaY > 0 ? -0.1 : 0.1;
+    setDiagramTransform(prev => {
+      const nextScale = Math.min(2.5, Math.max(0.4, prev.scale + delta));
+      return { ...prev, scale: nextScale };
+    });
+  };
+
+  const startPan = (event) => {
+    setIsPanning(true);
+    panStartRef.current = {
+      x: event.clientX - diagramTransform.x,
+      y: event.clientY - diagramTransform.y,
+    };
+  };
+
+  const onPan = (event) => {
+    if (!isPanning) return;
+    setDiagramTransform(prev => ({
+      ...prev,
+      x: event.clientX - panStartRef.current.x,
+      y: event.clientY - panStartRef.current.y,
+    }));
+  };
+
+  const endPan = () => setIsPanning(false);
 
   const filtered = useMemo(() => {
     const term = normalize(search);
@@ -345,33 +436,82 @@ export default function FluxPage() {
             </table>
           </div>
         ) : (
-          <div className="diagram-grid">
-            {filtered.map(flow => (
-              <div className="diagram-card" key={flow.id}>
-                <div className="diagram-header">
-                  <span className="diagram-etab">{flow.etablissement}</span>
-                  <span className="pill" style={getInterfaceStyle(flow.interfaceType)}>
-                    {flow.interfaceType}
-                  </span>
-                </div>
-                <div className="diagram-flow">
-                  <div className="node">
-                    <span className="node-label">{formatLabel(flow.sourceTrigramme)}</span>
-                  </div>
-                  <div className="arrow">→</div>
-                  <div className="node">
-                    <span className="node-label">{formatLabel(flow.targetTrigramme)}</span>
-                  </div>
-                </div>
-                <div className="diagram-meta">
-                  <span>Protocole: {flow.protocol || '-'}</span>
-                  <span>Message: {flow.messageType || '-'}</span>
-                  <span>Port: {flow.port ?? '-'}</span>
-                  <span>EAI: {flow.eaiName || 'Direct'}</span>
-                </div>
-                {flow.description && <p className="diagram-desc">{flow.description}</p>}
-              </div>
-            ))}
+          <div className="diagram-wrapper">
+            <div className="diagram-toolbar">
+              <span className="muted">Zoom: {(diagramTransform.scale * 100).toFixed(0)}%</span>
+              <button type="button" className="secondary" onClick={resetDiagramView}>Réinitialiser la vue</button>
+            </div>
+            <div
+              className="diagram-canvas"
+              onWheel={handleWheel}
+              onMouseDown={startPan}
+              onMouseMove={onPan}
+              onMouseUp={endPan}
+              onMouseLeave={endPan}
+              role="presentation"
+            >
+              <svg
+                width={diagramData.width}
+                height={diagramData.height}
+                style={{
+                  transform: `translate(${diagramTransform.x}px, ${diagramTransform.y}px) scale(${diagramTransform.scale})`,
+                  transformOrigin: '0 0',
+                }}
+              >
+                <defs>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+                  </marker>
+                </defs>
+                {diagramData.links.map(link => {
+                  const sourceNode = diagramData.nodes.find(node => node.id === link.source);
+                  const targetNode = diagramData.nodes.find(node => node.id === link.target);
+                  if (!sourceNode || !targetNode) return null;
+                  const startX = sourceNode.x + diagramData.nodeSize.width;
+                  const startY = sourceNode.y + diagramData.nodeSize.height / 2;
+                  const endX = targetNode.x;
+                  const endY = targetNode.y + diagramData.nodeSize.height / 2;
+                  const stroke = INTERFACE_COLORS[link.type] || '#64748b';
+                  const midX = (startX + endX) / 2;
+                  return (
+                    <g key={link.id}>
+                      <path
+                        d={`M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`}
+                        fill="none"
+                        stroke={stroke}
+                        strokeWidth="2"
+                        markerEnd="url(#arrow)"
+                      />
+                      {link.label && (
+                        <text x={midX} y={Math.min(startY, endY) - 6} fontSize="11" fill="#475569">
+                          {link.label}
+                        </text>
+                      )}
+                    </g>
+                  );
+                })}
+                {diagramData.nodes.map(node => (
+                  <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
+                    <rect
+                      width={diagramData.nodeSize.width}
+                      height={diagramData.nodeSize.height}
+                      rx="14"
+                      fill="#f8fafc"
+                      stroke="#dbe3f0"
+                    />
+                    <text
+                      x={diagramData.nodeSize.width / 2}
+                      y={diagramData.nodeSize.height / 2 + 4}
+                      textAnchor="middle"
+                      fontSize="12"
+                      fill="#1f2937"
+                    >
+                      {node.label}
+                    </text>
+                  </g>
+                ))}
+              </svg>
+            </div>
           </div>
         )}
       </main>
@@ -454,67 +594,38 @@ export default function FluxPage() {
           box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
           background: #fff;
         }
-        .diagram-grid {
+        .diagram-wrapper {
           margin-top: 20px;
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-          gap: 16px;
-        }
-        .diagram-card {
-          background: #fff;
-          border-radius: 16px;
-          padding: 16px;
-          box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
           display: flex;
           flex-direction: column;
           gap: 12px;
         }
-        .diagram-header {
+        .diagram-toolbar {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-end;
           align-items: center;
           gap: 8px;
         }
-        .diagram-etab {
-          font-weight: 600;
-          color: #1f2937;
-          font-size: 0.9rem;
+        .diagram-canvas {
+          background: #fff;
+          border-radius: 16px;
+          box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
+          overflow: hidden;
+          min-height: 420px;
+          cursor: grab;
+          position: relative;
         }
-        .diagram-flow {
-          display: grid;
-          grid-template-columns: 1fr auto 1fr;
-          align-items: center;
-          gap: 8px;
+        .diagram-canvas:active {
+          cursor: grabbing;
+        }
+        svg {
+          display: block;
         }
         .node {
-          padding: 10px 12px;
           border-radius: 12px;
-          background: #f3f6fb;
-          text-align: center;
-          font-weight: 600;
-          color: #1f2937;
-          min-height: 44px;
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-        .node-label {
-          font-size: 0.9rem;
-        }
-        .arrow {
-          font-size: 1.4rem;
-          color: #002b6f;
-        }
-        .diagram-meta {
-          display: grid;
-          gap: 4px;
-          font-size: 0.82rem;
-          color: #4b5563;
-        }
-        .diagram-desc {
-          margin: 0;
-          font-size: 0.85rem;
-          color: #374151;
         }
         table {
           width: 100%;
