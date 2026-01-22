@@ -6,6 +6,7 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
 - **Vue métier** : navigation par domaines et processus, filtres multi-critères, recherche clavier (/), légende des interfaces et panneau de synthèse (alignement, mutualisation, complétude…).
 - **Vue applicative** : regroupement des applications par trigramme, affichage des serveurs logiques associés et mode « vue paysage » imprimable.
 - **Vue réseau** : exploration des VLANs et des serveurs, filtrage par identifiant, description, réseau ou IP.
+- **Vue flux** : visualisation des flux applicatifs (source/cible, protocole, type de message, EAI, criticité).
 - **Administration des données** :
   - `/admin-metier` pour éditer les domaines, processus et applications d’un fichier JSON.
   - `/admin-infra` pour mapper une extraction Excel vers les fichiers `*.infra.json` (mode remplacement ou incrémental, vérification des trigrammes).
@@ -15,6 +16,7 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
 - `data/*.json` : vue fonctionnelle (`etablissements → domaines → processus → applications`).
 - `data/*.infra.json` : inventaire des serveurs (`serveurs[]`) reliés aux applications par le champ `trigramme`.
 - `data/*.network.json` : informations réseau par établissement (`vlans[]`).
+- `data/*.flux.json` : flux applicatifs par établissement (`flux[]`).
 - `data/trigrammes.json` : dictionnaire trigramme → application (utilisé pour les imports infra et les scripts).
 - `data/auth/access-rules.json` : IP autorisées, comptes Basic Auth (mots de passe hachés `bcrypt`).
 - `data/auth/auth-config.json` : liste des pages et routes API protégées par session.

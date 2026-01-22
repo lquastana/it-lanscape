@@ -37,6 +37,7 @@ export default function ApplicationsPage() {
           <nav className="view-switch" aria-label="Navigation des vues">
             <Link href="/">Vue Métier</Link>
             <Link href="/applications" className="active">Vue Applicative</Link>
+            <Link href="/flux">Vue Flux</Link>
             <Link href="/network">Vue Réseau</Link>
             <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>

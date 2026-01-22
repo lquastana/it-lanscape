@@ -1,0 +1,44 @@
+{
+  "etablissement": "CH Ajaccio",
+  "flux": [
+    {
+      "id": "FLX-001",
+      "sourceTrigramme": "ADT",
+      "targetTrigramme": "DPI",
+      "protocol": "HL7v2",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Administrative",
+      "viaEai": true,
+      "eaiName": "EAI régional",
+      "description": "Admissions / mouvements vers le DPI",
+      "criticite": "Critique"
+    },
+    {
+      "id": "FLX-002",
+      "sourceTrigramme": "LAB",
+      "targetTrigramme": "DPI",
+      "protocol": "FHIR",
+      "port": 443,
+      "messageType": "Observation",
+      "interfaceType": "Medicale",
+      "viaEai": false,
+      "eaiName": null,
+      "description": "Résultats de biologie",
+      "criticite": "Standard"
+    },
+    {
+      "id": "FLX-003",
+      "sourceTrigramme": "PACS",
+      "targetTrigramme": "DPI",
+      "protocol": "DICOM",
+      "port": 104,
+      "messageType": "DICOM",
+      "interfaceType": "Medicale",
+      "viaEai": true,
+      "eaiName": "EAI local",
+      "description": "Images vers le DPI",
+      "criticite": "Critique"
+    }
+  ]
+}
