@@ -1,4 +1,4 @@
 {
-  "protectedPages": ["/applications", "/network","/admin-metier","/admin-infra"],
-  "protectedApiRoutes": ["/api/infrastructure", "/api/network", "/api/files"]
+  "protectedPages": ["/applications", "/flux", "/network", "/admin-metier", "/admin-infra", "/admin-flux"],
+  "protectedApiRoutes": ["/api/infrastructure", "/api/network", "/api/files", "/api/flux", "/api/file"]
 }

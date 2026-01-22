@@ -142,6 +142,7 @@ export default function Admin() {
           <nav className="view-switch" aria-label="Navigation des vues">
             <Link className="active" href="/admin-metier">Gestion vue métier</Link>
             <Link href="/admin-infra">Gestion vue infrastructure</Link>
+            <Link href="/admin-flux">Gestion flux</Link>
             <Link href="/admin-trigramme">Référentiel trigrammes</Link>
             <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
