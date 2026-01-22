@@ -174,6 +174,10 @@ export default function FluxPage() {
         target,
         type: flow.interfaceType,
         label: flow.messageType || flow.protocol || '',
+        protocol: flow.protocol,
+        port: flow.port,
+        eaiName: flow.eaiName,
+        etablissement: flow.etablissement,
       };
     });
     const nodes = Array.from(nodesMap.values());
@@ -463,7 +467,7 @@ export default function FluxPage() {
                     <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
                   </marker>
                 </defs>
-                {diagramData.links.map((link, index) => {
+                {diagramData.links.map((link) => {
                   const sourceNode = diagramData.nodes.find(node => node.id === link.source);
                   const targetNode = diagramData.nodes.find(node => node.id === link.target);
                   if (!sourceNode || !targetNode) return null;
@@ -473,10 +477,9 @@ export default function FluxPage() {
                   const endY = targetNode.y + diagramData.nodeSize.height / 2;
                   const stroke = INTERFACE_COLORS[link.type] || '#64748b';
                   const midX = (startX + endX) / 2;
-                  const labelOffset = (index % 2 === 0 ? -1 : 1) * (10 + (index % 5) * 6);
-                  const labelY = ((startY + endY) / 2) + labelOffset;
                   return (
                     <g key={link.id}>
+                      <title>{`Source: ${formatLabel(link.source)}\nCible: ${formatLabel(link.target)}\nType: ${link.type}\nProtocole: ${link.protocol || '-'}\nMessage: ${link.label || '-'}\nPort: ${link.port ?? '-'}\nEAI: ${link.eaiName || 'Direct'}\nÉtablissement: ${link.etablissement}`}</title>
                       <path
                         d={`M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`}
                         fill="none"
@@ -484,11 +487,6 @@ export default function FluxPage() {
                         strokeWidth="2"
                         markerEnd="url(#arrow)"
                       />
-                      {link.label && (
-                        <text x={midX} y={labelY} fontSize="11" fill="#475569">
-                          {link.label}
-                        </text>
-                      )}
                     </g>
                   );
                 })}
