@@ -477,6 +477,13 @@ small { font-size: 12px; line-height: 16px; }
   padding: 24px;
 }
 
+.incident-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .incident-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -723,6 +730,31 @@ small { font-size: 12px; line-height: 16px; }
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@media print {
+  .hero,
+  .view-switch,
+  .no-print,
+  #chat-toggle,
+  #report-toggle {
+    display: none !important;
+  }
+
+  .page-shell {
+    max-width: none;
+    padding: 0;
+  }
+
+  .incident-page {
+    margin-top: 0;
+  }
+
+  .incident-panel,
+  .incident-results {
+    box-shadow: none;
+    border: none;
+  }
 }
 
 

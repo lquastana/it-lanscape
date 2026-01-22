@@ -610,7 +610,12 @@ export default function IncidentSimulationPage() {
         </section>
 
         <section className="incident-results">
-          <h2>Résultats &amp; impacts</h2>
+          <div className="incident-results-header">
+            <h2>Résultats &amp; impacts</h2>
+            <button type="button" className="btn-secondary no-print" onClick={() => window.print()}>
+              Exporter en PDF
+            </button>
+          </div>
           {!analysis ? (
             <p className="muted">Lancez une analyse pour afficher les impacts.</p>
           ) : (
