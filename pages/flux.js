@@ -463,7 +463,7 @@ export default function FluxPage() {
                     <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
                   </marker>
                 </defs>
-                {diagramData.links.map(link => {
+                {diagramData.links.map((link, index) => {
                   const sourceNode = diagramData.nodes.find(node => node.id === link.source);
                   const targetNode = diagramData.nodes.find(node => node.id === link.target);
                   if (!sourceNode || !targetNode) return null;
@@ -473,6 +473,8 @@ export default function FluxPage() {
                   const endY = targetNode.y + diagramData.nodeSize.height / 2;
                   const stroke = INTERFACE_COLORS[link.type] || '#64748b';
                   const midX = (startX + endX) / 2;
+                  const labelOffset = (index % 2 === 0 ? -1 : 1) * (10 + (index % 5) * 6);
+                  const labelY = ((startY + endY) / 2) + labelOffset;
                   return (
                     <g key={link.id}>
                       <path
@@ -483,7 +485,7 @@ export default function FluxPage() {
                         markerEnd="url(#arrow)"
                       />
                       {link.label && (
-                        <text x={midX} y={Math.min(startY, endY) - 6} fontSize="11" fill="#475569">
+                        <text x={midX} y={labelY} fontSize="11" fill="#475569">
                           {link.label}
                         </text>
                       )}
