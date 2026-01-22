@@ -509,33 +509,97 @@ export default function IncidentSimulationPage() {
 
     const nodes = Array.from(nodesMap.values());
     const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
-    const columnWidth = 260;
-    const rowGap = 130;
-    const nodeSize = { width: 210, height: 92 };
+    const nodeSize = { width: 210, height: 64 };
+    const nodeGap = 12;
+    const processGap = 20;
+    const establishmentGap = 28;
+    const processPadding = 16;
+    const establishmentPadding = 18;
+    const processLabelHeight = 16;
+    const establishmentLabelHeight = 18;
+    const columnWidth = nodeSize.width + processPadding * 2 + establishmentPadding * 2 + 120;
     const layout = [];
+    const processBlocks = [];
+    const establishmentBlocks = [];
 
     for (let depth = 0; depth <= maxDepth; depth += 1) {
       const column = nodes
         .filter(node => node.depth === depth)
-        .sort((a, b) => a.label.localeCompare(b.label));
-      const startY = 80;
-      column.forEach((node, rowIdx) => {
-        layout.push({
+        .map(node => ({
           ...node,
-          x: depth * columnWidth,
-          y: startY + rowIdx * rowGap,
+          etablissement: node.etablissement || 'Établissement non renseigné',
+          process: node.process || 'Processus non renseigné',
+        }))
+        .sort((a, b) => {
+          const estCompare = a.etablissement.localeCompare(b.etablissement);
+          if (estCompare !== 0) return estCompare;
+          const procCompare = a.process.localeCompare(b.process);
+          if (procCompare !== 0) return procCompare;
+          return a.label.localeCompare(b.label);
         });
+      const startY = 80;
+      const columnX = depth * columnWidth;
+      let currentY = startY;
+      const establishments = Array.from(new Set(column.map(node => node.etablissement)));
+      establishments.forEach(establishment => {
+        const establishmentNodes = column.filter(node => node.etablissement === establishment);
+        const processes = Array.from(new Set(establishmentNodes.map(node => node.process)));
+        const establishmentStartY = currentY;
+        currentY += establishmentLabelHeight + establishmentPadding;
+        processes.forEach(process => {
+          const processNodes = establishmentNodes.filter(node => node.process === process);
+          const processStartY = currentY;
+          currentY += processLabelHeight + processPadding;
+          processNodes.forEach((node) => {
+            layout.push({
+              ...node,
+              x: columnX + establishmentPadding + processPadding,
+              y: currentY,
+            });
+            currentY += nodeSize.height + nodeGap;
+          });
+          if (processNodes.length) {
+            currentY -= nodeGap;
+          }
+          currentY += processPadding;
+          processBlocks.push({
+            id: `${depth}-${establishment}-${process}`,
+            label: process,
+            x: columnX + establishmentPadding,
+            y: processStartY,
+            width: nodeSize.width + processPadding * 2,
+            height: currentY - processStartY,
+          });
+          currentY += processGap;
+        });
+        if (processes.length) {
+          currentY -= processGap;
+        }
+        currentY += establishmentPadding;
+        establishmentBlocks.push({
+          id: `${depth}-${establishment}`,
+          label: establishment,
+          x: columnX,
+          y: establishmentStartY,
+          width: nodeSize.width + processPadding * 2 + establishmentPadding * 2,
+          height: currentY - establishmentStartY,
+        });
+        currentY += establishmentGap;
       });
     }
 
     const width = (maxDepth + 1) * columnWidth + nodeSize.width;
     const height = Math.max(
       ...layout.map(node => node.y + nodeSize.height),
+      ...processBlocks.map(block => block.y + block.height),
+      ...establishmentBlocks.map(block => block.y + block.height),
       320,
     );
 
     return {
       nodes: layout,
+      processBlocks,
+      establishmentBlocks,
       links: analysis.propagationEdges,
       width,
       height,
@@ -718,6 +782,52 @@ export default function IncidentSimulationPage() {
                                 </marker>
                               ))}
                             </defs>
+                            {propagationDiagram.establishmentBlocks.map(block => (
+                              <g key={block.id}>
+                                <rect
+                                  x={block.x}
+                                  y={block.y}
+                                  width={block.width}
+                                  height={block.height}
+                                  rx="18"
+                                  fill="#eef2ff"
+                                  stroke="#c7d2fe"
+                                  strokeWidth="1.5"
+                                />
+                                <text
+                                  x={block.x + 16}
+                                  y={block.y + 22}
+                                  fontSize="12"
+                                  fontWeight="600"
+                                  fill="#1e293b"
+                                >
+                                  {block.label}
+                                </text>
+                              </g>
+                            ))}
+                            {propagationDiagram.processBlocks.map(block => (
+                              <g key={block.id}>
+                                <rect
+                                  x={block.x}
+                                  y={block.y}
+                                  width={block.width}
+                                  height={block.height}
+                                  rx="14"
+                                  fill="#ffffff"
+                                  stroke="#e2e8f0"
+                                  strokeWidth="1"
+                                />
+                                <text
+                                  x={block.x + 14}
+                                  y={block.y + 18}
+                                  fontSize="11"
+                                  fontWeight="500"
+                                  fill="#475569"
+                                >
+                                  {block.label}
+                                </text>
+                              </g>
+                            ))}
                             {propagationDiagram.links.map(edge => {
                               const sourceNode = propagationDiagram.nodes.find(node => node.id === edge.source);
                               const targetNode = propagationDiagram.nodes.find(node => node.id === edge.target);
@@ -769,22 +879,12 @@ export default function IncidentSimulationPage() {
                                 />
                                 <text
                                   x={propagationDiagram.nodeSize.width / 2}
-                                  y={propagationDiagram.nodeSize.height / 2 - (node.process || node.etablissement ? 10 : -2)}
+                                  y={propagationDiagram.nodeSize.height / 2 + 4}
                                   textAnchor="middle"
                                   fontSize="12"
                                   fill="#1f2937"
                                 >
-                                  <tspan x={propagationDiagram.nodeSize.width / 2}>{node.label}</tspan>
-                                  {node.process && (
-                                    <tspan x={propagationDiagram.nodeSize.width / 2} dy="14" fontSize="10" fill="#6b7280">
-                                      {node.process}
-                                    </tspan>
-                                  )}
-                                  {node.etablissement && (
-                                    <tspan x={propagationDiagram.nodeSize.width / 2} dy="14" fontSize="9" fill="#94a3b8">
-                                      {node.etablissement}
-                                    </tspan>
-                                  )}
+                                  {node.label}
                                 </text>
                               </g>
                             ))}
