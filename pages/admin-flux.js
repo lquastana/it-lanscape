@@ -12,10 +12,8 @@ const emptyFlow = {
   port: '',
   messageType: '',
   interfaceType: 'Administrative',
-  viaEai: false,
   eaiName: '',
   description: '',
-  criticite: 'Standard',
 };
 
 const normalizeId = () => (crypto.randomUUID ? crypto.randomUUID() : `FLX-${Date.now()}`);
@@ -93,7 +91,7 @@ export default function AdminFlux() {
       port: Number.isNaN(portValue) ? null : portValue,
       sourceTrigramme: form.sourceTrigramme.trim().toUpperCase(),
       targetTrigramme: form.targetTrigramme.trim().toUpperCase(),
-      eaiName: form.viaEai ? form.eaiName || '' : null,
+      eaiName: form.eaiName?.trim() ? form.eaiName.trim() : null,
     };
 
     const next = [...flows];
@@ -199,20 +197,9 @@ export default function AdminFlux() {
                   ))}
                 </select>
               </label>
-              <label className="checkbox">
-                <input type="checkbox" checked={form.viaEai} onChange={e => updateForm('viaEai', e.target.checked)} />
-                Passage via EAI
-              </label>
               <label>
                 Nom EAI
-                <input value={form.eaiName} onChange={e => updateForm('eaiName', e.target.value)} placeholder="EAI régional / local" disabled={!form.viaEai} />
-              </label>
-              <label>
-                Criticité
-                <select value={form.criticite} onChange={e => updateForm('criticite', e.target.value)}>
-                  <option value="Standard">Standard</option>
-                  <option value="Critique">Critique</option>
-                </select>
+                <input value={form.eaiName} onChange={e => updateForm('eaiName', e.target.value)} placeholder="EAI régional / local" />
               </label>
               <label className="full">
                 Description
@@ -244,7 +231,6 @@ export default function AdminFlux() {
                     <th>Port</th>
                     <th>Message</th>
                     <th>EAI</th>
-                    <th>Criticité</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -257,8 +243,7 @@ export default function AdminFlux() {
                       <td>{flow.protocol || '-'}</td>
                       <td>{flow.port ?? '-'}</td>
                       <td>{flow.messageType || '-'}</td>
-                      <td>{flow.viaEai ? flow.eaiName || 'EAI' : 'Direct'}</td>
-                      <td>{flow.criticite || '-'}</td>
+                      <td>{flow.eaiName || 'Direct'}</td>
                       <td className="actions">
                         <button type="button" onClick={() => handleEdit(idx)}>✏️</button>
                         <button type="button" onClick={() => handleDelete(idx)}>🗑️</button>
@@ -278,12 +263,15 @@ export default function AdminFlux() {
           grid-template-columns: minmax(280px, 380px) 1fr;
           gap: 24px;
           margin-bottom: 40px;
+          align-items: start;
         }
         .card {
           background: #fff;
           border-radius: 16px;
           padding: 20px;
           box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
+          min-width: 0;
+          position: relative;
         }
         .form-grid {
           display: grid;
@@ -303,12 +291,6 @@ export default function AdminFlux() {
         }
         textarea {
           resize: vertical;
-        }
-        .checkbox {
-          flex-direction: row;
-          align-items: center;
-          gap: 8px;
-          margin-top: 8px;
         }
         .full {
           grid-column: 1 / -1;

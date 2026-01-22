@@ -3,42 +3,58 @@
   "flux": [
     {
       "id": "FLX-001",
-      "sourceTrigramme": "ADT",
-      "targetTrigramme": "DPI",
-      "protocol": "HL7v2",
-      "port": 2575,
-      "messageType": "ADT",
+      "sourceTrigramme": "PAS",
+      "targetTrigramme": "DXC",
+      "protocol": "N/A",
+      "port": null,
+      "messageType": "HL7 ADT",
       "interfaceType": "Administrative",
-      "viaEai": true,
       "eaiName": "EAI régional",
-      "description": "Admissions / mouvements vers le DPI",
-      "criticite": "Critique"
+      "description": "Flux administratif GAP vers DPI"
     },
     {
       "id": "FLX-002",
       "sourceTrigramme": "LAB",
-      "targetTrigramme": "DPI",
+      "targetTrigramme": "DXC",
       "protocol": "FHIR",
       "port": 443,
       "messageType": "Observation",
       "interfaceType": "Medicale",
-      "viaEai": false,
-      "eaiName": null,
-      "description": "Résultats de biologie",
-      "criticite": "Standard"
+      "eaiName": "EAI local",
+      "description": "Résultats de biologie vers DPI"
     },
     {
       "id": "FLX-003",
-      "sourceTrigramme": "PACS",
-      "targetTrigramme": "DPI",
+      "sourceTrigramme": "SYN",
+      "targetTrigramme": "DXC",
       "protocol": "DICOM",
       "port": 104,
       "messageType": "DICOM",
       "interfaceType": "Medicale",
-      "viaEai": true,
       "eaiName": "EAI local",
-      "description": "Images vers le DPI",
-      "criticite": "Critique"
+      "description": "Images PACS vers DPI"
+    },
+    {
+      "id": "FLX-004",
+      "sourceTrigramme": "PAS",
+      "targetTrigramme": "PMS",
+      "protocol": "N/A",
+      "port": null,
+      "messageType": "HL7 ADT",
+      "interfaceType": "Facturation",
+      "eaiName": "EAI régional",
+      "description": "Flux GAP vers PMSI Pilot"
+    },
+    {
+      "id": "FLX-005",
+      "sourceTrigramme": "DXP",
+      "targetTrigramme": "DXC",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "",
+      "description": "Planning des équipes vers DPI"
     }
   ]
 }

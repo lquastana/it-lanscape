@@ -11,10 +11,11 @@ export default function FluxPage() {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
+  const [source, setSource] = useState('');
+  const [target, setTarget] = useState('');
   const [interfaceType, setInterfaceType] = useState('');
   const [protocol, setProtocol] = useState('');
   const [eaiName, setEaiName] = useState('');
-  const [viaEai, setViaEai] = useState('');
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -47,6 +48,22 @@ export default function FluxPage() {
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [flattened]);
 
+  const sources = useMemo(() => {
+    const set = new Set();
+    flattened.forEach(flow => {
+      if (flow.sourceTrigramme) set.add(flow.sourceTrigramme);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [flattened]);
+
+  const targets = useMemo(() => {
+    const set = new Set();
+    flattened.forEach(flow => {
+      if (flow.targetTrigramme) set.add(flow.targetTrigramme);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [flattened]);
+
   const eaiNames = useMemo(() => {
     const set = new Set();
     flattened.forEach(flow => {
@@ -58,11 +75,11 @@ export default function FluxPage() {
   const filtered = useMemo(() => {
     const term = normalize(search);
     return flattened.filter(flow => {
+      if (source && flow.sourceTrigramme !== source) return false;
+      if (target && flow.targetTrigramme !== target) return false;
       if (interfaceType && flow.interfaceType !== interfaceType) return false;
       if (protocol && flow.protocol !== protocol) return false;
       if (eaiName && flow.eaiName !== eaiName) return false;
-      if (viaEai === 'true' && !flow.viaEai) return false;
-      if (viaEai === 'false' && flow.viaEai) return false;
       if (!term) return true;
       const haystack = [
         flow.sourceTrigramme,
@@ -75,7 +92,7 @@ export default function FluxPage() {
       ].map(normalize).join(' ');
       return haystack.includes(term);
     });
-  }, [flattened, interfaceType, protocol, eaiName, viaEai, search]);
+  }, [flattened, source, target, interfaceType, protocol, eaiName, search]);
 
   return (
     <>
@@ -119,6 +136,24 @@ export default function FluxPage() {
             />
           </label>
           <label>
+            Source
+            <select value={source} onChange={e => setSource(e.target.value)}>
+              <option value="">Toutes</option>
+              {sources.map(item => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Cible
+            <select value={target} onChange={e => setTarget(e.target.value)}>
+              <option value="">Toutes</option>
+              {targets.map(item => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+          </label>
+          <label>
             Type d'interface
             <select value={interfaceType} onChange={e => setInterfaceType(e.target.value)}>
               <option value="">Tous</option>
@@ -134,14 +169,6 @@ export default function FluxPage() {
               {protocols.map(item => (
                 <option key={item} value={item}>{item}</option>
               ))}
-            </select>
-          </label>
-          <label>
-            Passage EAI
-            <select value={viaEai} onChange={e => setViaEai(e.target.value)}>
-              <option value="">Tous</option>
-              <option value="true">Oui</option>
-              <option value="false">Non</option>
             </select>
           </label>
           <label>
@@ -173,7 +200,6 @@ export default function FluxPage() {
                   <th>Port</th>
                   <th>Message</th>
                   <th>EAI</th>
-                  <th>Criticité</th>
                   <th>Description</th>
                 </tr>
               </thead>
@@ -188,13 +214,12 @@ export default function FluxPage() {
                     <td>{flow.port ?? '-'}</td>
                     <td>{flow.messageType || '-'}</td>
                     <td>
-                      {flow.viaEai ? (
-                        <span className="eai-tag">{flow.eaiName || 'EAI'}</span>
+                      {flow.eaiName ? (
+                        <span className="eai-tag">{flow.eaiName}</span>
                       ) : (
                         <span className="muted">Direct</span>
                       )}
                     </td>
-                    <td>{flow.criticite || '-'}</td>
                     <td className="desc">{flow.description || '-'}</td>
                   </tr>
                 ))}
