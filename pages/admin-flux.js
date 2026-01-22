@@ -2,29 +2,81 @@ import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 
-const INTERFACE_TYPES = ['Administrative', 'Medicale', 'Facturation', 'Planification', 'Autre'];
+const FIELD_CATALOG = [
+  { key: 'id', label: 'Identifiant flux', hint: 'ID unique (optionnel)' },
+  { key: 'sourceTrigramme', label: 'Source (trigramme)', hint: 'Trigramme application source' },
+  { key: 'targetTrigramme', label: 'Cible (trigramme)', hint: 'Trigramme application cible' },
+  { key: 'protocol', label: 'Protocole', hint: 'HL7v2, FHIR, DICOM, API, N/A...' },
+  { key: 'port', label: 'Port', hint: '443, 104, 2575...' },
+  { key: 'messageType', label: 'Type de message', hint: 'ADT, ORU, HPRIMXML...' },
+  { key: 'interfaceType', label: 'Type d’interface', hint: 'Administrative, Medicale...' },
+  { key: 'eaiName', label: 'Nom EAI', hint: 'EAI régional / local' },
+  { key: 'description', label: 'Description', hint: 'Description du flux' },
+];
 
-const emptyFlow = {
-  id: '',
-  sourceTrigramme: '',
-  targetTrigramme: '',
-  protocol: '',
-  port: '',
-  messageType: '',
-  interfaceType: 'Administrative',
-  eaiName: '',
-  description: '',
+const AUTO_GUESSES = {
+  id: ['id', 'identifiant', 'flux_id'],
+  sourceTrigramme: ['source', 'src', 'trigramme source', 'app source'],
+  targetTrigramme: ['cible', 'target', 'dst', 'trigramme cible', 'app cible'],
+  protocol: ['protocole', 'protocol'],
+  port: ['port'],
+  messageType: ['message', 'message type', 'typemessage'],
+  interfaceType: ['interface', 'type interface'],
+  eaiName: ['eai', 'broker', 'bus'],
+  description: ['description', 'commentaire'],
 };
 
-const normalizeId = () => (crypto.randomUUID ? crypto.randomUUID() : `FLX-${Date.now()}`);
+const numberFields = new Set(['port']);
 
-export default function AdminFlux() {
+const findBestMatch = (cols, key) => {
+  const probes = AUTO_GUESSES[key] || [];
+  const lowerCols = cols.map(c => c.toLowerCase());
+  for (const probe of probes) {
+    const idx = lowerCols.findIndex(c => c.includes(probe));
+    if (idx !== -1) return cols[idx];
+  }
+  return '';
+};
+
+const buildAutoMapping = (cols) => Object.fromEntries(FIELD_CATALOG.map(({ key }) => [key, findBestMatch(cols, key)]));
+
+const normalizeTrigram = (value = '') => value.toString().trim().toUpperCase();
+
+const normalizeText = (value = '') => value.toString().trim();
+
+const ensureId = () => (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2));
+
+const getMatchKey = (flow) => flow.id || `${flow.sourceTrigramme || ''}|${flow.targetTrigramme || ''}|${flow.protocol || ''}|${flow.messageType || ''}`;
+
+const mergeIncremental = (existing = [], incoming = []) => {
+  const merged = new Map();
+  existing.forEach(flow => {
+    const key = getMatchKey(flow) || ensureId();
+    merged.set(key, { ...flow });
+  });
+  incoming.forEach(flow => {
+    const key = getMatchKey(flow) || ensureId();
+    if (merged.has(key)) {
+      const previous = merged.get(key);
+      merged.set(key, { ...previous, ...flow, id: flow.id || previous.id });
+    } else {
+      merged.set(key, { ...flow });
+    }
+  });
+  return Array.from(merged.values());
+};
+
+export default function FluxImport() {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState('');
-  const [data, setData] = useState(null);
+  const [existingData, setExistingData] = useState(null);
+  const [excelRows, setExcelRows] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [mapping, setMapping] = useState({});
+  const [mode, setMode] = useState('replace');
   const [status, setStatus] = useState('');
-  const [form, setForm] = useState(emptyFlow);
-  const [editIndex, setEditIndex] = useState(null);
+  const [libReady, setLibReady] = useState(false);
+  const [libError, setLibError] = useState('');
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -39,95 +91,109 @@ export default function AdminFlux() {
   }, []);
 
   useEffect(() => {
-    if (!selectedFile) {
-      setData(null);
-      return;
-    }
+    if (!selectedFile) { setExistingData(null); return; }
     const base = selectedFile.replace(/\.json$/, '');
-    setStatus('Chargement...');
     fetch('/api/file/' + encodeURIComponent(base))
       .then(r => (r.ok ? r.json() : Promise.reject()))
-      .then(payload => {
-        setData(payload);
-        setStatus('');
-      })
+      .then(data => setExistingData(data))
       .catch(() => setStatus('Lecture du fichier flux impossible'));
   }, [selectedFile]);
 
-  const flows = useMemo(() => data?.flux || [], [data]);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.XLSX) { setLibReady(true); return; }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
+    script.async = true;
+    script.onload = () => setLibReady(true);
+    script.onerror = () => setLibError('Librairie Excel non chargée (connexion requise)');
+    document.body.appendChild(script);
+    return () => {
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+  }, []);
 
-  const handleSave = async () => {
-    if (!selectedFile || !data) return;
-    setStatus('Enregistrement...');
+  useEffect(() => {
+    if (!columns.length) return;
+    setMapping(prev => Object.keys(prev).length ? prev : buildAutoMapping(columns));
+  }, [columns]);
+
+  const mappedRows = useMemo(() => {
+    if (!excelRows.length) return [];
+    return excelRows.map(raw => {
+      const flow = {};
+      FIELD_CATALOG.forEach(({ key }) => {
+        const col = mapping[key];
+        if (!col) return;
+        const value = raw[col];
+        if (value === undefined || value === null || value === '') return;
+        flow[key] = numberFields.has(key) ? Number(value) : value;
+      });
+      if (flow.sourceTrigramme) flow.sourceTrigramme = normalizeTrigram(flow.sourceTrigramme);
+      if (flow.targetTrigramme) flow.targetTrigramme = normalizeTrigram(flow.targetTrigramme);
+      if (flow.protocol) flow.protocol = normalizeText(flow.protocol);
+      if (flow.messageType) flow.messageType = normalizeText(flow.messageType);
+      if (flow.interfaceType) flow.interfaceType = normalizeText(flow.interfaceType);
+      if (flow.eaiName) flow.eaiName = normalizeText(flow.eaiName);
+      if (flow.description) flow.description = normalizeText(flow.description);
+      if (flow.port !== undefined && Number.isNaN(flow.port)) flow.port = null;
+      return {
+        flow,
+      };
+    });
+  }, [excelRows, mapping]);
+
+  const handleFile = async (evt) => {
+    const file = evt.target.files?.[0];
+    if (!file || !libReady || !window.XLSX) return;
+    setStatus('Lecture du fichier…');
+    try {
+      const buffer = await file.arrayBuffer();
+      const workbook = window.XLSX.read(buffer, { type: 'array' });
+      const firstSheet = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[firstSheet];
+      const rows = window.XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      setExcelRows(rows);
+      setColumns(rows.length ? Object.keys(rows[0]) : []);
+      setStatus(`${rows.length} lignes détectées dans ${firstSheet}`);
+    } catch (err) {
+      console.error(err);
+      setStatus('Erreur lors de la lecture du fichier Excel');
+    }
+  };
+
+  const updateMapping = (key, value) => setMapping(prev => ({ ...prev, [key]: value }));
+
+  const handleImport = async () => {
+    if (!selectedFile) { setStatus('Sélectionnez un établissement'); return; }
+    if (!mappedRows.length) { setStatus('Aucune ligne à importer'); return; }
+    setStatus('Préparation du jeu de données…');
     const base = selectedFile.replace(/\.json$/, '');
+    const target = existingData || { etablissement: base, flux: [] };
+    const newFlux = mappedRows.map(m => ({
+      ...m.flow,
+      id: m.flow.id || ensureId(),
+      eaiName: m.flow.eaiName || null,
+    }));
+    const flux = mode === 'replace' ? newFlux : mergeIncremental(target.flux, newFlux);
+
+    const payload = { ...target, flux };
     const res = await fetch('/api/file/' + encodeURIComponent(base), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data, null, 2),
+      body: JSON.stringify(payload, null, 2),
     });
-    setStatus(res.ok ? '✅ Enregistré' : '❌ Erreur d’enregistrement');
+    setStatus(res.ok ? '✅ Import terminé' : '❌ Erreur lors de l\'enregistrement');
+    if (res.ok) setExistingData(payload);
   };
 
-  const updateForm = (field, value) => {
-    setForm(prev => ({ ...prev, [field]: value }));
-  };
-
-  const resetForm = () => {
-    setForm(emptyFlow);
-    setEditIndex(null);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!data) return;
-    if (!form.sourceTrigramme || !form.targetTrigramme) {
-      setStatus('Merci de renseigner source et cible.');
-      return;
-    }
-    const portValue = form.port === '' ? null : Number(form.port);
-    const payload = {
-      ...form,
-      id: form.id || normalizeId(),
-      port: Number.isNaN(portValue) ? null : portValue,
-      sourceTrigramme: form.sourceTrigramme.trim().toUpperCase(),
-      targetTrigramme: form.targetTrigramme.trim().toUpperCase(),
-      eaiName: form.eaiName?.trim() ? form.eaiName.trim() : null,
-    };
-
-    const next = [...flows];
-    if (editIndex != null) {
-      next[editIndex] = payload;
-    } else {
-      next.unshift(payload);
-    }
-    setData(prev => ({ ...prev, flux: next }));
-    resetForm();
-    setStatus('Modification prête à être enregistrée.');
-  };
-
-  const handleEdit = (idx) => {
-    const flow = flows[idx];
-    setForm({
-      ...emptyFlow,
-      ...flow,
-      port: flow.port ?? '',
-      eaiName: flow.eaiName ?? '',
-    });
-    setEditIndex(idx);
-  };
-
-  const handleDelete = (idx) => {
-    if (!confirm('Supprimer ce flux ?')) return;
-    const next = flows.filter((_, i) => i !== idx);
-    setData(prev => ({ ...prev, flux: next }));
-    setStatus('Flux supprimé (pensez à enregistrer).');
-    if (editIndex === idx) resetForm();
-  };
+  const previewHeaders = ['sourceTrigramme', 'targetTrigramme', 'protocol', 'port', 'messageType', 'interfaceType', 'eaiName']
+    .concat(FIELD_CATALOG.filter(f => !['sourceTrigramme', 'targetTrigramme', 'protocol', 'port', 'messageType', 'interfaceType', 'eaiName'].includes(f.key)).map(f => f.key));
 
   return (
     <>
       <Head>
-        <title>Administration flux</title>
+        <title>Import flux applicatifs</title>
       </Head>
       <header className="hero">
         <div className="page-shell hero-grid">
@@ -137,8 +203,8 @@ export default function AdminFlux() {
             </div>
             <div>
               <p className="eyebrow">GCS E-santé Corse</p>
-              <h1>Administration des flux applicatifs</h1>
-              <p className="hero-subtitle">Déclarez les échanges, protocoles et EAI.</p>
+              <h1>Import Excel des flux</h1>
+              <p className="hero-subtitle">Chargez un extrait, mappez les colonnes et importez les flux applicatifs.</p>
             </div>
           </div>
           <nav className="view-switch" aria-label="Navigation des vues">
@@ -146,108 +212,65 @@ export default function AdminFlux() {
             <Link href="/admin-infra">Gestion vue infrastructure</Link>
             <Link className="active" href="/admin-flux">Gestion flux</Link>
             <Link href="/admin-trigramme">Référentiel trigrammes</Link>
-            <button onClick={handleLogout} style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline' }}>Déconnexion</button>
+            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>
       </header>
 
-      <section className="toolbar page-shell">
-        <select value={selectedFile} onChange={e => setSelectedFile(e.target.value)}>
-          <option value="">— Sélectionner un fichier —</option>
-          {files.map(file => (
-            <option key={file} value={file}>{file.replace('.flux.json', '')}</option>
-          ))}
-        </select>
-        <button className="primary" disabled={!data} onClick={handleSave}>💾 Enregistrer</button>
-        <span className="status">{status}</span>
-      </section>
-
-      <main className="page-shell grid">
+      <main className="import-layout page-shell">
         <section className="card">
-          <h2>{editIndex != null ? 'Modifier un flux' : 'Ajouter un flux'}</h2>
-          {!data ? (
-            <p className="hint">Sélectionnez un établissement pour commencer.</p>
-          ) : (
-            <form onSubmit={handleSubmit} className="form-grid">
-              <label>
-                Source (trigramme)
-                <input value={form.sourceTrigramme} onChange={e => updateForm('sourceTrigramme', e.target.value)} required />
-              </label>
-              <label>
-                Cible (trigramme)
-                <input value={form.targetTrigramme} onChange={e => updateForm('targetTrigramme', e.target.value)} required />
-              </label>
-              <label>
-                Protocole
-                <input value={form.protocol} onChange={e => updateForm('protocol', e.target.value)} placeholder="HL7v2, FHIR, DICOM..." />
-              </label>
-              <label>
-                Port
-                <input type="number" value={form.port} onChange={e => updateForm('port', e.target.value)} placeholder="443" />
-              </label>
-              <label>
-                Type de message
-                <input value={form.messageType} onChange={e => updateForm('messageType', e.target.value)} placeholder="ADT, ORM, HPRIMXML..." />
-              </label>
-              <label>
-                Type d'interface
-                <select value={form.interfaceType} onChange={e => updateForm('interfaceType', e.target.value)}>
-                  {INTERFACE_TYPES.map(type => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Nom EAI
-                <input value={form.eaiName} onChange={e => updateForm('eaiName', e.target.value)} placeholder="EAI régional / local" />
-              </label>
-              <label className="full">
-                Description
-                <textarea value={form.description} onChange={e => updateForm('description', e.target.value)} rows={3} />
-              </label>
-              <div className="actions">
-                <button type="button" onClick={resetForm}>Réinitialiser</button>
-                <button type="submit" className="primary">{editIndex != null ? 'Mettre à jour' : 'Ajouter'}</button>
-              </div>
-            </form>
+          <h2>1. Sélection du périmètre</h2>
+          <label>Fichier flux cible
+            <select value={selectedFile} onChange={e => setSelectedFile(e.target.value)}>
+              <option value="">— Choisir un établissement —</option>
+              {files.map(f => <option key={f} value={f}>{f.replace('.flux.json', '')}</option>)}
+            </select>
+          </label>
+          <label>Fichier Excel (.xlsx)
+            <input type="file" accept=".xlsx,.xls,.csv" onChange={handleFile} disabled={!libReady} />
+          </label>
+          {libError && <p className="warning">{libError}</p>}
+          {status && <p className="status">{status}</p>}
+        </section>
+
+        <section className="card">
+          <h2>2. Mapping des colonnes</h2>
+          {!columns.length && <p className="hint">Chargez un fichier pour accéder au mapping.</p>}
+          {columns.length > 0 && (
+            <div className="mapping-grid">
+              {FIELD_CATALOG.map(field => (
+                <div key={field.key} className="map-line">
+                  <div>
+                    <strong>{field.label}</strong>
+                    <span>{field.hint}</span>
+                  </div>
+                  <select value={mapping[field.key] || ''} onChange={e => updateMapping(field.key, e.target.value)}>
+                    <option value="">— Ignorer —</option>
+                    {columns.map(col => <option key={col} value={col}>{col}</option>)}
+                  </select>
+                </div>
+              ))}
+            </div>
           )}
         </section>
 
         <section className="card">
-          <h2>Flux déclarés</h2>
-          {!data ? (
-            <p className="hint">Aucun flux chargé.</p>
-          ) : flows.length === 0 ? (
-            <p className="hint">Aucun flux pour cet établissement.</p>
-          ) : (
+          <h2>3. Aperçu</h2>
+          {!mappedRows.length && <p className="hint">Aucune donnée à prévisualiser.</p>}
+          {!!mappedRows.length && (
             <div className="table-wrapper">
               <table>
                 <thead>
                   <tr>
-                    <th>Source</th>
-                    <th>Cible</th>
-                    <th>Type</th>
-                    <th>Protocole</th>
-                    <th>Port</th>
-                    <th>Message</th>
-                    <th>EAI</th>
-                    <th></th>
+                    {previewHeaders.map(header => <th key={header}>{header}</th>)}
                   </tr>
                 </thead>
                 <tbody>
-                  {flows.map((flow, idx) => (
-                    <tr key={flow.id}>
-                      <td>{flow.sourceTrigramme}</td>
-                      <td>{flow.targetTrigramme}</td>
-                      <td>{flow.interfaceType}</td>
-                      <td>{flow.protocol || '-'}</td>
-                      <td>{flow.port ?? '-'}</td>
-                      <td>{flow.messageType || '-'}</td>
-                      <td>{flow.eaiName || 'Direct'}</td>
-                      <td className="actions">
-                        <button type="button" onClick={() => handleEdit(idx)}>✏️</button>
-                        <button type="button" onClick={() => handleDelete(idx)}>🗑️</button>
-                      </td>
+                  {mappedRows.slice(0, 10).map(({ flow }, idx) => (
+                    <tr key={idx}>
+                      {previewHeaders.map(header => (
+                        <td key={header}>{flow[header] ?? '-'}</td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>
@@ -255,54 +278,60 @@ export default function AdminFlux() {
             </div>
           )}
         </section>
+
+        <section className="card">
+          <h2>4. Import</h2>
+          <div className="import-actions">
+            <label className="inline">
+              <input type="radio" name="mode" value="replace" checked={mode === 'replace'} onChange={() => setMode('replace')} />
+              Remplacer les flux existants
+            </label>
+            <label className="inline">
+              <input type="radio" name="mode" value="merge" checked={mode === 'merge'} onChange={() => setMode('merge')} />
+              Fusion incrémentale
+            </label>
+            <button className="primary" onClick={handleImport} disabled={!selectedFile || !mappedRows.length}>Lancer l'import</button>
+          </div>
+        </section>
       </main>
 
       <style jsx>{`
-        .grid {
+        .import-layout {
           display: grid;
-          grid-template-columns: minmax(280px, 380px) 1fr;
-          gap: 24px;
+          gap: 16px;
           margin-bottom: 40px;
-          align-items: start;
         }
         .card {
           background: #fff;
           border-radius: 16px;
           padding: 20px;
           box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
-          min-width: 0;
-          position: relative;
-        }
-        .form-grid {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-          gap: 12px 16px;
         }
         label {
           display: flex;
           flex-direction: column;
           gap: 6px;
-          font-size: 0.9rem;
-          min-width: 0;
+          margin-bottom: 12px;
         }
-        input, select, textarea {
+        select, input {
           padding: 8px 10px;
           border-radius: 8px;
           border: 1px solid #d6dbe6;
-          width: 100%;
-          box-sizing: border-box;
         }
-        textarea {
-          resize: vertical;
+        .mapping-grid {
+          display: grid;
+          gap: 12px;
         }
-        .full {
-          grid-column: 1 / -1;
-        }
-        .actions {
-          display: flex;
-          gap: 8px;
-          justify-content: flex-end;
+        .map-line {
+          display: grid;
+          grid-template-columns: 1fr minmax(180px, 240px);
+          gap: 16px;
           align-items: center;
+        }
+        .map-line span {
+          display: block;
+          color: #6b7280;
+          font-size: 0.8rem;
         }
         .table-wrapper {
           overflow-x: auto;
@@ -318,21 +347,34 @@ export default function AdminFlux() {
         th, td {
           padding: 10px 12px;
           border-bottom: 1px solid #eef2f7;
+          text-align: left;
         }
         th {
           text-transform: uppercase;
           font-size: 0.75rem;
           letter-spacing: 0.04em;
           background: #f3f6fb;
-          text-align: left;
+        }
+        .import-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          align-items: center;
+        }
+        .inline {
+          flex-direction: row;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 0;
         }
         .hint {
           color: #6b7280;
         }
-        @media (max-width: 980px) {
-          .grid {
-            grid-template-columns: 1fr;
-          }
+        .warning {
+          color: #b45309;
+        }
+        .status {
+          color: #1f2937;
         }
       `}</style>
     </>

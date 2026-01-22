@@ -12,6 +12,7 @@ export default function FluxPage() {
   const [trigrammes, setTrigrammes] = useState({});
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
+  const [etablissement, setEtablissement] = useState('');
   const [source, setSource] = useState('');
   const [target, setTarget] = useState('');
   const [interfaceType, setInterfaceType] = useState('');
@@ -46,6 +47,10 @@ export default function FluxPage() {
       ...flow,
       etablissement: etab.nom,
     })))
+  ), [data]);
+
+  const etablissements = useMemo(() => (
+    data.map(etab => etab.nom).filter(Boolean).sort((a, b) => a.localeCompare(b))
   ), [data]);
 
   const protocols = useMemo(() => {
@@ -117,6 +122,7 @@ export default function FluxPage() {
     const sourceTri = resolveTrigram(source);
     const targetTri = resolveTrigram(target);
     return flattened.filter(flow => {
+      if (etablissement && flow.etablissement !== etablissement) return false;
       if (sourceTri && flow.sourceTrigramme !== sourceTri) return false;
       if (targetTri && flow.targetTrigramme !== targetTri) return false;
       if (interfaceType && flow.interfaceType !== interfaceType) return false;
@@ -134,7 +140,7 @@ export default function FluxPage() {
       ].map(normalize).join(' ');
       return haystack.includes(term);
     });
-  }, [flattened, source, target, interfaceType, protocol, eaiName, search, trigrammes]);
+  }, [flattened, etablissement, source, target, interfaceType, protocol, eaiName, search, trigrammes]);
 
   return (
     <>
@@ -166,16 +172,26 @@ export default function FluxPage() {
         </div>
       </header>
 
-      <section className="filters page-shell">
+      <section className="legend-wrapper page-shell">
+        <h2 className="legend-title">Légende &amp; Filtres</h2>
         <div className="filters-grid">
-          <label>
+          <label className="wide">
             Recherche
             <input
               type="search"
-              placeholder="Trigramme, protocole, message, EAI..."
+              placeholder="Trigramme, libellé, protocole, message, EAI..."
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
+          </label>
+          <label>
+            Établissement
+            <select value={etablissement} onChange={e => setEtablissement(e.target.value)}>
+              <option value="">Tous</option>
+              {etablissements.map(item => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
           </label>
           <label>
             Source
@@ -282,14 +298,14 @@ export default function FluxPage() {
       </main>
 
       <style jsx>{`
-        .filters {
-          margin-top: 24px;
-        }
         .filters-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
           gap: 12px;
           align-items: end;
+        }
+        .wide {
+          grid-column: 1 / -1;
         }
         label {
           display: flex;
