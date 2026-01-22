@@ -131,14 +131,35 @@ export default function FluxPage() {
     setEaiName('');
   };
 
-  const resetDiagramView = () => {
-    setDiagramTransform({ x: 0, y: 0, scale: 1 });
-  };
-
   const getInterfaceStyle = (type) => ({
     background: INTERFACE_COLORS[type] || '#e5e7eb',
     color: type === 'Administrative' ? '#1f2937' : '#fff',
   });
+
+  const filtered = useMemo(() => {
+    const term = normalize(search);
+    const sourceTri = resolveTrigram(source);
+    const targetTri = resolveTrigram(target);
+    return flattened.filter(flow => {
+      if (etablissement && flow.etablissement !== etablissement) return false;
+      if (sourceTri && flow.sourceTrigramme !== sourceTri) return false;
+      if (targetTri && flow.targetTrigramme !== targetTri) return false;
+      if (interfaceType && flow.interfaceType !== interfaceType) return false;
+      if (protocol && flow.protocol !== protocol) return false;
+      if (eaiName && flow.eaiName !== eaiName) return false;
+      if (!term) return true;
+      const haystack = [
+        formatLabel(flow.sourceTrigramme),
+        formatLabel(flow.targetTrigramme),
+        flow.protocol,
+        flow.messageType,
+        flow.eaiName,
+        flow.description,
+        flow.etablissement,
+      ].map(normalize).join(' ');
+      return haystack.includes(term);
+    });
+  }, [flattened, etablissement, source, target, interfaceType, protocol, eaiName, search, trigrammes]);
 
   const diagramData = useMemo(() => {
     const nodesMap = new Map();
@@ -194,7 +215,11 @@ export default function FluxPage() {
     );
 
     return { nodes: Object.values(layout), links, width, height, nodeSize };
-  }, [filtered, formatLabel, trigrammes]);
+  }, [filtered, formatLabel]);
+
+  const resetDiagramView = () => {
+    setDiagramTransform({ x: 0, y: 0, scale: 1 });
+  };
 
   const handleWheel = (event) => {
     event.preventDefault();
@@ -223,31 +248,6 @@ export default function FluxPage() {
   };
 
   const endPan = () => setIsPanning(false);
-
-  const filtered = useMemo(() => {
-    const term = normalize(search);
-    const sourceTri = resolveTrigram(source);
-    const targetTri = resolveTrigram(target);
-    return flattened.filter(flow => {
-      if (etablissement && flow.etablissement !== etablissement) return false;
-      if (sourceTri && flow.sourceTrigramme !== sourceTri) return false;
-      if (targetTri && flow.targetTrigramme !== targetTri) return false;
-      if (interfaceType && flow.interfaceType !== interfaceType) return false;
-      if (protocol && flow.protocol !== protocol) return false;
-      if (eaiName && flow.eaiName !== eaiName) return false;
-      if (!term) return true;
-      const haystack = [
-        formatLabel(flow.sourceTrigramme),
-        formatLabel(flow.targetTrigramme),
-        flow.protocol,
-        flow.messageType,
-        flow.eaiName,
-        flow.description,
-        flow.etablissement,
-      ].map(normalize).join(' ');
-      return haystack.includes(term);
-    });
-  }, [flattened, etablissement, source, target, interfaceType, protocol, eaiName, search, trigrammes]);
 
   return (
     <>
