@@ -58,7 +58,7 @@ small { font-size: 12px; line-height: 16px; }
 .hero {
   background: linear-gradient(135deg, #003366 0%, #00264d 60%, #001a33 100%);
   color: var(--color-white);
-  padding: 48px 0 40px;
+  padding: 32px 0 28px;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
   box-shadow: var(--shadow-soft);
@@ -68,20 +68,20 @@ small { font-size: 12px; line-height: 16px; }
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 24px;
+  gap: 18px;
 }
 
 .hero-brand {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 16px;
+  gap: 14px;
   align-items: center;
 }
 
 .brand-mark {
-  width: 120px;
-  height: 120px;
-  border-radius: 16px;
+  width: 92px;
+  height: 92px;
+  border-radius: 14px;
   background: rgba(255, 255, 255);
   display: grid;
   place-items: center;
@@ -90,8 +90,8 @@ small { font-size: 12px; line-height: 16px; }
 }
 
 .brand-mark img {
-  width: 100px;
-  height: 100px;
+  width: 76px;
+  height: 76px;
   object-fit: contain;
 }
 
@@ -107,30 +107,49 @@ small { font-size: 12px; line-height: 16px; }
 .hero h1 {
   color: var(--color-white);
   margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
 }
 
 .hero-subtitle {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
 }
 
 .view-switch {
   display: inline-flex;
-  gap: 10px;
+  gap: 8px;
   background: rgba(255, 255, 255, 0.08);
-  padding: 6px;
+  padding: 4px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .view-switch a {
   text-decoration: none;
-  padding: 10px 16px;
+  padding: 8px 12px;
   border-radius: 999px;
   color: var(--color-white);
   font-weight: 600;
+  font-size: 14px;
   border: 1px solid transparent;
   transition: all 0.2s ease;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding: 24px 0 20px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .view-switch {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 
 .view-switch a:hover {

@@ -5,17 +5,17 @@
     {
       "id": "ch_val_de_lys",
       "username": "valdellys",
-      "password": "$2b$10$yJuf5SiRIK0sUtjgBE9ee.OfLq5Y460WqT6nZylKH72PqsYDkNn.u"
+      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK"
     },
     {
       "id": "clinique_des_dunes",
       "username": "dunes",
-      "password": "$2b$10$YVF0LQb3GPeV169loTyIJOpILLP.BULhHmya2/DykxsYqBcbfyxNm"
+      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK"
     },
     {
       "id": "hopital_saint_roch",
       "username": "saintroch",
-      "password": "$2b$10$I0PCqPgigrDiRCx.mHkMcus5aF05vyVQ2ur.g3WiHPcHTKOPQBVoK"
+      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK"
     }
   ]
 }
