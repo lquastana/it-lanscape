@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -117,9 +117,7 @@ export default function FluxPage() {
     return trimmed;
   };
 
-  const formatLabel = (tri) => {
-    return trigrammes[tri] || tri;
-  };
+  const formatLabel = useCallback((tri) => trigrammes[tri] || tri, [trigrammes]);
 
   const resetFilters = () => {
     setSearch('');
@@ -159,11 +157,23 @@ export default function FluxPage() {
       ].map(normalize).join(' ');
       return haystack.includes(term);
     });
-  }, [flattened, etablissement, source, target, interfaceType, protocol, eaiName, search, trigrammes]);
+  }, [flattened, etablissement, source, target, interfaceType, protocol, eaiName, search, formatLabel]);
 
-  const diagramData = useMemo(() => {
+  const groupedFlows = useMemo(() => {
+    const map = new Map();
+    filtered.forEach(flow => {
+      const key = flow.etablissement || 'Établissement inconnu';
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(flow);
+    });
+    return Array.from(map.entries())
+      .map(([key, flows]) => ({ etablissement: key, flows }))
+      .sort((a, b) => a.etablissement.localeCompare(b.etablissement));
+  }, [filtered]);
+
+  const buildDiagramData = useCallback((flows) => {
     const nodesMap = new Map();
-    const links = filtered.map(flow => {
+    const links = flows.map(flow => {
       const source = flow.sourceTrigramme;
       const target = flow.targetTrigramme;
       nodesMap.set(source, { id: source, label: formatLabel(source) });
@@ -219,7 +229,15 @@ export default function FluxPage() {
     );
 
     return { nodes: Object.values(layout), links, width, height, nodeSize };
-  }, [filtered, formatLabel]);
+  }, [formatLabel]);
+
+  const diagramByEtablissement = useMemo(() => {
+    const map = new Map();
+    groupedFlows.forEach(group => {
+      map.set(group.etablissement, buildDiagramData(group.flows));
+    });
+    return map;
+  }, [groupedFlows, buildDiagramData]);
 
   const resetDiagramView = () => {
     setDiagramTransform({ x: 0, y: 0, scale: 1 });
@@ -285,47 +303,51 @@ export default function FluxPage() {
 
       <section className="legend-wrapper page-shell">
         <h2 className="legend-title">Légende &amp; Filtres</h2>
-        <div className="search-row">
-          <label className="wide">
-            Recherche
+        <div className="filters-toolbar">
+          <div className="search-compact">
             <input
+              className="search-input"
               type="search"
               placeholder="Rechercher un flux..."
               value={search}
               onChange={e => setSearch(e.target.value)}
+              aria-label="Recherche par mot-clé"
             />
-          </label>
-          <div className="search-actions">
-            <div className="view-toggle" role="group" aria-label="Modes d'affichage">
+            {search && (
               <button
                 type="button"
-                className={viewMode === 'liste' ? 'active' : ''}
-                onClick={() => setViewMode('liste')}
+                className="search-clear"
+                onClick={() => setSearch('')}
+                aria-label="Effacer la recherche"
+                title="Effacer"
               >
-                Vue Liste
+                ✖
               </button>
-              <button
-                type="button"
-                className={viewMode === 'diagramme' ? 'active' : ''}
-                onClick={() => setViewMode('diagramme')}
-              >
-                Vue Diagramme
-              </button>
-            </div>
+            )}
+          </div>
+          <div className="toolbar-actions">
             <button
               type="button"
-              className="secondary"
+              className="btn-secondary"
               onClick={() => setShowAdvanced(v => !v)}
+              aria-expanded={showAdvanced}
+              aria-controls="flux-advanced-panel"
             >
-              Filtres avancés {showAdvanced ? '▲' : '▼'}
+              Filtres avancés {showAdvanced ? '▴' : '▾'}
             </button>
-            <button type="button" className="primary" onClick={resetFilters}>Réinitialiser</button>
+            <button type="button" className="btn-reset" onClick={resetFilters}>Réinitialiser</button>
           </div>
         </div>
-        {showAdvanced && (
+        <form
+          id="flux-advanced-panel"
+          className={`filters-collapsible ${showAdvanced ? 'open' : ''}`}
+          onSubmit={(e) => e.preventDefault()}
+          role="region"
+          aria-label="Filtres avancés"
+        >
           <div className="filters-grid">
-            <label>
-              Établissement
+            <label className="filter-item">
+              <span>Établissement</span>
               <select value={etablissement} onChange={e => setEtablissement(e.target.value)}>
                 <option value="">Tous</option>
                 {etablissements.map(item => (
@@ -333,8 +355,8 @@ export default function FluxPage() {
                 ))}
               </select>
             </label>
-            <label>
-              Source
+            <label className="filter-item">
+              <span>Source</span>
               <input
                 list="sources-list"
                 placeholder="Rechercher une source..."
@@ -347,8 +369,8 @@ export default function FluxPage() {
                 ))}
               </datalist>
             </label>
-            <label>
-              Cible
+            <label className="filter-item">
+              <span>Cible</span>
               <input
                 list="targets-list"
                 placeholder="Rechercher une cible..."
@@ -361,8 +383,8 @@ export default function FluxPage() {
                 ))}
               </datalist>
             </label>
-            <label>
-              Type d'interface
+            <label className="filter-item">
+              <span>Type d'interface</span>
               <select value={interfaceType} onChange={e => setInterfaceType(e.target.value)}>
                 <option value="">Tous</option>
                 {INTERFACE_TYPES.map(type => (
@@ -370,8 +392,8 @@ export default function FluxPage() {
                 ))}
               </select>
             </label>
-            <label>
-              Protocole
+            <label className="filter-item">
+              <span>Protocole</span>
               <select value={protocol} onChange={e => setProtocol(e.target.value)}>
                 <option value="">Tous</option>
                 {protocols.map(item => (
@@ -379,8 +401,8 @@ export default function FluxPage() {
                 ))}
               </select>
             </label>
-            <label>
-              EAI
+            <label className="filter-item">
+              <span>EAI</span>
               <select value={eaiName} onChange={e => setEaiName(e.target.value)}>
                 <option value="">Tous</option>
                 {eaiNames.map(item => (
@@ -389,213 +411,177 @@ export default function FluxPage() {
               </select>
             </label>
           </div>
-        )}
+        </form>
         {status && <p className="status">{status}</p>}
       </section>
 
       <main className="page-shell">
         {filtered.length === 0 ? (
           <p className="hint">Aucun flux à afficher.</p>
-        ) : viewMode === 'liste' ? (
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>Établissement</th>
-                  <th>Source</th>
-                  <th>Cible</th>
-                  <th>Type</th>
-                  <th>Protocole</th>
-                  <th>Port</th>
-                  <th>Message</th>
-                  <th>EAI</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map(flow => (
-                  <tr key={flow.id}>
-                    <td>{flow.etablissement}</td>
-                    <td>{formatLabel(flow.sourceTrigramme)}</td>
-                    <td>{formatLabel(flow.targetTrigramme)}</td>
-                    <td>
-                      <span className="pill" style={getInterfaceStyle(flow.interfaceType)}>
-                        {flow.interfaceType}
-                      </span>
-                    </td>
-                    <td>{flow.protocol}</td>
-                    <td>{flow.port ?? '-'}</td>
-                    <td>{flow.messageType || '-'}</td>
-                    <td>
-                      {flow.eaiName ? (
-                        <span className="eai-tag">{flow.eaiName}</span>
-                      ) : (
-                        <span className="muted">Direct</span>
-                      )}
-                    </td>
-                    <td className="desc">{flow.description || '-'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         ) : (
-          <div className="diagram-wrapper">
-            <div className="diagram-toolbar">
-              <span className="muted">Zoom: {(diagramTransform.scale * 100).toFixed(0)}%</span>
-              <button type="button" className="secondary" onClick={resetDiagramView}>Réinitialiser la vue</button>
-            </div>
-            <div
-              className="diagram-canvas"
-              onWheel={handleWheel}
-              onMouseDown={startPan}
-              onMouseMove={onPan}
-              onMouseUp={endPan}
-              onMouseLeave={endPan}
-              role="presentation"
-            >
-              <svg
-                width={diagramData.width}
-                height={diagramData.height}
-                style={{
-                  transform: `translate(${diagramTransform.x}px, ${diagramTransform.y}px) scale(${diagramTransform.scale})`,
-                  transformOrigin: '0 0',
-                }}
-              >
-                <defs>
-                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-                    <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
-                  </marker>
-                </defs>
-                {diagramData.links.map((link) => {
-                  const sourceNode = diagramData.nodes.find(node => node.id === link.source);
-                  const targetNode = diagramData.nodes.find(node => node.id === link.target);
-                  if (!sourceNode || !targetNode) return null;
-                  const startX = sourceNode.x + diagramData.nodeSize.width;
-                  const startY = sourceNode.y + diagramData.nodeSize.height / 2;
-                  const endX = targetNode.x;
-                  const endY = targetNode.y + diagramData.nodeSize.height / 2;
-                  const stroke = INTERFACE_COLORS[link.type] || '#64748b';
-                  const midX = (startX + endX) / 2;
-                  const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
-                  return (
-                    <g key={link.id}>
-                      <path
-                        d={pathD}
-                        fill="none"
-                        stroke="transparent"
-                        strokeWidth="16"
-                        style={{ pointerEvents: 'stroke' }}
-                      >
-                        <title>{`Source: ${formatLabel(link.source)}\nCible: ${formatLabel(link.target)}\nType: ${link.type}\nProtocole: ${link.protocol || '-'}\nMessage: ${link.label || '-'}\nPort: ${link.port ?? '-'}\nEAI: ${link.eaiName || 'Direct'}\nÉtablissement: ${link.etablissement}`}</title>
-                      </path>
-                      <path
-                        d={pathD}
-                        fill="none"
-                        stroke={stroke}
-                        strokeWidth="2"
-                        markerEnd="url(#arrow)"
-                        style={{ pointerEvents: 'none' }}
-                      />
-                    </g>
-                  );
-                })}
-                {diagramData.nodes.map(node => (
-                  <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
-                    <rect
-                      width={diagramData.nodeSize.width}
-                      height={diagramData.nodeSize.height}
-                      rx="14"
-                      fill="#f8fafc"
-                      stroke="#dbe3f0"
-                    />
-                    <text
-                      x={diagramData.nodeSize.width / 2}
-                      y={diagramData.nodeSize.height / 2 + 4}
-                      textAnchor="middle"
-                      fontSize="12"
-                      fill="#1f2937"
+          groupedFlows.map((group, index) => {
+            const diagramData = diagramByEtablissement.get(group.etablissement);
+            return (
+              <section key={group.etablissement} className="etab-block">
+                <div className="etab-header">
+                  <h2>{group.etablissement}</h2>
+                  {index === 0 && (
+                    <div style={{ margin: '0.5rem 0 1rem' }}>
+                      <button onClick={() => setViewMode(viewMode === 'liste' ? 'diagramme' : 'liste')}>
+                        {viewMode === 'liste' ? '🔭 Vue Diagramme' : '📋 Vue Liste'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {viewMode === 'liste' ? (
+                  <div className="table-wrapper">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Source</th>
+                          <th>Cible</th>
+                          <th>Type</th>
+                          <th>Protocole</th>
+                          <th>Port</th>
+                          <th>Message</th>
+                          <th>EAI</th>
+                          <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {group.flows.map(flow => (
+                          <tr key={flow.id}>
+                            <td>{formatLabel(flow.sourceTrigramme)}</td>
+                            <td>{formatLabel(flow.targetTrigramme)}</td>
+                            <td>
+                              <span className="pill" style={getInterfaceStyle(flow.interfaceType)}>
+                                {flow.interfaceType}
+                              </span>
+                            </td>
+                            <td>{flow.protocol}</td>
+                            <td>{flow.port ?? '-'}</td>
+                            <td>{flow.messageType || '-'}</td>
+                            <td>
+                              {flow.eaiName ? (
+                                <span className="eai-tag">{flow.eaiName}</span>
+                              ) : (
+                                <span className="muted">Direct</span>
+                              )}
+                            </td>
+                            <td className="desc">{flow.description || '-'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="diagram-wrapper">
+                    <div className="diagram-toolbar">
+                      <span className="muted">Zoom: {(diagramTransform.scale * 100).toFixed(0)}%</span>
+                      <button type="button" className="btn-secondary" onClick={resetDiagramView}>Réinitialiser la vue</button>
+                    </div>
+                    <div
+                      className="diagram-canvas"
+                      onWheel={handleWheel}
+                      onMouseDown={startPan}
+                      onMouseMove={onPan}
+                      onMouseUp={endPan}
+                      onMouseLeave={endPan}
+                      role="presentation"
                     >
-                      {node.label}
-                    </text>
-                  </g>
-                ))}
-              </svg>
-            </div>
-          </div>
+                      <svg
+                        width={diagramData.width}
+                        height={diagramData.height}
+                        style={{
+                          transform: `translate(${diagramTransform.x}px, ${diagramTransform.y}px) scale(${diagramTransform.scale})`,
+                          transformOrigin: '0 0',
+                        }}
+                      >
+                        <defs>
+                          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+                          </marker>
+                        </defs>
+                        {diagramData.links.map((link) => {
+                          const sourceNode = diagramData.nodes.find(node => node.id === link.source);
+                          const targetNode = diagramData.nodes.find(node => node.id === link.target);
+                          if (!sourceNode || !targetNode) return null;
+                          const startX = sourceNode.x + diagramData.nodeSize.width;
+                          const startY = sourceNode.y + diagramData.nodeSize.height / 2;
+                          const endX = targetNode.x;
+                          const endY = targetNode.y + diagramData.nodeSize.height / 2;
+                          const stroke = INTERFACE_COLORS[link.type] || '#64748b';
+                          const midX = (startX + endX) / 2;
+                          const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
+                          return (
+                            <g key={link.id}>
+                              <path
+                                d={pathD}
+                                fill="none"
+                                stroke="transparent"
+                                strokeWidth="16"
+                                style={{ pointerEvents: 'stroke' }}
+                              >
+                                <title>{`Source: ${formatLabel(link.source)}\nCible: ${formatLabel(link.target)}\nType: ${link.type}\nProtocole: ${link.protocol || '-'}\nMessage: ${link.label || '-'}\nPort: ${link.port ?? '-'}\nEAI: ${link.eaiName || 'Direct'}\nÉtablissement: ${link.etablissement}`}</title>
+                              </path>
+                              <path
+                                d={pathD}
+                                fill="none"
+                                stroke={stroke}
+                                strokeWidth="2"
+                                markerEnd="url(#arrow)"
+                                style={{ pointerEvents: 'none' }}
+                              />
+                            </g>
+                          );
+                        })}
+                        {diagramData.nodes.map(node => (
+                          <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
+                            <rect
+                              width={diagramData.nodeSize.width}
+                              height={diagramData.nodeSize.height}
+                              rx="14"
+                              fill="#f8fafc"
+                              stroke="#dbe3f0"
+                            />
+                            <text
+                              x={diagramData.nodeSize.width / 2}
+                              y={diagramData.nodeSize.height / 2 + 4}
+                              textAnchor="middle"
+                              fontSize="12"
+                              fill="#1f2937"
+                            >
+                              {node.label}
+                            </text>
+                          </g>
+                        ))}
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </section>
+            );
+          })
         )}
       </main>
 
       <style jsx>{`
-        .search-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          align-items: flex-end;
-          margin-bottom: 12px;
+        .etab-block {
+          margin-bottom: 32px;
         }
-        .search-actions {
-          display: flex;
-          gap: 12px;
-          align-items: center;
-          flex-wrap: wrap;
+        .filters-grid input {
+          width: 100%;
+          padding: 10px 12px;
+          border-radius: var(--radius-sm);
+          border: 1.5px solid var(--color-border);
+          background: var(--color-white);
+          font-family: var(--font-body);
+          transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
-        .view-toggle {
-          display: inline-flex;
-          border: 1px solid #d0d7e4;
-          border-radius: 10px;
-          overflow: hidden;
-          background: #fff;
-        }
-        .view-toggle button {
-          border: none;
-          background: transparent;
-          padding: 10px 14px;
-          cursor: pointer;
-          font-weight: 600;
-          color: #1f2937;
-        }
-        .view-toggle button.active {
-          background: #002b6f;
-          color: #fff;
-        }
-        .filters-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 12px;
-          align-items: end;
-        }
-        .wide {
-          flex: 1;
-          min-width: 280px;
-        }
-        label {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          font-size: 0.9rem;
-        }
-        input, select {
-          padding: 8px 10px;
-          border-radius: 8px;
-          border: 1px solid #d6dbe6;
-          background: #fff;
-        }
-        .primary {
-          background: #002b6f;
-          color: #fff;
-          border: none;
-          padding: 10px 14px;
-          border-radius: 10px;
-          cursor: pointer;
-        }
-        .secondary {
-          background: #fff;
-          color: #002b6f;
-          border: 1px solid #002b6f;
-          padding: 10px 14px;
-          border-radius: 10px;
-          cursor: pointer;
+        .filters-grid input:focus {
+          outline: none;
+          border-color: var(--color-accent);
+          box-shadow: 0 0 0 2px rgba(40, 166, 191, 0.12);
         }
         .table-wrapper {
           margin-top: 20px;
