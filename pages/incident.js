@@ -520,42 +520,26 @@ export default function IncidentSimulationPage() {
         status: app.status,
       });
     });
-    analysis.propagationEdges.forEach(edge => {
-      const sourceMeta = appMeta.get(edge.source);
-      const targetMeta = appMeta.get(edge.target);
-      const sourceEntries = sourceMeta?.entries?.length
-        ? sourceMeta.entries
-        : [{ etablissement: edge.source, processus: 'Processus non renseigné' }];
-      const targetEntries = targetMeta?.entries?.length
-        ? targetMeta.entries
-        : [{ etablissement: edge.target, processus: 'Processus non renseigné' }];
-      sourceEntries.forEach(entry => {
-        const sourceId = `${edge.source}-${entry.etablissement}`;
-        if (nodesMap.has(sourceId)) return;
-        nodesMap.set(sourceId, {
-          id: sourceId,
-          trigramme: edge.source,
-          label: edge.sourceLabel,
-          etablissement: entry.etablissement,
-          process: entry.processus,
-          depth: 0,
-          status: edge.status,
-        });
+    const entriesFor = (meta, fallbackLabel) => (
+      meta?.entries?.length
+        ? meta.entries
+        : [{ etablissement: fallbackLabel, processus: 'Processus non renseigné' }]
+    );
+
+    const ensureNode = ({ trigramme, label, entry, depth, status }) => {
+      const nodeId = `${trigramme}-${entry.etablissement}`;
+      if (nodesMap.has(nodeId)) return nodeId;
+      nodesMap.set(nodeId, {
+        id: nodeId,
+        trigramme,
+        label,
+        etablissement: entry.etablissement,
+        process: entry.processus,
+        depth,
+        status,
       });
-      targetEntries.forEach(entry => {
-        const targetId = `${edge.target}-${entry.etablissement}`;
-        if (nodesMap.has(targetId)) return;
-        nodesMap.set(targetId, {
-          id: targetId,
-          trigramme: edge.target,
-          label: edge.targetLabel,
-          etablissement: entry.etablissement,
-          process: entry.processus,
-          depth: 1,
-          status: edge.status,
-        });
-      });
-    });
+      return nodeId;
+    };
 
     const nodes = Array.from(nodesMap.values());
     const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
@@ -651,18 +635,34 @@ export default function IncidentSimulationPage() {
     analysis.propagationEdges.forEach(edge => {
       const sourceMeta = appMeta.get(edge.source);
       const targetMeta = appMeta.get(edge.target);
-      const sourceEntries = sourceMeta?.entries?.length
-        ? sourceMeta.entries
-        : [{ etablissement: edge.source, processus: 'Processus non renseigné' }];
-      const targetEntries = targetMeta?.entries?.length
-        ? targetMeta.entries
-        : [{ etablissement: edge.target, processus: 'Processus non renseigné' }];
+      const sourceEntries = entriesFor(sourceMeta, edge.source);
+      const targetEntries = entriesFor(targetMeta, edge.target);
       const sourceScoped = sourceMeta?.multiEtablissement ? sourceEntries : sourceEntries.slice(0, 1);
       const targetScoped = targetMeta?.multiEtablissement ? targetEntries : targetEntries.slice(0, 1);
+      const targetByEtab = new Map(targetScoped.map(entry => [entry.etablissement, entry]));
+
       sourceScoped.forEach(sourceEntry => {
-        const sourceId = `${edge.source}-${sourceEntry.etablissement}`;
-        targetScoped.forEach(targetEntry => {
-          const targetId = `${edge.target}-${targetEntry.etablissement}`;
+        const matchingTarget = targetByEtab.get(sourceEntry.etablissement);
+        const targets = matchingTarget
+          ? [matchingTarget]
+          : targetScoped.length === 1
+            ? targetScoped
+            : [];
+        const sourceId = ensureNode({
+          trigramme: edge.source,
+          label: edge.sourceLabel,
+          entry: sourceEntry,
+          depth: 0,
+          status: edge.status,
+        });
+        targets.forEach(targetEntry => {
+          const targetId = ensureNode({
+            trigramme: edge.target,
+            label: edge.targetLabel,
+            entry: targetEntry,
+            depth: 1,
+            status: edge.status,
+          });
           expandedLinks.push({
             ...edge,
             sourceId,
