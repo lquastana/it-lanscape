@@ -1045,13 +1045,6 @@ export default function IncidentSimulationPage() {
                                     </div>
                                   </div>
                                 )}
-                                <ul>
-                                  {report.propagation.map((edge, index) => (
-                                    <li key={`${edge.source}-${edge.target}-${index}`}>
-                                      {edge.sourceLabel} → {edge.targetLabel} ({formatStatus(edge.status)})
-                                    </li>
-                                  ))}
-                                </ul>
                               </>
                             )}
                           </div>
