@@ -38,6 +38,7 @@ export default function NetworkPage() {
             <Link href="/applications">Vue Applicative</Link>
             <Link href="/flux">Vue Flux</Link>
             <Link href="/network" className="active">Vue Réseau</Link>
+            <Link href="/incident">Simulation d'incident</Link>
             <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>

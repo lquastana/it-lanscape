@@ -296,6 +296,7 @@ export default function FluxPage() {
             <Link href="/applications">Vue Applicative</Link>
             <Link href="/flux" className="active">Vue Flux</Link>
             <Link href="/network">Vue Réseau</Link>
+            <Link href="/incident">Simulation d'incident</Link>
             <button onClick={handleLogout} style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline' }}>Déconnexion</button>
           </nav>
         </div>

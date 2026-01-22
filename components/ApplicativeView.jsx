@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { DOMAIN_COLORS, INTERFACE_COLORS } from '../lib/constants';
 import {toGiBRounded,prettyLabel,prettyValue} from '../lib/utils';
 import useInfrastructureData from '../hooks/useInfrastructureData';
-import useFluxData from '../hooks/useFluxData';
 
 function useServerIndex(infraEtab) {
   return useMemo(() => {
@@ -24,30 +23,6 @@ function appMatches(app, serverIndex, term) {
     return servers.some(s => s.VM.toLowerCase().includes(term));
   }
   return false;
-}
-
-function buildDependencyIndex(fluxData) {
-  const map = new Map();
-  if (!fluxData?.etablissements) return map;
-
-  fluxData.etablissements.forEach(etab => {
-    const depsByApp = new Map();
-    (etab.flux || []).forEach(flow => {
-      const { sourceTrigramme, targetTrigramme } = flow;
-      if (!sourceTrigramme || !targetTrigramme) return;
-      if (!depsByApp.has(sourceTrigramme)) {
-        depsByApp.set(sourceTrigramme, { upstream: new Set(), downstream: new Set() });
-      }
-      if (!depsByApp.has(targetTrigramme)) {
-        depsByApp.set(targetTrigramme, { upstream: new Set(), downstream: new Set() });
-      }
-      depsByApp.get(sourceTrigramme).downstream.add(targetTrigramme);
-      depsByApp.get(targetTrigramme).upstream.add(sourceTrigramme);
-    });
-    map.set(etab.nom, depsByApp);
-  });
-
-  return map;
 }
 
 function EtabCondensed({ etab, infraEtab, colors, showSwitch, condensedPrintView, setCondensedPrintView, search }) {
@@ -156,12 +131,9 @@ function EtabNormal({
   condensedPrintView,
   setCondensedPrintView,
   search,
-  dependencyIndex,
-  resolveAppLabel,
 }) {
   const serverIndex = useServerIndex(infraEtab);
   const term = search ? search.toLowerCase() : '';
-  const depsByApp = dependencyIndex?.get(etab.nom);
 
   const domains = etab.domaines
     .map((dom, idx) => {
@@ -214,10 +186,6 @@ function EtabNormal({
                               const servers = app.trigramme ? serverIndex.get(app.trigramme) || [] : [];
                               const sKey = `${etab.nom}::${app.trigramme}`;
                               const sOpen = openServers[sKey] ?? true;
-                              const deps = app.trigramme ? depsByApp?.get(app.trigramme) : null;
-                              const upstream = deps ? Array.from(deps.upstream) : [];
-                              const downstream = deps ? Array.from(deps.downstream) : [];
-                              const isSpof = servers.length === 1;
                               return (
                                 <div key={app.nom} className="application">
                                   <h5>
@@ -249,42 +217,6 @@ function EtabNormal({
                                   <p className="host-label" style={{ fontStyle: 'italic', color: '#666' }}>
                                     Hébergement : {app.hebergement}
                                   </p>
-                                  <div className="dependency-block">
-                                    <div className="dependency-header">
-                                      <span className="dependency-title">Dépendances</span>
-                                      {isSpof && (
-                                        <span className="spof-badge" title="Single point of failure">
-                                          SPOF · {servers.length} serveur
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="dependency-grid">
-                                      <div>
-                                        <span className="dependency-label">Amont</span>
-                                        {upstream.length > 0 ? (
-                                          <ul className="dependency-list">
-                                            {upstream.map(tri => (
-                                              <li key={`up-${tri}`}>{resolveAppLabel(tri)}</li>
-                                            ))}
-                                          </ul>
-                                        ) : (
-                                          <span className="dependency-empty">Aucune</span>
-                                        )}
-                                      </div>
-                                      <div>
-                                        <span className="dependency-label">Aval</span>
-                                        {downstream.length > 0 ? (
-                                          <ul className="dependency-list">
-                                            {downstream.map(tri => (
-                                              <li key={`down-${tri}`}>{resolveAppLabel(tri)}</li>
-                                            ))}
-                                          </ul>
-                                        ) : (
-                                          <span className="dependency-empty">Aucune</span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
                                   {app.trigramme && (
                                     <div className="servers-section">
                                       <h5 onClick={() => toggleServers(etab.nom, app.trigramme)}>
@@ -339,30 +271,11 @@ function EtabNormal({
 
 export default function ApplicativeView({ data, colors = INTERFACE_COLORS, search = '' }) {
   const { data: infra } = useInfrastructureData();
-  const { data: flux } = useFluxData();
 
   const [openDomain, setOpenDomain] = useState({});
   const [openProcess, setOpenProcess] = useState({});
   const [openServers, setOpenServers] = useState({});
   const [condensedPrintView, setCondensedPrintView] = useState(false);
-
-  const dependencyIndex = useMemo(() => buildDependencyIndex(flux), [flux]);
-  const appLabelByTri = useMemo(() => {
-    const map = new Map();
-    data?.etablissements?.forEach(etab => {
-      etab.domaines.forEach(dom => {
-        dom.processus.forEach(proc => {
-          proc.applications.forEach(app => {
-            if (app.trigramme && !map.has(app.trigramme)) {
-              map.set(app.trigramme, app.nom);
-            }
-          });
-        });
-      });
-    });
-    return map;
-  }, [data]);
-  const resolveAppLabel = (tri) => appLabelByTri.get(tri) || tri;
 
   if (!data || !infra) return <main id="content">Chargement…</main>;
 
@@ -414,8 +327,6 @@ export default function ApplicativeView({ data, colors = INTERFACE_COLORS, searc
               condensedPrintView={condensedPrintView}
               setCondensedPrintView={setCondensedPrintView}
               search={search}
-              dependencyIndex={dependencyIndex}
-              resolveAppLabel={resolveAppLabel}
             />
           );
         })
