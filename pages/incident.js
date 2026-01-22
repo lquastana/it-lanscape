@@ -24,13 +24,6 @@ const STATUS_RANK = {
   latence: 1,
 };
 
-const STATUS_COLORS = {
-  hs: '#b91c1c',
-  degrade: '#f97316',
-  latence: '#2563eb',
-  intermittent: '#7c3aed',
-};
-
 const CRITICITE_RANK = {
   Critique: 2,
   Standard: 1,
@@ -504,184 +497,60 @@ export default function IncidentSimulationPage() {
   ), [appMeta]);
 
   const statusBadge = (status) => `status-badge status-${status}`;
-  const propagationDiagram = useMemo(() => {
-    if (!analysis?.propagationEdges?.length) return null;
-    const nodesMap = new Map();
+  const reportByEtablissement = useMemo(() => {
+    if (!analysis) return [];
+    const byEtab = new Map();
+    const ensureEtab = (etab) => {
+      const key = etab || 'Établissement non renseigné';
+      if (!byEtab.has(key)) {
+        byEtab.set(key, {
+          etablissement: key,
+          impactedApps: [],
+          impactedProcesses: new Set(),
+          blockedFlows: [],
+          propagation: [],
+        });
+      }
+      return byEtab.get(key);
+    };
+
+    const etabsByTri = new Map();
     analysis.impactedApps.forEach(app => {
-      const nodeId = `${app.trigramme}-${app.etablissement}`;
-      if (nodesMap.has(nodeId)) return;
-      nodesMap.set(nodeId, {
-        id: nodeId,
-        trigramme: app.trigramme,
-        label: app.label,
-        etablissement: app.etablissement,
-        process: app.processus,
-        depth: app.depth ?? 0,
-        status: app.status,
-      });
+      const list = etabsByTri.get(app.trigramme) || new Set();
+      list.add(app.etablissement || 'Établissement non renseigné');
+      etabsByTri.set(app.trigramme, list);
+      const entry = ensureEtab(app.etablissement);
+      entry.impactedApps.push(app);
+      entry.impactedProcesses.add(`${app.domaine} / ${app.processus}`);
     });
-    const entriesFor = (meta, fallbackLabel) => (
-      meta?.entries?.length
-        ? meta.entries
-        : [{ etablissement: fallbackLabel, processus: 'Processus non renseigné' }]
-    );
 
-    const ensureNode = ({ trigramme, label, entry, depth, status }) => {
-      const nodeId = `${trigramme}-${entry.etablissement}`;
-      if (nodesMap.has(nodeId)) return nodeId;
-      nodesMap.set(nodeId, {
-        id: nodeId,
-        trigramme,
-        label,
-        etablissement: entry.etablissement,
-        process: entry.processus,
-        depth,
-        status,
-      });
-      return nodeId;
-    };
+    analysis.blockedFlows.forEach(flow => {
+      const entry = ensureEtab(flow.etablissement || 'Établissement non renseigné');
+      entry.blockedFlows.push(flow);
+    });
 
-    const nodes = Array.from(nodesMap.values());
-    const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
-    const nodeSize = { width: 210, height: 64 };
-    const nodeGap = 12;
-    const processGap = 20;
-    const establishmentGap = 28;
-    const processPadding = 16;
-    const establishmentPadding = 18;
-    const processLabelHeight = 16;
-    const establishmentLabelHeight = 18;
-    const establishmentWidth = nodeSize.width + processPadding * 2 + establishmentPadding * 2;
-    const columnWidth = establishmentWidth + 120;
-    const layout = [];
-    const processBlocks = [];
-    const establishmentBlocks = [];
-
-    for (let depth = 0; depth <= maxDepth; depth += 1) {
-      const column = nodes
-        .filter(node => node.depth === depth)
-        .map(node => ({
-          ...node,
-          etablissement: node.etablissement || 'Établissement non renseigné',
-          process: node.process || 'Processus non renseigné',
-        }))
-        .sort((a, b) => {
-          const estCompare = a.etablissement.localeCompare(b.etablissement);
-          if (estCompare !== 0) return estCompare;
-          const procCompare = a.process.localeCompare(b.process);
-          if (procCompare !== 0) return procCompare;
-          return a.label.localeCompare(b.label);
-        });
-      const startY = 80;
-      const columnX = depth * columnWidth;
-      let currentY = startY;
-      const establishments = Array.from(new Set(column.map(node => node.etablissement)));
-      establishments.forEach(establishment => {
-        const establishmentNodes = column.filter(node => node.etablissement === establishment);
-        const processes = Array.from(new Set(establishmentNodes.map(node => node.process)));
-        const establishmentStartY = currentY;
-        currentY += establishmentLabelHeight + establishmentPadding;
-        processes.forEach(process => {
-          const processNodes = establishmentNodes.filter(node => node.process === process);
-          const processStartY = currentY;
-          currentY += processLabelHeight + processPadding;
-          processNodes.forEach((node) => {
-            layout.push({
-              ...node,
-              x: columnX + establishmentPadding + processPadding,
-              y: currentY,
-            });
-            currentY += nodeSize.height + nodeGap;
-          });
-          if (processNodes.length) {
-            currentY -= nodeGap;
-          }
-          currentY += processPadding;
-          processBlocks.push({
-            id: `${depth}-${establishment}-${process}`,
-            label: process,
-            x: columnX + establishmentPadding,
-            y: processStartY,
-            width: nodeSize.width + processPadding * 2,
-            height: currentY - processStartY,
-          });
-          currentY += processGap;
-        });
-        if (processes.length) {
-          currentY -= processGap;
-        }
-        currentY += establishmentPadding;
-        establishmentBlocks.push({
-          id: `${depth}-${establishment}`,
-          label: establishment,
-          x: columnX,
-          y: establishmentStartY,
-          width: establishmentWidth,
-          height: currentY - establishmentStartY,
-        });
-        currentY += establishmentGap;
-      });
-    }
-
-    const width = (maxDepth + 1) * columnWidth + nodeSize.width;
-    const height = Math.max(
-      ...layout.map(node => node.y + nodeSize.height),
-      ...processBlocks.map(block => block.y + block.height),
-      ...establishmentBlocks.map(block => block.y + block.height),
-      320,
-    );
-
-    const expandedLinks = [];
     analysis.propagationEdges.forEach(edge => {
-      const sourceMeta = appMeta.get(edge.source);
-      const targetMeta = appMeta.get(edge.target);
-      const sourceEntries = entriesFor(sourceMeta, edge.source);
-      const targetEntries = entriesFor(targetMeta, edge.target);
-      const sourceScoped = sourceMeta?.multiEtablissement ? sourceEntries : sourceEntries.slice(0, 1);
-      const targetScoped = targetMeta?.multiEtablissement ? targetEntries : targetEntries.slice(0, 1);
-      const targetByEtab = new Map(targetScoped.map(entry => [entry.etablissement, entry]));
-
-      sourceScoped.forEach(sourceEntry => {
-        const matchingTarget = targetByEtab.get(sourceEntry.etablissement);
-        const targets = matchingTarget
-          ? [matchingTarget]
-          : targetScoped.length === 1
-            ? targetScoped
-            : [];
-        const sourceId = ensureNode({
-          trigramme: edge.source,
-          label: edge.sourceLabel,
-          entry: sourceEntry,
-          depth: 0,
-          status: edge.status,
-        });
-        targets.forEach(targetEntry => {
-          const targetId = ensureNode({
-            trigramme: edge.target,
-            label: edge.targetLabel,
-            entry: targetEntry,
-            depth: 1,
-            status: edge.status,
-          });
-          expandedLinks.push({
-            ...edge,
-            sourceId,
-            targetId,
-          });
+      const sourceEtabs = etabsByTri.get(edge.source);
+      const targetEtabs = etabsByTri.get(edge.target);
+      if (!sourceEtabs || !targetEtabs) return;
+      sourceEtabs.forEach(etab => {
+        if (!targetEtabs.has(etab)) return;
+        const entry = ensureEtab(etab);
+        entry.propagation.push({
+          ...edge,
+          etablissement: etab,
         });
       });
     });
 
-    return {
-      nodes: layout,
-      processBlocks,
-      establishmentBlocks,
-      links: expandedLinks,
-      width,
-      height,
-      nodeSize,
-    };
-  }, [analysis, appMeta]);
+    return Array.from(byEtab.values())
+      .map(entry => ({
+        ...entry,
+        impactedApps: entry.impactedApps.sort(prioritySort),
+        impactedProcesses: Array.from(entry.impactedProcesses).sort((a, b) => a.localeCompare(b)),
+      }))
+      .sort((a, b) => a.etablissement.localeCompare(b.etablissement));
+  }, [analysis]);
 
   return (
     <>
@@ -841,233 +710,140 @@ export default function IncidentSimulationPage() {
             <p className="muted">Lancez une analyse pour afficher les impacts.</p>
           ) : (
             <>
-              <div className="impact-graph">
-                <h3>Propagation</h3>
-                {analysis.propagationEdges.length === 0 ? (
-                  <p className="muted">Aucune propagation détectée.</p>
-                ) : (
-                  <>
-                    <p className="muted">Survolez une flèche pour connaître la cause de la propagation.</p>
-                    {propagationDiagram && (
-                      <div className="propagation-diagram">
-                        <div className="propagation-canvas">
-                          <svg width={propagationDiagram.width} height={propagationDiagram.height}>
-                            <defs>
-                              {Object.entries(STATUS_COLORS).map(([key, color]) => (
-                                <marker key={key} id={`prop-arrow-${key}`} markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-                                  <path d="M0,0 L0,6 L9,3 z" fill={color} />
-                                </marker>
-                              ))}
-                            </defs>
-                            {propagationDiagram.establishmentBlocks.map(block => (
-                              <g key={block.id}>
-                                <rect
-                                  x={block.x}
-                                  y={block.y}
-                                  width={block.width}
-                                  height={block.height}
-                                  rx="18"
-                                  fill="#eef2ff"
-                                  stroke="#c7d2fe"
-                                  strokeWidth="1.5"
-                                />
-                                <text
-                                  x={block.x + 16}
-                                  y={block.y + 22}
-                                  fontSize="12"
-                                  fontWeight="600"
-                                  fill="#1e293b"
-                                >
-                                  {block.label}
-                                </text>
-                              </g>
-                            ))}
-                            {propagationDiagram.processBlocks.map(block => (
-                              <g key={block.id}>
-                                <rect
-                                  x={block.x}
-                                  y={block.y}
-                                  width={block.width}
-                                  height={block.height}
-                                  rx="14"
-                                  fill="#ffffff"
-                                  stroke="#e2e8f0"
-                                  strokeWidth="1"
-                                />
-                                <text
-                                  x={block.x + 14}
-                                  y={block.y + 18}
-                                  fontSize="11"
-                                  fontWeight="500"
-                                  fill="#475569"
-                                >
-                                  {block.label}
-                                </text>
-                              </g>
-                            ))}
-                            {propagationDiagram.links.map(edge => {
-                              const sourceNode = propagationDiagram.nodes.find(node => node.id === edge.sourceId);
-                              const targetNode = propagationDiagram.nodes.find(node => node.id === edge.targetId);
-                              if (!sourceNode || !targetNode) return null;
-                              const startX = sourceNode.x + propagationDiagram.nodeSize.width;
-                              const startY = sourceNode.y + propagationDiagram.nodeSize.height / 2;
-                              const endX = targetNode.x;
-                              const endY = targetNode.y + propagationDiagram.nodeSize.height / 2;
-                              const midX = (startX + endX) / 2;
-                              const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
-                              const stroke = STATUS_COLORS[edge.status] || '#64748b';
-                              const title = [
-                                `Propagation depuis ${edge.sourceLabel}`,
-                                `Impact source: ${formatStatus(edge.status)}`,
-                                `Cible: ${edge.targetLabel}`,
-                                `Type: ${edge.interfaceType || 'Dépendance'}`,
-                              ].join('\n');
-                              return (
-                                <g key={`${edge.sourceId}-${edge.targetId}`}>
-                                  <path
-                                    d={pathD}
-                                    fill="none"
-                                    stroke="transparent"
-                                    strokeWidth="16"
-                                    style={{ pointerEvents: 'stroke' }}
-                                  >
-                                    <title>{title}</title>
-                                  </path>
-                                  <path
-                                    d={pathD}
-                                    fill="none"
-                                    stroke={stroke}
-                                    strokeWidth="2"
-                                    markerEnd={`url(#prop-arrow-${edge.status})`}
-                                    style={{ pointerEvents: 'none' }}
-                                  />
-                                </g>
-                              );
-                            })}
-                            {propagationDiagram.nodes.map(node => (
-                              <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
-                                <rect
-                                  width={propagationDiagram.nodeSize.width}
-                                  height={propagationDiagram.nodeSize.height}
-                                  rx="14"
-                                  fill="#f8fafc"
-                                  stroke={STATUS_COLORS[node.status] || '#dbe3f0'}
-                                  strokeWidth="2"
-                                />
-                                <text
-                                  x={propagationDiagram.nodeSize.width / 2}
-                                  y={propagationDiagram.nodeSize.height / 2 + 4}
-                                  textAnchor="middle"
-                                  fontSize="12"
-                                  fill="#1f2937"
-                                >
-                                  {node.label}
-                                </text>
-                              </g>
-                            ))}
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-
               <div className="impact-details">
-                <h3>Impacts priorisés</h3>
-                <div className="impact-cards">
-                  {analysis.impactedApps.map(app => (
-                    <details key={`${app.trigramme}-${app.etablissement}`} className="impact-card">
-                      <summary>
-                        <div>
-                          <strong>{app.label}</strong>
-                          <span className="muted"> • {app.etablissement}</span>
-                        </div>
-                        <div>
-                          <span className={`status-pill status-${app.status}`}>{formatStatus(app.status)}</span>
-                          <span className="crit-pill">{app.criticite}</span>
-                        </div>
-                      </summary>
-                      <div className="impact-body">
-                        <p>{describeStatus(app.status)}</p>
-                        <div className="impact-meta">
+                <h3>Rapport par établissement</h3>
+                {reportByEtablissement.length === 0 ? (
+                  <p className="muted">Aucun impact identifié.</p>
+                ) : (
+                  <div className="impact-cards">
+                    {reportByEtablissement.map(report => (
+                      <details key={report.etablissement} className="impact-card">
+                        <summary>
                           <div>
-                            <span className="label">Domaine / Processus</span>
-                            <p>{app.domaine} • {app.processus}</p>
+                            <strong>{report.etablissement}</strong>
+                            <span className="muted">
+                              {' '}
+                              • {report.impactedApps.length} application(s)
+                              • {report.blockedFlows.length} flux
+                              • {report.impactedProcesses.length} processus
+                            </span>
+                          </div>
+                        </summary>
+                        <div className="impact-body">
+                          <div>
+                            <h4>Propagation</h4>
+                            {report.propagation.length === 0 ? (
+                              <p className="muted">Aucune propagation détectée.</p>
+                            ) : (
+                              <ul>
+                                {report.propagation.map((edge, index) => (
+                                  <li key={`${edge.source}-${edge.target}-${index}`}>
+                                    {edge.sourceLabel} → {edge.targetLabel} ({formatStatus(edge.status)})
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </div>
                           <div>
-                            <span className="label">Périmètre</span>
-                            <p>{app.etablissement}</p>
+                            <h4>Impacts priorisés</h4>
+                            {report.impactedApps.length === 0 ? (
+                              <p className="muted">Aucune application impactée.</p>
+                            ) : (
+                              report.impactedApps.map(app => (
+                                <details key={`${app.trigramme}-${app.etablissement}`} className="impact-card">
+                                  <summary>
+                                    <div>
+                                      <strong>{app.label}</strong>
+                                      <span className="muted"> • {app.domaine} / {app.processus}</span>
+                                    </div>
+                                    <div>
+                                      <span className={`status-pill status-${app.status}`}>{formatStatus(app.status)}</span>
+                                      <span className="crit-pill">{app.criticite}</span>
+                                    </div>
+                                  </summary>
+                                  <div className="impact-body">
+                                    <p>{describeStatus(app.status)}</p>
+                                    <div className="impact-meta">
+                                      <div>
+                                        <span className="label">Périmètre</span>
+                                        <p>{app.etablissement}</p>
+                                      </div>
+                                      <div>
+                                        <span className="label">Hébergeur</span>
+                                        <p>{app.hebergement}</p>
+                                      </div>
+                                      <div>
+                                        <span className="label">Type de rupture</span>
+                                        <p>{Array.from(new Set(app.causes.map(cause => cause.type))).join(', ') || 'Applicatif'}</p>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <span className="label">Dépendances en cause</span>
+                                      <ul>
+                                        {app.causes.map((cause, index) => (
+                                          <li key={`${app.trigramme}-${index}`}>
+                                            {cause.label} ({formatStatus(cause.status)})
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <span className="label">Actions recommandées</span>
+                                      <ul>
+                                        {actionsByStatus(app.status).map(action => (
+                                          <li key={action}>{action}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </details>
+                              ))
+                            )}
                           </div>
                           <div>
-                            <span className="label">Hébergeur</span>
-                            <p>{app.hebergement}</p>
+                            <h4>Services &amp; processus touchés</h4>
+                            {report.impactedProcesses.length === 0 ? (
+                              <p className="muted">Aucun processus identifié.</p>
+                            ) : (
+                              <ul className="impact-list">
+                                {report.impactedProcesses.map(item => (
+                                  <li key={item}>{item}</li>
+                                ))}
+                              </ul>
+                            )}
                           </div>
                           <div>
-                            <span className="label">Type de rupture</span>
-                            <p>{Array.from(new Set(app.causes.map(cause => cause.type))).join(', ') || 'Applicatif'}</p>
+                            <h4>Flux bloqués / dégradés</h4>
+                            {report.blockedFlows.length === 0 ? (
+                              <p className="muted">Aucun flux impacté.</p>
+                            ) : (
+                              <ul className="impact-list">
+                                {report.blockedFlows.map(flow => (
+                                  <li key={`${flow.id}-${flow.source}-${flow.target}`}>
+                                    {flow.sourceLabel} → {flow.targetLabel} ({flow.interfaceType || 'Flux'})
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </div>
                         </div>
-                        <div>
-                          <span className="label">Dépendances en cause</span>
-                          <ul>
-                            {app.causes.map((cause, index) => (
-                              <li key={`${app.trigramme}-${index}`}>
-                                {cause.label} ({formatStatus(cause.status)})
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <span className="label">Actions recommandées</span>
-                          <ul>
-                            {actionsByStatus(app.status).map(action => (
-                              <li key={action}>{action}</li>
-                            ))}
-                          </ul>
+                      </details>
+                    ))}
+                  </div>
+                )}
+                {analysis.impactedOther.length > 0 && (
+                  <div className="impact-cards">
+                    {analysis.impactedOther.map(item => (
+                      <div key={item.id} className="impact-card static-card">
+                        <div className="impact-body">
+                          <strong>{item.label}</strong>
+                          <span className={`status-pill status-${item.status}`}>{formatStatus(item.status)}</span>
+                          <p className="muted">Composant externe à cartographier.</p>
                         </div>
                       </div>
-                    </details>
-                  ))}
-                  {analysis.impactedOther.map(item => (
-                    <div key={item.id} className="impact-card static-card">
-                      <div className="impact-body">
-                        <strong>{item.label}</strong>
-                        <span className={`status-pill status-${item.status}`}>{formatStatus(item.status)}</span>
-                        <p className="muted">Composant externe à cartographier.</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="impact-summary">
-                <div>
-                  <h3>Services &amp; processus touchés</h3>
-                  {analysis.impactedProcesses.length === 0 ? (
-                    <p className="muted">Aucun processus identifié.</p>
-                  ) : (
-                    <ul className="impact-list">
-                      {analysis.impactedProcesses.map(item => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div>
-                  <h3>Flux bloqués / dégradés</h3>
-                  {analysis.blockedFlows.length === 0 ? (
-                    <p className="muted">Aucun flux impacté.</p>
-                  ) : (
-                    <ul className="impact-list">
-                      {analysis.blockedFlows.map(flow => (
-                        <li key={`${flow.id}-${flow.source}-${flow.target}`}>
-                          {flow.sourceLabel} → {flow.targetLabel} ({flow.interfaceType || 'Flux'})
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </>
           )}
