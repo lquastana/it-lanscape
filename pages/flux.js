@@ -20,6 +20,7 @@ export default function FluxPage() {
   const [protocol, setProtocol] = useState('');
   const [eaiName, setEaiName] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [viewMode, setViewMode] = useState('liste');
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -200,6 +201,22 @@ export default function FluxPage() {
             />
           </label>
           <div className="search-actions">
+            <div className="view-toggle" role="group" aria-label="Modes d'affichage">
+              <button
+                type="button"
+                className={viewMode === 'liste' ? 'active' : ''}
+                onClick={() => setViewMode('liste')}
+              >
+                Vue Liste
+              </button>
+              <button
+                type="button"
+                className={viewMode === 'diagramme' ? 'active' : ''}
+                onClick={() => setViewMode('diagramme')}
+              >
+                Vue Diagramme
+              </button>
+            </div>
             <button
               type="button"
               className="secondary"
@@ -284,7 +301,7 @@ export default function FluxPage() {
       <main className="page-shell">
         {filtered.length === 0 ? (
           <p className="hint">Aucun flux à afficher.</p>
-        ) : (
+        ) : viewMode === 'liste' ? (
           <div className="table-wrapper">
             <table>
               <thead>
@@ -327,6 +344,35 @@ export default function FluxPage() {
               </tbody>
             </table>
           </div>
+        ) : (
+          <div className="diagram-grid">
+            {filtered.map(flow => (
+              <div className="diagram-card" key={flow.id}>
+                <div className="diagram-header">
+                  <span className="diagram-etab">{flow.etablissement}</span>
+                  <span className="pill" style={getInterfaceStyle(flow.interfaceType)}>
+                    {flow.interfaceType}
+                  </span>
+                </div>
+                <div className="diagram-flow">
+                  <div className="node">
+                    <span className="node-label">{formatLabel(flow.sourceTrigramme)}</span>
+                  </div>
+                  <div className="arrow">→</div>
+                  <div className="node">
+                    <span className="node-label">{formatLabel(flow.targetTrigramme)}</span>
+                  </div>
+                </div>
+                <div className="diagram-meta">
+                  <span>Protocole: {flow.protocol || '-'}</span>
+                  <span>Message: {flow.messageType || '-'}</span>
+                  <span>Port: {flow.port ?? '-'}</span>
+                  <span>EAI: {flow.eaiName || 'Direct'}</span>
+                </div>
+                {flow.description && <p className="diagram-desc">{flow.description}</p>}
+              </div>
+            ))}
+          </div>
         )}
       </main>
 
@@ -342,6 +388,26 @@ export default function FluxPage() {
           display: flex;
           gap: 12px;
           align-items: center;
+          flex-wrap: wrap;
+        }
+        .view-toggle {
+          display: inline-flex;
+          border: 1px solid #d0d7e4;
+          border-radius: 10px;
+          overflow: hidden;
+          background: #fff;
+        }
+        .view-toggle button {
+          border: none;
+          background: transparent;
+          padding: 10px 14px;
+          cursor: pointer;
+          font-weight: 600;
+          color: #1f2937;
+        }
+        .view-toggle button.active {
+          background: #002b6f;
+          color: #fff;
         }
         .filters-grid {
           display: grid;
@@ -387,6 +453,68 @@ export default function FluxPage() {
           overflow: hidden;
           box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
           background: #fff;
+        }
+        .diagram-grid {
+          margin-top: 20px;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 16px;
+        }
+        .diagram-card {
+          background: #fff;
+          border-radius: 16px;
+          padding: 16px;
+          box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .diagram-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 8px;
+        }
+        .diagram-etab {
+          font-weight: 600;
+          color: #1f2937;
+          font-size: 0.9rem;
+        }
+        .diagram-flow {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          gap: 8px;
+        }
+        .node {
+          padding: 10px 12px;
+          border-radius: 12px;
+          background: #f3f6fb;
+          text-align: center;
+          font-weight: 600;
+          color: #1f2937;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .node-label {
+          font-size: 0.9rem;
+        }
+        .arrow {
+          font-size: 1.4rem;
+          color: #002b6f;
+        }
+        .diagram-meta {
+          display: grid;
+          gap: 4px;
+          font-size: 0.82rem;
+          color: #4b5563;
+        }
+        .diagram-desc {
+          margin: 0;
+          font-size: 0.85rem;
+          color: #374151;
         }
         table {
           width: 100%;
