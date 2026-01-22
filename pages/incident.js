@@ -33,6 +33,7 @@ const COMPONENT_TYPES = [
   { value: 'application', label: 'Application' },
   { value: 'serveur', label: 'Serveur' },
   { value: 'flux', label: 'Interface / Flux' },
+  { value: 'hebergeur', label: 'Hébergeur' },
   { value: 'custom', label: 'Autre composant' },
 ];
 
@@ -142,8 +143,9 @@ export default function IncidentSimulationPage() {
     window.localStorage.setItem('incident-scenarios', JSON.stringify(savedScenarios));
   }, [savedScenarios]);
 
-  const { appMeta, serverOptions, flowOptions, links, serversByApp } = useMemo(() => {
+  const { appMeta, serverOptions, flowOptions, links, serversByApp, hebergeurOptions } = useMemo(() => {
     const appIndex = new Map();
+    const hebergeurs = new Set();
     if (landscape?.etablissements) {
       landscape.etablissements.forEach(etab => {
         etab.domaines.forEach(dom => {
@@ -157,6 +159,9 @@ export default function IncidentSimulationPage() {
                   domaine: dom.nom,
                   processus: proc.nom,
                 });
+              }
+              if (app.hebergement) {
+                hebergeurs.add(app.hebergement);
               }
             });
           });
@@ -214,6 +219,7 @@ export default function IncidentSimulationPage() {
       flowOptions: flows,
       links: linksList,
       serversByApp: serversByTri,
+      hebergeurOptions: Array.from(hebergeurs).sort((a, b) => a.localeCompare(b)),
     };
   }, [landscape, infrastructure, flux]);
 
@@ -258,6 +264,15 @@ export default function IncidentSimulationPage() {
         sourceTrigramme: flow?.sourceTrigramme,
         targetTrigramme: flow?.targetTrigramme,
         etablissement: flow?.etablissement || 'Inconnu',
+      };
+    }
+    if (selectionType === 'hebergeur') {
+      item = {
+        id: `${selectionType}-${selectionValue}-${Date.now()}`,
+        type: selectionType,
+        status: selectionStatus,
+        label: `Hébergeur : ${selectionValue}`,
+        hebergement: selectionValue,
       };
     }
     if (selectionType === 'custom') {
@@ -333,6 +348,17 @@ export default function IncidentSimulationPage() {
           label: component.label,
           status: component.status,
         }, 0);
+      }
+      if (component.type === 'hebergeur') {
+        const status = normalizeStatus(component.status);
+        appMeta.forEach((meta, tri) => {
+          if (meta.app.hebergement !== component.hebergement) return;
+          addAppImpact(tri, status, {
+            type: 'Hébergeur',
+            label: component.label,
+            status: component.status,
+          }, 0);
+        });
       }
       if (component.type === 'custom') {
         impactedOther.push(component);
@@ -505,7 +531,8 @@ export default function IncidentSimulationPage() {
                   <option value="">Sélectionner...</option>
                   {(selectionType === 'application' ? appOptions
                     : selectionType === 'serveur' ? serverOptions
-                    : flowOptions).map(option => (
+                    : selectionType === 'flux' ? flowOptions
+                    : hebergeurOptions.map(item => ({ value: item, label: item }))).map(option => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>
