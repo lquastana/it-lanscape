@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -112,6 +112,7 @@ export default function IncidentSimulationPage() {
   const [analysis, setAnalysis] = useState(null);
   const [scenarioName, setScenarioName] = useState('');
   const [savedScenarios, setSavedScenarios] = useState([]);
+  const printDetailsStateRef = useRef(null);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -150,6 +151,32 @@ export default function IncidentSimulationPage() {
     window.localStorage.setItem('incident-scenarios', JSON.stringify(savedScenarios));
   }, [savedScenarios]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const selector = '.impact-details details.impact-report';
+    const handleBeforePrint = () => {
+      const detailsList = Array.from(document.querySelectorAll(selector));
+      printDetailsStateRef.current = detailsList.map(detail => detail.open);
+      detailsList.forEach(detail => {
+        detail.open = true;
+      });
+    };
+    const handleAfterPrint = () => {
+      const detailsList = Array.from(document.querySelectorAll(selector));
+      detailsList.forEach((detail, index) => {
+        const previous = printDetailsStateRef.current?.[index];
+        detail.open = Boolean(previous);
+      });
+    };
+
+    window.addEventListener('beforeprint', handleBeforePrint);
+    window.addEventListener('afterprint', handleAfterPrint);
+    return () => {
+      window.removeEventListener('beforeprint', handleBeforePrint);
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, []);
+
   const { appMeta, serverOptions, flowOptions, links, serversByApp, hebergeurOptions } = useMemo(() => {
     const appIndex = new Map();
     const hebergeurs = new Set();
@@ -162,11 +189,18 @@ export default function IncidentSimulationPage() {
               if (!appIndex.has(app.trigramme)) {
                 appIndex.set(app.trigramme, {
                   app,
-                  etablissement: etab.nom,
-                  domaine: dom.nom,
-                  processus: proc.nom,
+                  entries: [],
+                  multiEtablissement: false,
                 });
               }
+              const entry = appIndex.get(app.trigramme);
+              entry.entries.push({
+                etablissement: etab.nom,
+                domaine: dom.nom,
+                processus: proc.nom,
+                hebergement: app.hebergement,
+              });
+              entry.multiEtablissement = entry.multiEtablissement || Boolean(app.multiEtablissement);
               if (app.hebergement) {
                 hebergeurs.add(app.hebergement);
               }
@@ -241,17 +275,18 @@ export default function IncidentSimulationPage() {
 
     let item = null;
     if (selectionType === 'application') {
-      const meta = appMeta.get(selectionValue);
-      item = {
-        id: `${selectionType}-${selectionValue}-${Date.now()}`,
-        type: selectionType,
-        status: selectionStatus,
-        label: meta ? `${meta.app.nom} (${selectionValue})` : selectionValue,
-        trigramme: selectionValue,
-        etablissement: meta?.etablissement || 'Inconnu',
-        detail: meta ? `${meta.domaine} / ${meta.processus}` : '',
-      };
-    }
+        const meta = appMeta.get(selectionValue);
+        const primaryEntry = meta?.entries?.[0];
+        item = {
+          id: `${selectionType}-${selectionValue}-${Date.now()}`,
+          type: selectionType,
+          status: selectionStatus,
+          label: meta ? `${meta.app.nom} (${selectionValue})` : selectionValue,
+          trigramme: selectionValue,
+          etablissement: meta?.multiEtablissement ? 'Multi-établissements' : primaryEntry?.etablissement || 'Inconnu',
+          detail: primaryEntry ? `${primaryEntry.domaine} / ${primaryEntry.processus}` : '',
+        };
+      }
     if (selectionType === 'serveur') {
       const server = serverOptions.find(opt => opt.value === selectionValue);
       item = {
@@ -408,17 +443,29 @@ export default function IncidentSimulationPage() {
       });
     }
 
-    const impactedAppsList = Array.from(impactedApps.values()).map(item => {
+    const impactedAppsList = Array.from(impactedApps.values()).flatMap(item => {
       const meta = appMeta.get(item.trigramme);
-      return {
+      const entries = meta?.entries?.length
+        ? meta.entries
+        : [{
+            etablissement: 'Inconnu',
+            domaine: 'Non renseigné',
+            processus: 'Non renseigné',
+            hebergement: meta?.app?.hebergement,
+          }];
+      const shared = {
         ...item,
         label: meta ? meta.app.nom : item.trigramme,
-        etablissement: meta?.etablissement || 'Inconnu',
-        domaine: meta?.domaine || 'Non renseigné',
-        processus: meta?.processus || 'Non renseigné',
-        criticite: meta?.app.criticite || 'Standard',
-        hebergement: meta?.app.hebergement || 'Non renseigné',
+        criticite: meta?.app?.criticite || 'Standard',
+        multiEtablissement: Boolean(meta?.multiEtablissement),
       };
+      return entries.map(entry => ({
+        ...shared,
+        etablissement: entry.etablissement,
+        domaine: entry.domaine,
+        processus: entry.processus,
+        hebergement: entry.hebergement || meta?.app?.hebergement || 'Non renseigné',
+      }));
     }).sort(prioritySort);
 
     const impactedProcesses = Array.from(new Set(impactedAppsList.map(app => `${app.etablissement} • ${app.domaine} / ${app.processus}`)));
@@ -462,78 +509,220 @@ export default function IncidentSimulationPage() {
   };
 
   const appOptions = useMemo(() => (
-    Array.from(appMeta.entries()).map(([tri, meta]) => ({
-      value: tri,
-      label: `${meta.app.nom} (${tri}) • ${meta.etablissement}`,
-    })).sort((a, b) => a.label.localeCompare(b.label))
+    Array.from(appMeta.entries()).map(([tri, meta]) => {
+      const etablissementLabel = meta.multiEtablissement
+        ? 'Multi-établissements'
+        : meta.entries?.[0]?.etablissement || 'Établissement non renseigné';
+      return {
+        value: tri,
+        label: `${meta.app.nom} (${tri}) • ${etablissementLabel}`,
+      };
+    }).sort((a, b) => a.label.localeCompare(b.label))
   ), [appMeta]);
 
   const statusBadge = (status) => `status-badge status-${status}`;
-  const propagationDiagram = useMemo(() => {
-    if (!analysis?.propagationEdges?.length) return null;
-    const nodesMap = new Map();
+  const reportByEtablissement = useMemo(() => {
+    if (!analysis) return [];
+    const byEtab = new Map();
+    const ensureEtab = (etab) => {
+      const key = etab || 'Établissement non renseigné';
+      if (!byEtab.has(key)) {
+        byEtab.set(key, {
+          etablissement: key,
+          impactedApps: [],
+          impactedProcesses: new Set(),
+          blockedFlows: [],
+          propagation: [],
+        });
+      }
+      return byEtab.get(key);
+    };
+
+    const etabsByTri = new Map();
     analysis.impactedApps.forEach(app => {
-      nodesMap.set(app.trigramme, {
-        id: app.trigramme,
-        label: app.label,
-        depth: app.depth ?? 0,
-        status: app.status,
+      const list = etabsByTri.get(app.trigramme) || new Set();
+      list.add(app.etablissement || 'Établissement non renseigné');
+      etabsByTri.set(app.trigramme, list);
+      const entry = ensureEtab(app.etablissement);
+      entry.impactedApps.push(app);
+      entry.impactedProcesses.add(`${app.domaine} / ${app.processus}`);
+    });
+
+    analysis.blockedFlows.forEach(flow => {
+      const entry = ensureEtab(flow.etablissement || 'Établissement non renseigné');
+      entry.blockedFlows.push(flow);
+    });
+
+    analysis.propagationEdges.forEach(edge => {
+      const sourceEtabs = etabsByTri.get(edge.source);
+      const targetEtabs = etabsByTri.get(edge.target);
+      if (!sourceEtabs || !targetEtabs) return;
+      sourceEtabs.forEach(etab => {
+        if (!targetEtabs.has(etab)) return;
+        const entry = ensureEtab(etab);
+        entry.propagation.push({
+          ...edge,
+          etablissement: etab,
+        });
       });
     });
-    analysis.propagationEdges.forEach(edge => {
-      if (!nodesMap.has(edge.source)) {
-        nodesMap.set(edge.source, {
-          id: edge.source,
+
+    return Array.from(byEtab.values())
+      .map(entry => ({
+        ...entry,
+        impactedApps: entry.impactedApps.sort(prioritySort),
+        impactedProcesses: Array.from(entry.impactedProcesses).sort((a, b) => a.localeCompare(b)),
+      }))
+      .sort((a, b) => a.etablissement.localeCompare(b.etablissement));
+  }, [analysis]);
+
+  const propagationDiagrams = useMemo(() => {
+    const diagrams = new Map();
+    reportByEtablissement.forEach(report => {
+      if (!report.propagation.length || !report.impactedApps.length) {
+        diagrams.set(report.etablissement, null);
+        return;
+      }
+      const nodesMap = new Map();
+      report.impactedApps.forEach(app => {
+        const nodeId = `${app.trigramme}-${report.etablissement}`;
+        nodesMap.set(nodeId, {
+          id: nodeId,
+          trigramme: app.trigramme,
+          label: app.label,
+          process: app.processus || 'Processus non renseigné',
+          depth: app.depth ?? 0,
+          status: app.status,
+        });
+      });
+
+      const ensureNode = ({ trigramme, label, process, depth, status }) => {
+        const nodeId = `${trigramme}-${report.etablissement}`;
+        if (nodesMap.has(nodeId)) return nodeId;
+        nodesMap.set(nodeId, {
+          id: nodeId,
+          trigramme,
+          label,
+          process: process || 'Processus non renseigné',
+          depth,
+          status,
+        });
+        return nodeId;
+      };
+
+      const nodes = Array.from(nodesMap.values());
+      const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
+      const nodeSize = { width: 210, height: 64 };
+      const nodeGap = 12;
+      const processGap = 20;
+      const processPadding = 16;
+      const establishmentPadding = 18;
+      const processLabelHeight = 16;
+      const establishmentLabelHeight = 18;
+      const establishmentWidth = nodeSize.width + processPadding * 2 + establishmentPadding * 2;
+      const columnWidth = establishmentWidth + 120;
+      const layout = [];
+      const processBlocks = [];
+      const establishmentBlocks = [];
+
+      for (let depth = 0; depth <= maxDepth; depth += 1) {
+        const column = nodes
+          .filter(node => node.depth === depth)
+          .sort((a, b) => {
+            const procCompare = a.process.localeCompare(b.process);
+            if (procCompare !== 0) return procCompare;
+            return a.label.localeCompare(b.label);
+          });
+        if (!column.length) continue;
+        const startY = 80;
+        const columnX = depth * columnWidth;
+        let currentY = startY;
+        const processes = Array.from(new Set(column.map(node => node.process)));
+        const establishmentStartY = currentY;
+        currentY += establishmentLabelHeight + establishmentPadding;
+        processes.forEach(process => {
+          const processNodes = column.filter(node => node.process === process);
+          const processStartY = currentY;
+          currentY += processLabelHeight + processPadding;
+          processNodes.forEach((node) => {
+            layout.push({
+              ...node,
+              x: columnX + establishmentPadding + processPadding,
+              y: currentY,
+            });
+            currentY += nodeSize.height + nodeGap;
+          });
+          if (processNodes.length) {
+            currentY -= nodeGap;
+          }
+          currentY += processPadding;
+          processBlocks.push({
+            id: `${report.etablissement}-${depth}-${process}`,
+            label: process,
+            x: columnX + establishmentPadding,
+            y: processStartY,
+            width: nodeSize.width + processPadding * 2,
+            height: currentY - processStartY,
+          });
+          currentY += processGap;
+        });
+        if (processes.length) {
+          currentY -= processGap;
+        }
+        currentY += establishmentPadding;
+        establishmentBlocks.push({
+          id: `${report.etablissement}-${depth}`,
+          label: report.etablissement,
+          x: columnX,
+          y: establishmentStartY,
+          width: establishmentWidth,
+          height: currentY - establishmentStartY,
+        });
+      }
+
+      const width = (maxDepth + 1) * columnWidth + nodeSize.width;
+      const height = Math.max(
+        ...layout.map(node => node.y + nodeSize.height),
+        ...processBlocks.map(block => block.y + block.height),
+        ...establishmentBlocks.map(block => block.y + block.height),
+        320,
+      );
+
+      const expandedLinks = [];
+      report.propagation.forEach(edge => {
+        const sourceId = ensureNode({
+          trigramme: edge.source,
           label: edge.sourceLabel,
+          process: 'Processus non renseigné',
           depth: 0,
           status: edge.status,
         });
-      }
-      if (!nodesMap.has(edge.target)) {
-        nodesMap.set(edge.target, {
-          id: edge.target,
+        const targetId = ensureNode({
+          trigramme: edge.target,
           label: edge.targetLabel,
+          process: 'Processus non renseigné',
           depth: 1,
           status: edge.status,
         });
-      }
-    });
-
-    const nodes = Array.from(nodesMap.values());
-    const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
-    const columnWidth = 260;
-    const rowGap = 110;
-    const nodeSize = { width: 210, height: 64 };
-    const layout = [];
-
-    for (let depth = 0; depth <= maxDepth; depth += 1) {
-      const column = nodes
-        .filter(node => node.depth === depth)
-        .sort((a, b) => a.label.localeCompare(b.label));
-      const startY = 80;
-      column.forEach((node, rowIdx) => {
-        layout.push({
-          ...node,
-          x: depth * columnWidth,
-          y: startY + rowIdx * rowGap,
+        expandedLinks.push({
+          ...edge,
+          sourceId,
+          targetId,
         });
       });
-    }
 
-    const width = (maxDepth + 1) * columnWidth + nodeSize.width;
-    const height = Math.max(
-      ...layout.map(node => node.y + nodeSize.height),
-      320,
-    );
-
-    return {
-      nodes: layout,
-      links: analysis.propagationEdges,
-      width,
-      height,
-      nodeSize,
-    };
-  }, [analysis]);
+      diagrams.set(report.etablissement, {
+        nodes: layout,
+        processBlocks,
+        establishmentBlocks,
+        links: expandedLinks,
+        width,
+        height,
+        nodeSize,
+      });
+    });
+    return diagrams;
+  }, [reportByEtablissement]);
 
   return (
     <>
@@ -637,6 +826,7 @@ export default function IncidentSimulationPage() {
                     <div>
                       <strong>{item.label}</strong>
                       <span className="muted"> • {item.type}</span>
+                      {item.etablissement && <span className="muted"> • {item.etablissement}</span>}
                       {item.detail && <span className="muted"> • {item.detail}</span>}
                     </div>
                     <span className={statusBadge(item.status)}>{formatStatus(item.status)}</span>
@@ -692,197 +882,273 @@ export default function IncidentSimulationPage() {
             <p className="muted">Lancez une analyse pour afficher les impacts.</p>
           ) : (
             <>
-              <div className="impact-summary">
-                <div>
-                  <h3>Services &amp; processus touchés</h3>
-                  {analysis.impactedProcesses.length === 0 ? (
-                    <p className="muted">Aucun processus identifié.</p>
-                  ) : (
-                    <ul className="impact-list">
-                      {analysis.impactedProcesses.map(item => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div>
-                  <h3>Flux bloqués / dégradés</h3>
-                  {analysis.blockedFlows.length === 0 ? (
-                    <p className="muted">Aucun flux impacté.</p>
-                  ) : (
-                    <ul className="impact-list">
-                      {analysis.blockedFlows.map(flow => (
-                        <li key={`${flow.id}-${flow.source}-${flow.target}`}>
-                          {flow.sourceLabel} → {flow.targetLabel} ({flow.interfaceType || 'Flux'})
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
-
-              <div className="impact-graph">
-                <h3>Propagation</h3>
-                {analysis.propagationEdges.length === 0 ? (
-                  <p className="muted">Aucune propagation détectée.</p>
-                ) : (
-                  <>
-                    <p className="muted">Survolez une flèche pour connaître la cause de la propagation.</p>
-                    {propagationDiagram && (
-                      <div className="propagation-diagram">
-                        <div className="propagation-canvas">
-                          <svg width={propagationDiagram.width} height={propagationDiagram.height}>
-                            <defs>
-                              {Object.entries(STATUS_COLORS).map(([key, color]) => (
-                                <marker key={key} id={`prop-arrow-${key}`} markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-                                  <path d="M0,0 L0,6 L9,3 z" fill={color} />
-                                </marker>
-                              ))}
-                            </defs>
-                            {propagationDiagram.links.map(edge => {
-                              const sourceNode = propagationDiagram.nodes.find(node => node.id === edge.source);
-                              const targetNode = propagationDiagram.nodes.find(node => node.id === edge.target);
-                              if (!sourceNode || !targetNode) return null;
-                              const startX = sourceNode.x + propagationDiagram.nodeSize.width;
-                              const startY = sourceNode.y + propagationDiagram.nodeSize.height / 2;
-                              const endX = targetNode.x;
-                              const endY = targetNode.y + propagationDiagram.nodeSize.height / 2;
-                              const midX = (startX + endX) / 2;
-                              const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
-                              const stroke = STATUS_COLORS[edge.status] || '#64748b';
-                              const title = [
-                                `Propagation depuis ${edge.sourceLabel}`,
-                                `Impact source: ${formatStatus(edge.status)}`,
-                                `Cible: ${edge.targetLabel}`,
-                                `Type: ${edge.interfaceType || 'Dépendance'}`,
-                              ].join('\n');
-                              return (
-                                <g key={`${edge.source}-${edge.target}`}>
-                                  <path
-                                    d={pathD}
-                                    fill="none"
-                                    stroke="transparent"
-                                    strokeWidth="16"
-                                    style={{ pointerEvents: 'stroke' }}
-                                  >
-                                    <title>{title}</title>
-                                  </path>
-                                  <path
-                                    d={pathD}
-                                    fill="none"
-                                    stroke={stroke}
-                                    strokeWidth="2"
-                                    markerEnd={`url(#prop-arrow-${edge.status})`}
-                                    style={{ pointerEvents: 'none' }}
-                                  />
-                                </g>
-                              );
-                            })}
-                            {propagationDiagram.nodes.map(node => (
-                              <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
-                                <rect
-                                  width={propagationDiagram.nodeSize.width}
-                                  height={propagationDiagram.nodeSize.height}
-                                  rx="14"
-                                  fill="#f8fafc"
-                                  stroke={STATUS_COLORS[node.status] || '#dbe3f0'}
-                                  strokeWidth="2"
-                                />
-                                <text
-                                  x={propagationDiagram.nodeSize.width / 2}
-                                  y={propagationDiagram.nodeSize.height / 2 + 4}
-                                  textAnchor="middle"
-                                  fontSize="12"
-                                  fill="#1f2937"
-                                >
-                                  {node.label}
-                                </text>
-                              </g>
-                            ))}
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                    <div className="graph-list">
-                      {analysis.propagationEdges.map(edge => (
-                        <div key={`${edge.source}-${edge.target}`} className="graph-edge">
-                          <span className={`graph-node status-${edge.status}`}>{edge.sourceLabel}</span>
-                          <span className="graph-arrow">→</span>
-                          <span className={`graph-node status-${edge.status}`}>{edge.targetLabel}</span>
-                          <span className="muted">{edge.interfaceType || 'Dépendance'}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-
               <div className="impact-details">
-                <h3>Impacts priorisés</h3>
-                <div className="impact-cards">
-                  {analysis.impactedApps.map(app => (
-                    <details key={app.trigramme} className="impact-card">
-                      <summary>
-                        <div>
-                          <strong>{app.label}</strong>
-                          <span className="muted"> • {app.etablissement}</span>
-                        </div>
-                        <div>
-                          <span className={`status-pill status-${app.status}`}>{formatStatus(app.status)}</span>
-                          <span className="crit-pill">{app.criticite}</span>
-                        </div>
-                      </summary>
-                      <div className="impact-body">
-                        <p>{describeStatus(app.status)}</p>
-                        <div className="impact-meta">
+                <h3>Rapport par établissement</h3>
+                {reportByEtablissement.length === 0 ? (
+                  <p className="muted">Aucun impact identifié.</p>
+                ) : (
+                  <div className="impact-cards">
+                    {reportByEtablissement.map((report, index) => {
+                      const diagram = propagationDiagrams.get(report.etablissement);
+                      return (
+                      <details
+                        key={report.etablissement}
+                        className={`impact-card impact-report${index > 0 ? ' print-page-break' : ''}`}
+                      >
+                        <summary>
                           <div>
-                            <span className="label">Domaine / Processus</span>
-                            <p>{app.domaine} • {app.processus}</p>
+                            <strong>{report.etablissement}</strong>
+                            <span className="muted">
+                              {' '}
+                              • {report.impactedApps.length} application(s)
+                              • {report.blockedFlows.length} flux
+                              • {report.impactedProcesses.length} processus
+                            </span>
+                          </div>
+                        </summary>
+                        <div className="impact-body">
+                          <div>
+                            <h4>Propagation</h4>
+                            {report.propagation.length === 0 ? (
+                              <p className="muted">Aucune propagation détectée.</p>
+                            ) : (
+                              <>
+                                {diagram && (
+                                  <div className="propagation-diagram">
+                                    <div className="propagation-canvas">
+                                      <svg
+                                        width={diagram.width}
+                                        height={diagram.height}
+                                      >
+                                        <defs>
+                                          {Object.entries(STATUS_COLORS).map(([key, color]) => (
+                                            <marker
+                                              key={key}
+                                              id={`prop-arrow-${report.etablissement}-${key}`}
+                                              markerWidth="10"
+                                              markerHeight="10"
+                                              refX="8"
+                                              refY="3"
+                                              orient="auto"
+                                            >
+                                              <path d="M0,0 L0,6 L9,3 z" fill={color} />
+                                            </marker>
+                                          ))}
+                                        </defs>
+                                        {diagram.establishmentBlocks.map(block => (
+                                          <g key={block.id}>
+                                            <rect
+                                              x={block.x}
+                                              y={block.y}
+                                              width={block.width}
+                                              height={block.height}
+                                              rx="18"
+                                              fill="#eef2ff"
+                                              stroke="#c7d2fe"
+                                              strokeWidth="1.5"
+                                            />
+                                            <text
+                                              x={block.x + 16}
+                                              y={block.y + 22}
+                                              fontSize="12"
+                                              fontWeight="600"
+                                              fill="#1e293b"
+                                            >
+                                              {block.label}
+                                            </text>
+                                          </g>
+                                        ))}
+                                        {diagram.processBlocks.map(block => (
+                                          <g key={block.id}>
+                                            <rect
+                                              x={block.x}
+                                              y={block.y}
+                                              width={block.width}
+                                              height={block.height}
+                                              rx="14"
+                                              fill="#ffffff"
+                                              stroke="#e2e8f0"
+                                              strokeWidth="1"
+                                            />
+                                            <text
+                                              x={block.x + 14}
+                                              y={block.y + 18}
+                                              fontSize="11"
+                                              fontWeight="500"
+                                              fill="#475569"
+                                            >
+                                              {block.label}
+                                            </text>
+                                          </g>
+                                        ))}
+                                        {diagram.links.map(edge => {
+                                          const sourceNode = diagram.nodes.find(node => node.id === edge.sourceId);
+                                          const targetNode = diagram.nodes.find(node => node.id === edge.targetId);
+                                          if (!sourceNode || !targetNode) return null;
+                                          const startX = sourceNode.x + diagram.nodeSize.width;
+                                          const startY = sourceNode.y + diagram.nodeSize.height / 2;
+                                          const endX = targetNode.x;
+                                          const endY = targetNode.y + diagram.nodeSize.height / 2;
+                                          const midX = (startX + endX) / 2;
+                                          const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
+                                          const stroke = STATUS_COLORS[edge.status] || '#64748b';
+                                          const title = [
+                                            `Propagation depuis ${edge.sourceLabel}`,
+                                            `Impact source: ${formatStatus(edge.status)}`,
+                                            `Cible: ${edge.targetLabel}`,
+                                            `Type: ${edge.interfaceType || 'Dépendance'}`,
+                                          ].join('\n');
+                                          return (
+                                            <g key={`${edge.sourceId}-${edge.targetId}`}>
+                                              <path
+                                                d={pathD}
+                                                fill="none"
+                                                stroke="transparent"
+                                                strokeWidth="16"
+                                                style={{ pointerEvents: 'stroke' }}
+                                              >
+                                                <title>{title}</title>
+                                              </path>
+                                              <path
+                                                d={pathD}
+                                                fill="none"
+                                                stroke={stroke}
+                                                strokeWidth="2"
+                                                markerEnd={`url(#prop-arrow-${report.etablissement}-${edge.status})`}
+                                                style={{ pointerEvents: 'none' }}
+                                              />
+                                            </g>
+                                          );
+                                        })}
+                                        {diagram.nodes.map(node => (
+                                          <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
+                                            <rect
+                                              width={diagram.nodeSize.width}
+                                              height={diagram.nodeSize.height}
+                                              rx="14"
+                                              fill="#f8fafc"
+                                              stroke={STATUS_COLORS[node.status] || '#dbe3f0'}
+                                              strokeWidth="2"
+                                            />
+                                            <text
+                                              x={diagram.nodeSize.width / 2}
+                                              y={diagram.nodeSize.height / 2 + 4}
+                                              textAnchor="middle"
+                                              fontSize="12"
+                                              fill="#1f2937"
+                                            >
+                                              {node.label}
+                                            </text>
+                                          </g>
+                                        ))}
+                                      </svg>
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            )}
                           </div>
                           <div>
-                            <span className="label">Périmètre</span>
-                            <p>{app.etablissement}</p>
+                            <h4>Impacts priorisés</h4>
+                            {report.impactedApps.length === 0 ? (
+                              <p className="muted">Aucune application impactée.</p>
+                            ) : (
+                              report.impactedApps.map(app => (
+                                <details key={`${app.trigramme}-${app.etablissement}`} className="impact-card">
+                                  <summary>
+                                    <div>
+                                      <strong>{app.label}</strong>
+                                      <span className="muted"> • {app.domaine} / {app.processus}</span>
+                                    </div>
+                                    <div>
+                                      <span className={`status-pill status-${app.status}`}>{formatStatus(app.status)}</span>
+                                      <span className="crit-pill">{app.criticite}</span>
+                                    </div>
+                                  </summary>
+                                  <div className="impact-body">
+                                    <p>{describeStatus(app.status)}</p>
+                                    <div className="impact-meta">
+                                      <div>
+                                        <span className="label">Périmètre</span>
+                                        <p>{app.etablissement}</p>
+                                      </div>
+                                      <div>
+                                        <span className="label">Hébergeur</span>
+                                        <p>{app.hebergement}</p>
+                                      </div>
+                                      <div>
+                                        <span className="label">Type de rupture</span>
+                                        <p>{Array.from(new Set(app.causes.map(cause => cause.type))).join(', ') || 'Applicatif'}</p>
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <span className="label">Dépendances en cause</span>
+                                      <ul>
+                                        {app.causes.map((cause, index) => (
+                                          <li key={`${app.trigramme}-${index}`}>
+                                            {cause.label} ({formatStatus(cause.status)})
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <span className="label">Actions recommandées</span>
+                                      <ul>
+                                        {actionsByStatus(app.status).map(action => (
+                                          <li key={action}>{action}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </details>
+                              ))
+                            )}
                           </div>
                           <div>
-                            <span className="label">Hébergeur</span>
-                            <p>{app.hebergement}</p>
+                            <h4>Services &amp; processus touchés</h4>
+                            {report.impactedProcesses.length === 0 ? (
+                              <p className="muted">Aucun processus identifié.</p>
+                            ) : (
+                              <ul className="impact-list">
+                                {report.impactedProcesses.map(item => (
+                                  <li key={item}>{item}</li>
+                                ))}
+                              </ul>
+                            )}
                           </div>
                           <div>
-                            <span className="label">Type de rupture</span>
-                            <p>{Array.from(new Set(app.causes.map(cause => cause.type))).join(', ') || 'Applicatif'}</p>
+                            <h4>Flux bloqués / dégradés</h4>
+                            {report.blockedFlows.length === 0 ? (
+                              <p className="muted">Aucun flux impacté.</p>
+                            ) : (
+                              <ul className="impact-list">
+                                {report.blockedFlows.map(flow => (
+                                  <li key={`${flow.id}-${flow.source}-${flow.target}`}>
+                                    {flow.sourceLabel} → {flow.targetLabel} ({flow.interfaceType || 'Flux'})
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </div>
                         </div>
-                        <div>
-                          <span className="label">Dépendances en cause</span>
-                          <ul>
-                            {app.causes.map((cause, index) => (
-                              <li key={`${app.trigramme}-${index}`}>
-                                {cause.label} ({formatStatus(cause.status)})
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <span className="label">Actions recommandées</span>
-                          <ul>
-                            {actionsByStatus(app.status).map(action => (
-                              <li key={action}>{action}</li>
-                            ))}
-                          </ul>
+                      </details>
+                    );
+                  })}
+                  </div>
+                )}
+                {analysis.impactedOther.length > 0 && (
+                  <div className="impact-cards">
+                    {analysis.impactedOther.map(item => (
+                      <div key={item.id} className="impact-card static-card">
+                        <div className="impact-body">
+                          <strong>{item.label}</strong>
+                          <span className={`status-pill status-${item.status}`}>{formatStatus(item.status)}</span>
+                          <p className="muted">Composant externe à cartographier.</p>
                         </div>
                       </div>
-                    </details>
-                  ))}
-                  {analysis.impactedOther.map(item => (
-                    <div key={item.id} className="impact-card static-card">
-                      <div className="impact-body">
-                        <strong>{item.label}</strong>
-                        <span className={`status-pill status-${item.status}`}>{formatStatus(item.status)}</span>
-                        <p className="muted">Composant externe à cartographier.</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </>
           )}
