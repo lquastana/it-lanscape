@@ -415,6 +415,68 @@ small { font-size: 12px; line-height: 16px; }
   gap: 6px;
 }
 
+.dependency-block {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.dependency-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.dependency-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.spof-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #7c2d12;
+  background: #ffedd5;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.dependency-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dependency-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.dependency-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+  color: #0f172a;
+}
+
+.dependency-list li {
+  margin-bottom: 2px;
+}
+
+.dependency-empty {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
 .crit-dot {
   position: absolute;
   top: 4px;
