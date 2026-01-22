@@ -9,6 +9,7 @@ const normalize = (value = '') => value.toString().trim().toLowerCase();
 
 export default function FluxPage() {
   const [data, setData] = useState([]);
+  const [trigrammes, setTrigrammes] = useState({});
   const [status, setStatus] = useState('');
   const [search, setSearch] = useState('');
   const [source, setSource] = useState('');
@@ -31,6 +32,13 @@ export default function FluxPage() {
         setStatus('');
       })
       .catch(() => setStatus('Impossible de charger les flux'));
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/file/trigrammes')
+      .then(r => (r.ok ? r.json() : {}))
+      .then(setTrigrammes)
+      .catch(() => setTrigrammes({}));
   }, []);
 
   const flattened = useMemo(() => (
@@ -72,11 +80,45 @@ export default function FluxPage() {
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [flattened]);
 
+  const sourceOptions = useMemo(() => {
+    const items = sources.map(tri => ({
+      tri,
+      label: trigrammes[tri],
+    }));
+    return items.sort((a, b) => a.tri.localeCompare(b.tri));
+  }, [sources, trigrammes]);
+
+  const targetOptions = useMemo(() => {
+    const items = targets.map(tri => ({
+      tri,
+      label: trigrammes[tri],
+    }));
+    return items.sort((a, b) => a.tri.localeCompare(b.tri));
+  }, [targets, trigrammes]);
+
+  const resolveTrigram = (value) => {
+    if (!value) return '';
+    const trimmed = value.trim();
+    const exact = sources.find(tri => tri === trimmed) || targets.find(tri => tri === trimmed);
+    if (exact) return exact;
+    const match = Object.entries(trigrammes).find(([, label]) => label?.toLowerCase() === trimmed.toLowerCase());
+    if (match) return match[0];
+    const composite = trimmed.split(' - ')[0]?.trim();
+    return composite || trimmed;
+  };
+
+  const formatLabel = (tri) => {
+    const label = trigrammes[tri];
+    return label ? `${label} (${tri})` : tri;
+  };
+
   const filtered = useMemo(() => {
     const term = normalize(search);
+    const sourceTri = resolveTrigram(source);
+    const targetTri = resolveTrigram(target);
     return flattened.filter(flow => {
-      if (source && flow.sourceTrigramme !== source) return false;
-      if (target && flow.targetTrigramme !== target) return false;
+      if (sourceTri && flow.sourceTrigramme !== sourceTri) return false;
+      if (targetTri && flow.targetTrigramme !== targetTri) return false;
       if (interfaceType && flow.interfaceType !== interfaceType) return false;
       if (protocol && flow.protocol !== protocol) return false;
       if (eaiName && flow.eaiName !== eaiName) return false;
@@ -92,7 +134,7 @@ export default function FluxPage() {
       ].map(normalize).join(' ');
       return haystack.includes(term);
     });
-  }, [flattened, source, target, interfaceType, protocol, eaiName, search]);
+  }, [flattened, source, target, interfaceType, protocol, eaiName, search, trigrammes]);
 
   return (
     <>
@@ -137,21 +179,31 @@ export default function FluxPage() {
           </label>
           <label>
             Source
-            <select value={source} onChange={e => setSource(e.target.value)}>
-              <option value="">Toutes</option>
-              {sources.map(item => (
-                <option key={item} value={item}>{item}</option>
+            <input
+              list="sources-list"
+              placeholder="Rechercher une source..."
+              value={source}
+              onChange={e => setSource(e.target.value)}
+            />
+            <datalist id="sources-list">
+              {sourceOptions.map(item => (
+                <option key={item.tri} value={item.label ? `${item.tri} - ${item.label}` : item.tri} />
               ))}
-            </select>
+            </datalist>
           </label>
           <label>
             Cible
-            <select value={target} onChange={e => setTarget(e.target.value)}>
-              <option value="">Toutes</option>
-              {targets.map(item => (
-                <option key={item} value={item}>{item}</option>
+            <input
+              list="targets-list"
+              placeholder="Rechercher une cible..."
+              value={target}
+              onChange={e => setTarget(e.target.value)}
+            />
+            <datalist id="targets-list">
+              {targetOptions.map(item => (
+                <option key={item.tri} value={item.label ? `${item.tri} - ${item.label}` : item.tri} />
               ))}
-            </select>
+            </datalist>
           </label>
           <label>
             Type d'interface
@@ -207,8 +259,8 @@ export default function FluxPage() {
                 {filtered.map(flow => (
                   <tr key={flow.id}>
                     <td>{flow.etablissement}</td>
-                    <td>{flow.sourceTrigramme}</td>
-                    <td>{flow.targetTrigramme}</td>
+                    <td>{formatLabel(flow.sourceTrigramme)}</td>
+                    <td>{formatLabel(flow.targetTrigramme)}</td>
                     <td><span className="pill">{flow.interfaceType}</span></td>
                     <td>{flow.protocol}</td>
                     <td>{flow.port ?? '-'}</td>
