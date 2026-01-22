@@ -59,4 +59,9 @@ Variables d’environnement utiles :
 - `DISABLE_AUTH=true` : désactive l’authentification (développement uniquement).
 - `ACCESS_CONTROL_ENABLED=false` : contourne le filtrage IP/Basic Auth défini dans `access-rules.json`.
 
+Identifiants de test (données fictives) :
+- `valdellys` / `password`
+- `dunes` / `password`
+- `saintroch` / `password`
+
 Les règles d’accès et les données sont chargées depuis le dossier `data`; adaptez-les avant un déploiement.

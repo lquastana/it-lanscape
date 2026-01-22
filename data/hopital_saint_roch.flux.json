@@ -1,0 +1,280 @@
+{
+  "etablissement": "Hôpital Saint-Roch",
+  "flux": [
+    {
+      "id": "HSR-FLX-001",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Admissions et mouvements vers le DPI"
+    },
+    {
+      "id": "HSR-FLX-002",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "IFC",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Données de séjour pour préparation de facturation"
+    },
+    {
+      "id": "HSR-FLX-003",
+      "sourceTrigramme": "CRS",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ORM",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Demandes d'examens d'imagerie"
+    },
+    {
+      "id": "HSR-FLX-004",
+      "sourceTrigramme": "CRS",
+      "targetTrigramme": "SEC",
+      "protocol": "DICOM",
+      "port": 104,
+      "messageType": "DICOM",
+      "interfaceType": "Medicale",
+      "eaiName": "Direct",
+      "description": "Transfert des images vers le PACS"
+    },
+    {
+      "id": "HSR-FLX-005",
+      "sourceTrigramme": "SIL",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "RDE",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Ordonnances et délivrances médicaments"
+    },
+    {
+      "id": "HSR-FLX-006",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "MAI",
+      "protocol": "SMTP/TLS",
+      "port": 587,
+      "messageType": "MSS",
+      "interfaceType": "Administrative",
+      "eaiName": "Passerelle MSS",
+      "description": "Envoi de messages sécurisés vers Mailiz"
+    },
+    {
+      "id": "HSR-FLX-007",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Identités et mouvements pour facturation"
+    },
+    {
+      "id": "HSR-FLX-008",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Synchronisation planning et lits vers ORBIS Planning"
+    },
+    {
+      "id": "HSR-FLX-009",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "PYX",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "RDE",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Données de dispensation vers les armoires"
+    },
+    {
+      "id": "HSR-FLX-010",
+      "sourceTrigramme": "DOC",
+      "targetTrigramme": "ORB",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Téléconsultation",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Données cliniques pour téléconsultation"
+    },
+    {
+      "id": "HSR-FLX-011",
+      "sourceTrigramme": "HAD",
+      "targetTrigramme": "ORB",
+      "protocol": "FHIR",
+      "port": 443,
+      "messageType": "CarePlan",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Transmission des plans de soins vers l'HAD"
+    },
+    {
+      "id": "HSR-FLX-012",
+      "sourceTrigramme": "HAD",
+      "targetTrigramme": "ORB",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Visites",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Tournées et actes vers l'application mobile"
+    },
+    {
+      "id": "HSR-FLX-013",
+      "sourceTrigramme": "URG",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Flux patient vers le dossier urgences"
+    },
+    {
+      "id": "HSR-FLX-014",
+      "sourceTrigramme": "MAI",
+      "targetTrigramme": "ORB",
+      "protocol": "SMTP/TLS",
+      "port": 587,
+      "messageType": "MSS",
+      "interfaceType": "Medicale",
+      "eaiName": "Passerelle MSS",
+      "description": "Envoi de comptes rendus médicaux"
+    },
+    {
+      "id": "HSR-FLX-015",
+      "sourceTrigramme": "IFC",
+      "targetTrigramme": "GAP",
+      "protocol": "SFTP",
+      "port": 22,
+      "messageType": "Factures",
+      "interfaceType": "Facturation",
+      "eaiName": "ETL",
+      "description": "Transfert des factures vers la comptabilité"
+    },
+    {
+      "id": "HSR-FLX-016",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "MYR",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Analytics",
+      "interfaceType": "Administrative",
+      "eaiName": "API",
+      "description": "Alimentation du reporting financier"
+    },
+    {
+      "id": "HSR-FLX-017",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "TAB",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "KPI",
+      "interfaceType": "Administrative",
+      "eaiName": "API",
+      "description": "Indicateurs d'activité pour BI"
+    },
+    {
+      "id": "HSR-FLX-018",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "ENO",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ORM",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Orchestration des messages applicatifs"
+    },
+    {
+      "id": "HSR-FLX-019",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "CEN",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Monitoring",
+      "interfaceType": "Autre",
+      "eaiName": "API",
+      "description": "Supervision des services DPI"
+    },
+    {
+      "id": "HSR-FLX-020",
+      "sourceTrigramme": "CAR",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification CAR vers ORBIS Planning"
+    },
+    {
+      "id": "HSR-FLX-021",
+      "sourceTrigramme": "ONC",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification ONC vers ORBIS Planning"
+    },
+    {
+      "id": "HSR-FLX-022",
+      "sourceTrigramme": "BLO",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification BLO vers ORBIS Planning"
+    },
+    {
+      "id": "HSR-FLX-023",
+      "sourceTrigramme": "CAR",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité CAR vers Maincare iGAP"
+    },
+    {
+      "id": "HSR-FLX-024",
+      "sourceTrigramme": "ONC",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité ONC vers Maincare iGAP"
+    },
+    {
+      "id": "HSR-FLX-025",
+      "sourceTrigramme": "BLO",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité BLO vers Maincare iGAP"
+    }
+  ]
+}

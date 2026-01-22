@@ -1,0 +1,63 @@
+{
+  "etablissement": "Hôpital Saint-Roch",
+  "vlans": [
+    {
+      "id": 110,
+      "nom": "VLAN-ADMIN",
+      "description": "Applications administratives et support",
+      "network": "10.30.10.0/24",
+      "interco": "INTERCO-ADMIN",
+      "gateway": "10.30.10.254",
+      "serveurs": [
+        { "ip": "10.30.10.10", "nom": "hsr-gap-01" },
+        { "ip": "10.30.10.11", "nom": "hsr-ifact-01" },
+        { "ip": "10.30.10.12", "nom": "hsr-sage-01" },
+        { "ip": "10.30.10.13", "nom": "hsr-sfr-01" },
+        { "ip": "10.30.10.14", "nom": "hsr-carl-01" },
+        { "ip": "10.30.10.15", "nom": "hsr-sax-01" }
+      ]
+    },
+    {
+      "id": 120,
+      "nom": "VLAN-SOINS",
+      "description": "DPI, urgences et pharmacie",
+      "network": "10.30.20.0/24",
+      "interco": "INTERCO-SOIN",
+      "gateway": "10.30.20.254",
+      "serveurs": [
+        { "ip": "10.30.20.10", "nom": "hsr-orbis-app-01" },
+        { "ip": "10.30.20.11", "nom": "hsr-orbis-db-01" },
+        { "ip": "10.30.20.12", "nom": "hsr-orbis-plan-01" },
+        { "ip": "10.30.20.13", "nom": "hsr-pyxis-01" },
+        { "ip": "10.30.20.14", "nom": "hsr-sillage-01" },
+        { "ip": "10.30.20.15", "nom": "hsr-urg-01" }
+      ]
+    },
+    {
+      "id": 130,
+      "nom": "VLAN-IMAGERIE",
+      "description": "Plateau d'imagerie et PACS",
+      "network": "10.30.30.0/24",
+      "interco": "INTERCO-IMAG",
+      "gateway": "10.30.30.254",
+      "serveurs": [
+        { "ip": "10.30.30.10", "nom": "hsr-ris-01" },
+        { "ip": "10.30.30.11", "nom": "hsr-pacs-01" }
+      ]
+    },
+    {
+      "id": 140,
+      "nom": "VLAN-TECH",
+      "description": "Supervision, EAI et téléphonie",
+      "network": "10.30.40.0/24",
+      "interco": "INTERCO-TECH",
+      "gateway": "10.30.40.254",
+      "serveurs": [
+        { "ip": "10.30.40.10", "nom": "hsr-eai-01" },
+        { "ip": "10.30.40.11", "nom": "hsr-centreon-01" },
+        { "ip": "10.30.40.12", "nom": "hsr-glpi-01" },
+        { "ip": "10.30.40.13", "nom": "hsr-ucm-01" }
+      ]
+    }
+  ]
+}

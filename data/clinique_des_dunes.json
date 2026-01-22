@@ -1,0 +1,849 @@
+{
+  "etablissements": [
+    {
+      "nom": "Clinique des Dunes",
+      "domaines": [
+        {
+          "nom": "DP Administrative",
+          "description": "Gestion administrative du parcours patient.",
+          "processus": [
+            {
+              "nom": "GAP",
+              "description": "Gestion Administrative du Patient.",
+              "applications": [
+                {
+                  "nom": "Maincare iGAP",
+                  "description": "Gestion des admissions, identités et mouvements.",
+                  "editeur": "Maincare",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "GAP"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Commun",
+          "description": "Applications transversales DPI, pharmacie.",
+          "processus": [
+            {
+              "nom": "DPI",
+              "description": "Dossier patient informatisé et prescriptions.",
+              "applications": [
+                {
+                  "nom": "ORBIS DPI",
+                  "description": "Dossier patient informatisé et prescription connectée.",
+                  "editeur": "Dedalus",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  },
+                  "trigramme": "ORB"
+                },
+                {
+                  "nom": "ORBIS Planning",
+                  "description": "Planification des ressources médicales et des lits.",
+                  "editeur": "Dedalus",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "ORP"
+                }
+              ]
+            },
+            {
+              "nom": "Pharmacie",
+              "description": "Dispensation & traçabilité.",
+              "applications": [
+                {
+                  "nom": "BD Pyxis MedStation",
+                  "description": "Armoires sécurisées de dispensation.",
+                  "editeur": "Becton Dickinson",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "PYX"
+                },
+                {
+                  "nom": "Sillage Médicament",
+                  "description": "Gestion des stocks et du circuit du médicament.",
+                  "editeur": "MIPIH",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  },
+                  "trigramme": "SIL"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "DP Spécialités",
+          "description": "Dossiers et outils spécifiques aux spécialités médicales.",
+          "processus": [
+            {
+              "nom": "Urgences",
+              "description": "Prise en charge des passages aux urgences.",
+              "applications": [
+                {
+                  "nom": "ResUrgences",
+                  "description": "Dossier médical urgences et triage.",
+                  "editeur": "Dedalus",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "URG"
+                }
+              ]
+            },
+            {
+              "nom": "Hospitalisation à domicile",
+              "description": "Suivi des patients en HAD.",
+              "applications": [
+                {
+                  "nom": "AntHADine",
+                  "description": "Dossier HAD et planification des tournées.",
+                  "editeur": "Berger-Levrault",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "HAD"
+                },
+                {
+                  "nom": "NomadeCare",
+                  "description": "Application mobile de suivi des soins.",
+                  "editeur": "Maincare",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "NOM"
+                }
+              ]
+            },
+            {
+              "nom": "Spécialités médicales",
+              "description": "Applications dédiées aux spécialités médicales.",
+              "applications": [
+                {
+                  "nom": "CardioReport",
+                  "description": "Dossier de spécialité cardiologie et comptes rendus.",
+                  "editeur": "GE Healthcare",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "CAR"
+                },
+                {
+                  "nom": "OncoSuite",
+                  "description": "Dossier de spécialité oncologie, suivi des protocoles.",
+                  "editeur": "Varian",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "ONC"
+                },
+                {
+                  "nom": "BlocManager",
+                  "description": "Gestion du bloc opératoire et traçabilité.",
+                  "editeur": "Cegedim",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": true
+                  },
+                  "trigramme": "BLO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Support & logistique",
+          "description": "Soutenir les activités hospitalières : achats, stocks, linge, restauration, services techniques et logistique interne.",
+          "processus": [
+            {
+              "nom": "GEF / Inventaire",
+              "description": "Gestion des équipements et inventaire.",
+              "applications": [
+                {
+                  "nom": "CARL Source",
+                  "description": "GMAO et suivi des équipements.",
+                  "editeur": "Berger-Levrault",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "CRL"
+                },
+                {
+                  "nom": "Sage X3 Stock",
+                  "description": "Gestion des stocks et des inventaires.",
+                  "editeur": "Sage",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "SAX"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Dossier médico-techniques",
+          "description": "Plateaux techniques et imagerie.",
+          "processus": [
+            {
+              "nom": "Imagerie",
+              "description": "RIS et PACS.",
+              "applications": [
+                {
+                  "nom": "Carestream RIS",
+                  "description": "Radiology Information System.",
+                  "editeur": "Carestream",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "CRS"
+                },
+                {
+                  "nom": "Sectra PACS",
+                  "description": "Archivage et diffusion d'images médicales.",
+                  "editeur": "Sectra",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": false
+                  },
+                  "trigramme": "SEC"
+                }
+              ]
+            },
+            {
+              "nom": "Télémédecine",
+              "description": "Télé-imagerie et téléconsultation.",
+              "applications": [
+                {
+                  "nom": "Doctolib Téléconsultation",
+                  "description": "Plate-forme de téléconsultation.",
+                  "editeur": "Doctolib",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": true,
+                    "Autre": true
+                  },
+                  "trigramme": "DOC"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Communication / Collaboration",
+          "description": "Bureautique, intranet et partage documentaire.",
+          "processus": [
+            {
+              "nom": "Bureautique",
+              "description": "Messagerie et agenda.",
+              "applications": [
+                {
+                  "nom": "Microsoft 365",
+                  "description": "Messagerie, agenda et collaboration.",
+                  "editeur": "Microsoft",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "M36"
+                }
+              ]
+            },
+            {
+              "nom": "Portail web externe",
+              "description": "Site internet institutionnel.",
+              "applications": [
+                {
+                  "nom": "WordPress",
+                  "description": "CMS du site public de l'établissement.",
+                  "editeur": "Automattic",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "WPR"
+                }
+              ]
+            },
+            {
+              "nom": "GED",
+              "description": "Gestion électronique des documents.",
+              "applications": [
+                {
+                  "nom": "DocuWare",
+                  "description": "Plate-forme documentaire collaborative.",
+                  "editeur": "DocuWare",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "DWR"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Gestion",
+          "description": "Ressources humaines, paie, finances et facturation.",
+          "processus": [
+            {
+              "nom": "RH",
+              "description": "SIRH & planning.",
+              "applications": [
+                {
+                  "nom": "Cegid HR",
+                  "description": "SIRH et gestion des dossiers agents.",
+                  "editeur": "Cegid",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "CGR"
+                },
+                {
+                  "nom": "Octime",
+                  "description": "Gestion des temps et plannings.",
+                  "editeur": "Octime",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "OCT"
+                }
+              ]
+            },
+            {
+              "nom": "Paie",
+              "description": "Gestion de la paie.",
+              "applications": [
+                {
+                  "nom": "Cegid Payroll",
+                  "description": "Gestion de la paie hospitalière.",
+                  "editeur": "Cegid",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "CGP"
+                }
+              ]
+            },
+            {
+              "nom": "Finances / Budget",
+              "description": "Pilotage économique.",
+              "applications": [
+                {
+                  "nom": "Sage 1000",
+                  "description": "Suivi budgétaire et comptabilité.",
+                  "editeur": "Sage",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "SGE"
+                }
+              ]
+            },
+            {
+              "nom": "Facturation",
+              "description": "Facturation patient.",
+              "applications": [
+                {
+                  "nom": "iFact",
+                  "description": "Facturation hospitalière et tiers payant.",
+                  "editeur": "CPage",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "IFC"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Qualité & Risques",
+          "description": "Qualité, gestion documentaire et indicateurs.",
+          "processus": [
+            {
+              "nom": "Qualité / Risque",
+              "description": "Gestion documentaire et évènements indésirables.",
+              "applications": [
+                {
+                  "nom": "BlueKanGo QHSE",
+                  "description": "Gestion qualité et risques.",
+                  "editeur": "BlueKanGo",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "BLU"
+                }
+              ]
+            },
+            {
+              "nom": "Contrôle de gestion",
+              "description": "Suivi budgétaire et comptabilité analytique.",
+              "applications": [
+                {
+                  "nom": "MyReport",
+                  "description": "Pilotage décisionnel et rapports financiers.",
+                  "editeur": "Report One",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "MYR"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Efficience / PMSI",
+          "description": "Requêtes décisionnelles et reporting.",
+          "processus": [
+            {
+              "nom": "Requêteur",
+              "description": "Business Intelligence.",
+              "applications": [
+                {
+                  "nom": "Tableau",
+                  "description": "Tableaux de bord décisionnels.",
+                  "editeur": "Salesforce",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "TAB"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Échange de données",
+          "description": "Messagerie sécurisée et EAI.",
+          "processus": [
+            {
+              "nom": "MSS",
+              "description": "Messagerie Sécurisée de Santé.",
+              "applications": [
+                {
+                  "nom": "Mailiz",
+                  "description": "Messagerie sécurisée de santé.",
+                  "editeur": "ANS",
+                  "referent": null,
+                  "hebergement": "SaaS",
+                  "multiEtablissement": true,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  },
+                  "trigramme": "MAI"
+                }
+              ]
+            },
+            {
+              "nom": "EAI",
+              "description": "Middleware d’interopérabilité.",
+              "applications": [
+                {
+                  "nom": "Enovacom Integration Engine",
+                  "description": "Plaque d’échanges de données inter-applicative.",
+                  "editeur": "Enovacom",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": true,
+                    "Facturation": true,
+                    "Administrative": true,
+                    "Medicale": true,
+                    "Autre": true
+                  },
+                  "trigramme": "ENO"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Outils techniques",
+          "description": "Maintenance, supervision, téléphonie.",
+          "processus": [
+            {
+              "nom": "Supervision SI",
+              "description": "Monitoring & helpdesk.",
+              "applications": [
+                {
+                  "nom": "Centreon",
+                  "description": "Supervision infrastructure et applicative.",
+                  "editeur": "Centreon",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "CEN"
+                },
+                {
+                  "nom": "GLPI",
+                  "description": "Gestion du parc et support.",
+                  "editeur": "Teclib",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "GLP"
+                }
+              ]
+            },
+            {
+              "nom": "Téléphonie",
+              "description": "Téléphonie fixe.",
+              "applications": [
+                {
+                  "nom": "Cisco Unified Communications Manager",
+                  "description": "PABX IP et gestion des postes.",
+                  "editeur": "Cisco",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "CCM"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Sureté",
+          "description": "Sécurité physique du site.",
+          "processus": [
+            {
+              "nom": "Vidéosurveillance",
+              "description": "Vidéosurveillance.",
+              "applications": [
+                {
+                  "nom": "Milestone XProtect",
+                  "description": "Gestion centralisée des caméras.",
+                  "editeur": "Milestone Systems",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Critique",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": false,
+                    "Medicale": false,
+                    "Autre": true
+                  },
+                  "trigramme": "MIL"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nom": "Annuaire & ref. internes",
+          "description": "Référentiels organisation & finances.",
+          "processus": [
+            {
+              "nom": "Comptes budgétaires",
+              "description": "Plan comptable interne.",
+              "applications": [
+                {
+                  "nom": "Sage FRP 1000",
+                  "description": "Référentiel budgétaire et comptable.",
+                  "editeur": "Sage",
+                  "referent": null,
+                  "hebergement": "Clinique des Dunes",
+                  "multiEtablissement": false,
+                  "criticite": "Standard",
+                  "lienPRTG": null,
+                  "interfaces": {
+                    "Planification": false,
+                    "Facturation": false,
+                    "Administrative": true,
+                    "Medicale": false,
+                    "Autre": false
+                  },
+                  "trigramme": "SFR"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
