@@ -478,16 +478,17 @@ export default function FluxPage() {
                   const stroke = INTERFACE_COLORS[link.type] || '#64748b';
                   const midX = (startX + endX) / 2;
                   return (
-                    <g key={link.id}>
+                    <path
+                      key={link.id}
+                      d={`M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`}
+                      fill="none"
+                      stroke={stroke}
+                      strokeWidth="2"
+                      markerEnd="url(#arrow)"
+                      style={{ pointerEvents: 'stroke' }}
+                    >
                       <title>{`Source: ${formatLabel(link.source)}\nCible: ${formatLabel(link.target)}\nType: ${link.type}\nProtocole: ${link.protocol || '-'}\nMessage: ${link.label || '-'}\nPort: ${link.port ?? '-'}\nEAI: ${link.eaiName || 'Direct'}\nÉtablissement: ${link.etablissement}`}</title>
-                      <path
-                        d={`M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`}
-                        fill="none"
-                        stroke={stroke}
-                        strokeWidth="2"
-                        markerEnd="url(#arrow)"
-                      />
-                    </g>
+                    </path>
                   );
                 })}
                 {diagramData.nodes.map(node => (
