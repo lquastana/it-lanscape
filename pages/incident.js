@@ -24,6 +24,13 @@ const STATUS_RANK = {
   latence: 1,
 };
 
+const STATUS_COLORS = {
+  hs: '#b91c1c',
+  degrade: '#f97316',
+  latence: '#2563eb',
+  intermittent: '#7c3aed',
+};
+
 const CRITICITE_RANK = {
   Critique: 2,
   Standard: 1,
@@ -552,6 +559,154 @@ export default function IncidentSimulationPage() {
       .sort((a, b) => a.etablissement.localeCompare(b.etablissement));
   }, [analysis]);
 
+  const propagationDiagrams = useMemo(() => {
+    const diagrams = new Map();
+    reportByEtablissement.forEach(report => {
+      if (!report.propagation.length || !report.impactedApps.length) {
+        diagrams.set(report.etablissement, null);
+        return;
+      }
+      const nodesMap = new Map();
+      report.impactedApps.forEach(app => {
+        const nodeId = `${app.trigramme}-${report.etablissement}`;
+        nodesMap.set(nodeId, {
+          id: nodeId,
+          trigramme: app.trigramme,
+          label: app.label,
+          process: app.processus || 'Processus non renseigné',
+          depth: app.depth ?? 0,
+          status: app.status,
+        });
+      });
+
+      const ensureNode = ({ trigramme, label, process, depth, status }) => {
+        const nodeId = `${trigramme}-${report.etablissement}`;
+        if (nodesMap.has(nodeId)) return nodeId;
+        nodesMap.set(nodeId, {
+          id: nodeId,
+          trigramme,
+          label,
+          process: process || 'Processus non renseigné',
+          depth,
+          status,
+        });
+        return nodeId;
+      };
+
+      const nodes = Array.from(nodesMap.values());
+      const maxDepth = Math.max(...nodes.map(node => node.depth), 0);
+      const nodeSize = { width: 210, height: 64 };
+      const nodeGap = 12;
+      const processGap = 20;
+      const processPadding = 16;
+      const establishmentPadding = 18;
+      const processLabelHeight = 16;
+      const establishmentLabelHeight = 18;
+      const establishmentWidth = nodeSize.width + processPadding * 2 + establishmentPadding * 2;
+      const columnWidth = establishmentWidth + 120;
+      const layout = [];
+      const processBlocks = [];
+      const establishmentBlocks = [];
+
+      for (let depth = 0; depth <= maxDepth; depth += 1) {
+        const column = nodes
+          .filter(node => node.depth === depth)
+          .sort((a, b) => {
+            const procCompare = a.process.localeCompare(b.process);
+            if (procCompare !== 0) return procCompare;
+            return a.label.localeCompare(b.label);
+          });
+        if (!column.length) continue;
+        const startY = 80;
+        const columnX = depth * columnWidth;
+        let currentY = startY;
+        const processes = Array.from(new Set(column.map(node => node.process)));
+        const establishmentStartY = currentY;
+        currentY += establishmentLabelHeight + establishmentPadding;
+        processes.forEach(process => {
+          const processNodes = column.filter(node => node.process === process);
+          const processStartY = currentY;
+          currentY += processLabelHeight + processPadding;
+          processNodes.forEach((node) => {
+            layout.push({
+              ...node,
+              x: columnX + establishmentPadding + processPadding,
+              y: currentY,
+            });
+            currentY += nodeSize.height + nodeGap;
+          });
+          if (processNodes.length) {
+            currentY -= nodeGap;
+          }
+          currentY += processPadding;
+          processBlocks.push({
+            id: `${report.etablissement}-${depth}-${process}`,
+            label: process,
+            x: columnX + establishmentPadding,
+            y: processStartY,
+            width: nodeSize.width + processPadding * 2,
+            height: currentY - processStartY,
+          });
+          currentY += processGap;
+        });
+        if (processes.length) {
+          currentY -= processGap;
+        }
+        currentY += establishmentPadding;
+        establishmentBlocks.push({
+          id: `${report.etablissement}-${depth}`,
+          label: report.etablissement,
+          x: columnX,
+          y: establishmentStartY,
+          width: establishmentWidth,
+          height: currentY - establishmentStartY,
+        });
+      }
+
+      const width = (maxDepth + 1) * columnWidth + nodeSize.width;
+      const height = Math.max(
+        ...layout.map(node => node.y + nodeSize.height),
+        ...processBlocks.map(block => block.y + block.height),
+        ...establishmentBlocks.map(block => block.y + block.height),
+        320,
+      );
+
+      const expandedLinks = [];
+      report.propagation.forEach(edge => {
+        const sourceId = ensureNode({
+          trigramme: edge.source,
+          label: edge.sourceLabel,
+          process: 'Processus non renseigné',
+          depth: 0,
+          status: edge.status,
+        });
+        const targetId = ensureNode({
+          trigramme: edge.target,
+          label: edge.targetLabel,
+          process: 'Processus non renseigné',
+          depth: 1,
+          status: edge.status,
+        });
+        expandedLinks.push({
+          ...edge,
+          sourceId,
+          targetId,
+        });
+      });
+
+      diagrams.set(report.etablissement, {
+        nodes: layout,
+        processBlocks,
+        establishmentBlocks,
+        links: expandedLinks,
+        width,
+        height,
+        nodeSize,
+      });
+    });
+    return diagrams;
+  }, [reportByEtablissement]);
+
   return (
     <>
       <Head>
@@ -716,7 +871,9 @@ export default function IncidentSimulationPage() {
                   <p className="muted">Aucun impact identifié.</p>
                 ) : (
                   <div className="impact-cards">
-                    {reportByEtablissement.map(report => (
+                    {reportByEtablissement.map(report => {
+                      const diagram = propagationDiagrams.get(report.etablissement);
+                      return (
                       <details key={report.etablissement} className="impact-card">
                         <summary>
                           <div>
@@ -735,13 +892,147 @@ export default function IncidentSimulationPage() {
                             {report.propagation.length === 0 ? (
                               <p className="muted">Aucune propagation détectée.</p>
                             ) : (
-                              <ul>
-                                {report.propagation.map((edge, index) => (
-                                  <li key={`${edge.source}-${edge.target}-${index}`}>
-                                    {edge.sourceLabel} → {edge.targetLabel} ({formatStatus(edge.status)})
-                                  </li>
-                                ))}
-                              </ul>
+                              <>
+                                {diagram && (
+                                  <div className="propagation-diagram">
+                                    <div className="propagation-canvas">
+                                      <svg
+                                        width={diagram.width}
+                                        height={diagram.height}
+                                      >
+                                        <defs>
+                                          {Object.entries(STATUS_COLORS).map(([key, color]) => (
+                                            <marker
+                                              key={key}
+                                              id={`prop-arrow-${report.etablissement}-${key}`}
+                                              markerWidth="10"
+                                              markerHeight="10"
+                                              refX="8"
+                                              refY="3"
+                                              orient="auto"
+                                            >
+                                              <path d="M0,0 L0,6 L9,3 z" fill={color} />
+                                            </marker>
+                                          ))}
+                                        </defs>
+                                        {diagram.establishmentBlocks.map(block => (
+                                          <g key={block.id}>
+                                            <rect
+                                              x={block.x}
+                                              y={block.y}
+                                              width={block.width}
+                                              height={block.height}
+                                              rx="18"
+                                              fill="#eef2ff"
+                                              stroke="#c7d2fe"
+                                              strokeWidth="1.5"
+                                            />
+                                            <text
+                                              x={block.x + 16}
+                                              y={block.y + 22}
+                                              fontSize="12"
+                                              fontWeight="600"
+                                              fill="#1e293b"
+                                            >
+                                              {block.label}
+                                            </text>
+                                          </g>
+                                        ))}
+                                        {diagram.processBlocks.map(block => (
+                                          <g key={block.id}>
+                                            <rect
+                                              x={block.x}
+                                              y={block.y}
+                                              width={block.width}
+                                              height={block.height}
+                                              rx="14"
+                                              fill="#ffffff"
+                                              stroke="#e2e8f0"
+                                              strokeWidth="1"
+                                            />
+                                            <text
+                                              x={block.x + 14}
+                                              y={block.y + 18}
+                                              fontSize="11"
+                                              fontWeight="500"
+                                              fill="#475569"
+                                            >
+                                              {block.label}
+                                            </text>
+                                          </g>
+                                        ))}
+                                        {diagram.links.map(edge => {
+                                          const sourceNode = diagram.nodes.find(node => node.id === edge.sourceId);
+                                          const targetNode = diagram.nodes.find(node => node.id === edge.targetId);
+                                          if (!sourceNode || !targetNode) return null;
+                                          const startX = sourceNode.x + diagram.nodeSize.width;
+                                          const startY = sourceNode.y + diagram.nodeSize.height / 2;
+                                          const endX = targetNode.x;
+                                          const endY = targetNode.y + diagram.nodeSize.height / 2;
+                                          const midX = (startX + endX) / 2;
+                                          const pathD = `M${startX},${startY} C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
+                                          const stroke = STATUS_COLORS[edge.status] || '#64748b';
+                                          const title = [
+                                            `Propagation depuis ${edge.sourceLabel}`,
+                                            `Impact source: ${formatStatus(edge.status)}`,
+                                            `Cible: ${edge.targetLabel}`,
+                                            `Type: ${edge.interfaceType || 'Dépendance'}`,
+                                          ].join('\n');
+                                          return (
+                                            <g key={`${edge.sourceId}-${edge.targetId}`}>
+                                              <path
+                                                d={pathD}
+                                                fill="none"
+                                                stroke="transparent"
+                                                strokeWidth="16"
+                                                style={{ pointerEvents: 'stroke' }}
+                                              >
+                                                <title>{title}</title>
+                                              </path>
+                                              <path
+                                                d={pathD}
+                                                fill="none"
+                                                stroke={stroke}
+                                                strokeWidth="2"
+                                                markerEnd={`url(#prop-arrow-${report.etablissement}-${edge.status})`}
+                                                style={{ pointerEvents: 'none' }}
+                                              />
+                                            </g>
+                                          );
+                                        })}
+                                        {diagram.nodes.map(node => (
+                                          <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
+                                            <rect
+                                              width={diagram.nodeSize.width}
+                                              height={diagram.nodeSize.height}
+                                              rx="14"
+                                              fill="#f8fafc"
+                                              stroke={STATUS_COLORS[node.status] || '#dbe3f0'}
+                                              strokeWidth="2"
+                                            />
+                                            <text
+                                              x={diagram.nodeSize.width / 2}
+                                              y={diagram.nodeSize.height / 2 + 4}
+                                              textAnchor="middle"
+                                              fontSize="12"
+                                              fill="#1f2937"
+                                            >
+                                              {node.label}
+                                            </text>
+                                          </g>
+                                        ))}
+                                      </svg>
+                                    </div>
+                                  </div>
+                                )}
+                                <ul>
+                                  {report.propagation.map((edge, index) => (
+                                    <li key={`${edge.source}-${edge.target}-${index}`}>
+                                      {edge.sourceLabel} → {edge.targetLabel} ({formatStatus(edge.status)})
+                                    </li>
+                                  ))}
+                                </ul>
+                              </>
                             )}
                           </div>
                           <div>
@@ -828,7 +1119,8 @@ export default function IncidentSimulationPage() {
                           </div>
                         </div>
                       </details>
-                    ))}
+                    );
+                  })}
                   </div>
                 )}
                 {analysis.impactedOther.length > 0 && (
