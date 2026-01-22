@@ -19,9 +19,9 @@
       "protocol": "HL7",
       "port": 2575,
       "messageType": "DFT",
-      "interfaceType": "Facturation",
+      "interfaceType": "Administrative",
       "eaiName": "Enovacom Engine",
-      "description": "Actes médicaux vers la facturation"
+      "description": "Données de séjour pour préparation de facturation"
     },
     {
       "id": "VDL-FLX-003",
@@ -66,6 +66,149 @@
       "interfaceType": "Administrative",
       "eaiName": "Passerelle MSS",
       "description": "Envoi de messages sécurisés vers Mailiz"
+    },
+    {
+      "id": "VDL-FLX-007",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "IFC",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Identités et mouvements pour facturation"
+    },
+    {
+      "id": "VDL-FLX-008",
+      "sourceTrigramme": "ORP",
+      "targetTrigramme": "ORB",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Synchronisation planning et lits"
+    },
+    {
+      "id": "VDL-FLX-009",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "PYX",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "RDE",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Données de dispensation vers les armoires"
+    },
+    {
+      "id": "VDL-FLX-010",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "DOC",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Téléconsultation",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Données cliniques pour téléconsultation"
+    },
+    {
+      "id": "VDL-FLX-011",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "HAD",
+      "protocol": "FHIR",
+      "port": 443,
+      "messageType": "CarePlan",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Transmission des plans de soins vers l'HAD"
+    },
+    {
+      "id": "VDL-FLX-012",
+      "sourceTrigramme": "HAD",
+      "targetTrigramme": "NOM",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Visites",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Tournées et actes vers l'application mobile"
+    },
+    {
+      "id": "VDL-FLX-013",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "URG",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Flux patient vers le dossier urgences"
+    },
+    {
+      "id": "VDL-FLX-014",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "MAI",
+      "protocol": "SMTP/TLS",
+      "port": 587,
+      "messageType": "MSS",
+      "interfaceType": "Medicale",
+      "eaiName": "Passerelle MSS",
+      "description": "Envoi de comptes rendus médicaux"
+    },
+    {
+      "id": "VDL-FLX-015",
+      "sourceTrigramme": "IFC",
+      "targetTrigramme": "SGE",
+      "protocol": "SFTP",
+      "port": 22,
+      "messageType": "Factures",
+      "interfaceType": "Facturation",
+      "eaiName": "ETL",
+      "description": "Transfert des factures vers la comptabilité"
+    },
+    {
+      "id": "VDL-FLX-016",
+      "sourceTrigramme": "SGE",
+      "targetTrigramme": "MYR",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Analytics",
+      "interfaceType": "Administrative",
+      "eaiName": "API",
+      "description": "Alimentation du reporting financier"
+    },
+    {
+      "id": "VDL-FLX-017",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "TAB",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "KPI",
+      "interfaceType": "Administrative",
+      "eaiName": "API",
+      "description": "Indicateurs d'activité pour BI"
+    },
+    {
+      "id": "VDL-FLX-018",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "ENO",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ORM",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Orchestration des messages applicatifs"
+    },
+    {
+      "id": "VDL-FLX-019",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "CEN",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Monitoring",
+      "interfaceType": "Autre",
+      "eaiName": "API",
+      "description": "Supervision des services DPI"
     }
   ]
 }
