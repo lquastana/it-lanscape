@@ -33,7 +33,6 @@ const COMPONENT_TYPES = [
   { value: 'application', label: 'Application' },
   { value: 'serveur', label: 'Serveur' },
   { value: 'flux', label: 'Interface / Flux' },
-  { value: 'database', label: 'Base de données' },
   { value: 'custom', label: 'Autre composant' },
 ];
 
@@ -220,8 +219,8 @@ export default function IncidentSimulationPage() {
 
   const handleAddComponent = () => {
     if (!selectionType) return;
-    if ((selectionType === 'database' || selectionType === 'custom') && !selectionNote.trim()) return;
-    if (selectionType !== 'database' && selectionType !== 'custom' && !selectionValue) return;
+    if (selectionType === 'custom' && !selectionNote.trim()) return;
+    if (selectionType !== 'custom' && !selectionValue) return;
 
     let item = null;
     if (selectionType === 'application') {
@@ -261,7 +260,7 @@ export default function IncidentSimulationPage() {
         etablissement: flow?.etablissement || 'Inconnu',
       };
     }
-    if (selectionType === 'database' || selectionType === 'custom') {
+    if (selectionType === 'custom') {
       item = {
         id: `${selectionType}-${Date.now()}`,
         type: selectionType,
@@ -335,7 +334,7 @@ export default function IncidentSimulationPage() {
           status: component.status,
         }, 0);
       }
-      if (component.type === 'database' || component.type === 'custom') {
+      if (component.type === 'custom') {
         impactedOther.push(component);
       }
     });
@@ -379,6 +378,7 @@ export default function IncidentSimulationPage() {
         domaine: meta?.domaine || 'Non renseigné',
         processus: meta?.processus || 'Non renseigné',
         criticite: meta?.app.criticite || 'Standard',
+        hebergement: meta?.app.hebergement || 'Non renseigné',
       };
     }).sort(prioritySort);
 
@@ -488,7 +488,7 @@ export default function IncidentSimulationPage() {
                 ))}
               </select>
             </label>
-            {(selectionType === 'database' || selectionType === 'custom') ? (
+            {selectionType === 'custom' ? (
               <label className="span-2">
                 <span>Libellé du composant</span>
                 <input
@@ -654,6 +654,10 @@ export default function IncidentSimulationPage() {
                           <div>
                             <span className="label">Périmètre</span>
                             <p>{app.etablissement}</p>
+                          </div>
+                          <div>
+                            <span className="label">Hébergeur</span>
+                            <p>{app.hebergement}</p>
                           </div>
                           <div>
                             <span className="label">Type de rupture</span>
