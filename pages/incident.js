@@ -169,6 +169,8 @@ export default function IncidentSimulationPage() {
       });
     }
 
+    const labelForTri = (tri) => appIndex.get(tri)?.app?.nom || tri;
+
     const servers = [];
     const serversByTri = new Map();
     if (infrastructure?.etablissements) {
@@ -196,7 +198,7 @@ export default function IncidentSimulationPage() {
         (etab.flux || []).forEach(flow => {
           flows.push({
             value: flow.id || `${flow.sourceTrigramme}-${flow.targetTrigramme}`,
-            label: `${flow.sourceTrigramme} → ${flow.targetTrigramme} • ${etab.nom}`,
+            label: `${labelForTri(flow.sourceTrigramme)} → ${labelForTri(flow.targetTrigramme)} • ${etab.nom}`,
             ...flow,
             etablissement: etab.nom,
           });
@@ -204,6 +206,8 @@ export default function IncidentSimulationPage() {
             id: flow.id || `${flow.sourceTrigramme}-${flow.targetTrigramme}`,
             source: flow.sourceTrigramme,
             target: flow.targetTrigramme,
+            sourceLabel: labelForTri(flow.sourceTrigramme),
+            targetLabel: labelForTri(flow.targetTrigramme),
             etablissement: etab.nom,
             messageType: flow.messageType,
             protocol: flow.protocol,
@@ -378,12 +382,14 @@ export default function IncidentSimulationPage() {
         propagationEdges.push({
           source: link.source,
           target: link.target,
+          sourceLabel: link.sourceLabel,
+          targetLabel: link.targetLabel,
           status: current.status,
           interfaceType: link.interfaceType,
         });
         if (addAppImpact(link.target, mapIndirectStatus(current.status), {
           type: 'Dépendance amont',
-          label: `${link.source} → ${link.target}`,
+          label: `${link.sourceLabel} → ${link.targetLabel}`,
           status: current.status,
         }, current.depth + 1)) {
           queue.push({
@@ -630,7 +636,7 @@ export default function IncidentSimulationPage() {
                     <ul className="impact-list">
                       {analysis.blockedFlows.map(flow => (
                         <li key={`${flow.id}-${flow.source}-${flow.target}`}>
-                          {flow.source} → {flow.target} ({flow.interfaceType || 'Flux'})
+                          {flow.sourceLabel} → {flow.targetLabel} ({flow.interfaceType || 'Flux'})
                         </li>
                       ))}
                     </ul>
@@ -646,9 +652,9 @@ export default function IncidentSimulationPage() {
                   <div className="graph-list">
                     {analysis.propagationEdges.map(edge => (
                       <div key={`${edge.source}-${edge.target}`} className="graph-edge">
-                        <span className={`graph-node status-${edge.status}`}>{edge.source}</span>
+                        <span className={`graph-node status-${edge.status}`}>{edge.sourceLabel}</span>
                         <span className="graph-arrow">→</span>
-                        <span className={`graph-node status-${edge.status}`}>{edge.target}</span>
+                        <span className={`graph-node status-${edge.status}`}>{edge.targetLabel}</span>
                         <span className="muted">{edge.interfaceType || 'Dépendance'}</span>
                       </div>
                     ))}

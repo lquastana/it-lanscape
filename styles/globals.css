@@ -459,15 +459,9 @@ small { font-size: 12px; line-height: 16px; }
 
 .incident-page {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.1fr);
+  grid-template-columns: 1fr;
   gap: 24px;
   margin-top: 24px;
-}
-
-@media(max-width: 1100px) {
-  .incident-page {
-    grid-template-columns: 1fr;
-  }
 }
 
 .incident-panel,
@@ -477,6 +471,10 @@ small { font-size: 12px; line-height: 16px; }
   padding: 20px;
   box-shadow: var(--shadow-card);
   border: 1px solid var(--color-border);
+}
+
+.incident-results {
+  padding: 24px;
 }
 
 .incident-form {
@@ -606,10 +604,24 @@ small { font-size: 12px; line-height: 16px; }
   margin: 16px 0;
 }
 
+.impact-summary > div {
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+}
+
 @media(max-width: 900px) {
   .impact-summary {
     grid-template-columns: 1fr;
   }
+}
+
+.impact-list li {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
 }
 
 .impact-graph {
@@ -628,7 +640,7 @@ small { font-size: 12px; line-height: 16px; }
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px dashed #cbd5f5;
-  background: #f8fafc;
+  background: #fff;
 }
 
 .graph-node {
@@ -655,8 +667,9 @@ small { font-size: 12px; line-height: 16px; }
 .impact-card {
   border-radius: 14px;
   border: 1px solid #e2e8f0;
-  padding: 12px 14px;
-  background: #f8fafc;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.06);
 }
 
 .impact-card summary {
