@@ -14,7 +14,7 @@
     },
     {
       "id": "VDL-FLX-002",
-      "sourceTrigramme": "ORB",
+      "sourceTrigramme": "GAP",
       "targetTrigramme": "IFC",
       "protocol": "HL7",
       "port": 2575,
@@ -58,7 +58,7 @@
     },
     {
       "id": "VDL-FLX-006",
-      "sourceTrigramme": "ENO",
+      "sourceTrigramme": "GAP",
       "targetTrigramme": "MAI",
       "protocol": "SMTP/TLS",
       "port": 587,
@@ -70,7 +70,7 @@
     {
       "id": "VDL-FLX-007",
       "sourceTrigramme": "GAP",
-      "targetTrigramme": "IFC",
+      "targetTrigramme": "GAP",
       "protocol": "HL7",
       "port": 2575,
       "messageType": "ADT",
@@ -91,7 +91,7 @@
     },
     {
       "id": "VDL-FLX-009",
-      "sourceTrigramme": "ORB",
+      "sourceTrigramme": "GAP",
       "targetTrigramme": "PYX",
       "protocol": "HL7",
       "port": 2575,
@@ -158,7 +158,7 @@
     {
       "id": "VDL-FLX-015",
       "sourceTrigramme": "IFC",
-      "targetTrigramme": "SGE",
+      "targetTrigramme": "GAP",
       "protocol": "SFTP",
       "port": 22,
       "messageType": "Factures",
@@ -168,7 +168,7 @@
     },
     {
       "id": "VDL-FLX-016",
-      "sourceTrigramme": "SGE",
+      "sourceTrigramme": "GAP",
       "targetTrigramme": "MYR",
       "protocol": "API",
       "port": 443,
@@ -179,7 +179,7 @@
     },
     {
       "id": "VDL-FLX-017",
-      "sourceTrigramme": "ORB",
+      "sourceTrigramme": "GAP",
       "targetTrigramme": "TAB",
       "protocol": "API",
       "port": 443,
@@ -190,7 +190,7 @@
     },
     {
       "id": "VDL-FLX-018",
-      "sourceTrigramme": "ORB",
+      "sourceTrigramme": "GAP",
       "targetTrigramme": "ENO",
       "protocol": "HL7",
       "port": 2575,
