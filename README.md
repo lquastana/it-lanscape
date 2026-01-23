@@ -22,6 +22,7 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
 - `data/trigrammes.json` : dictionnaire trigramme → application (utilisé pour les imports infra et les scripts).
 - `data/auth/access-rules.json` : IP autorisées, comptes Basic Auth (mots de passe hachés `bcrypt`).
 - `data/auth/auth-config.json` : liste des pages et routes API protégées par session.
+- `data/audit-log.jsonl` : journal append-only des modifications (écritures via API).
 
 ## Prérequis
 - Node.js 18 ou version supérieure.

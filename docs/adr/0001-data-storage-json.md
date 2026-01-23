@@ -16,6 +16,9 @@ Stocker les données de cartographie (métier, infra, réseau, flux) dans des fi
 - Concurrence d’écriture limitée (risque de conflits).
 - Scalabilité limitée pour gros volumes.
 
+## Évolutions possibles
+- Ajouter un journal append-only (JSONL) pour tracer les modifications sans basculer sur une base.
+
 ## Alternatives envisagées
 - Base PostgreSQL avec migrations et schéma strict.
 - Intégration CMDB externe en source de vérité.
