@@ -4,7 +4,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/_next/static/:path*/*.js',
+        source: '/_next/static/:path*\\.js',
         headers: [
           { key: 'Content-Type', value: 'application/javascript; charset=utf-8' },
         ],
