@@ -1,4 +1,6 @@
 import fs from 'fs/promises';
+import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 import { appendAudit, hashContent, truncateSnapshot } from '../../../lib/audit.js';
 import { withAuthz } from '../../../lib/authz.js';
 import { loadAccessRules, saveAccessRules } from '../../../lib/accessControl.js';
@@ -23,12 +25,13 @@ async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { username, role } = req.body || {};
-  if (!username || typeof username !== 'string') {
+  const payload = req.body || {};
+  const action = payload.action || 'update-role';
+  const username = typeof payload.username === 'string' ? payload.username.trim() : '';
+  const role = payload.role;
+  const password = typeof payload.password === 'string' ? payload.password : '';
+  if (!username) {
     return res.status(400).json({ error: 'Utilisateur invalide' });
-  }
-  if (!ALLOWED_ROLES.includes(role)) {
-    return res.status(400).json({ error: 'Rôle invalide' });
   }
 
   try {
@@ -38,12 +41,51 @@ async function handler(req, res) {
     const establishments = Array.isArray(rules.establishments) ? rules.establishments : [];
     const target = establishments.find(est => est.username === username);
 
-    if (!target) {
-      return res.status(404).json({ error: 'Utilisateur introuvable' });
+    if (action === 'create') {
+      if (!ALLOWED_ROLES.includes(role)) {
+        return res.status(400).json({ error: 'Rôle invalide' });
+      }
+      if (!password || password.length < 6) {
+        return res.status(400).json({ error: 'Mot de passe trop court (min 6 caractères)' });
+      }
+      if (target) {
+        return res.status(409).json({ error: 'Utilisateur déjà existant' });
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      establishments.push({
+        id: `user_${crypto.randomUUID()}`,
+        username,
+        role,
+        password: hashedPassword,
+      });
+      rules.establishments = establishments;
+      await saveAccessRules(rules);
+    } else if (action === 'update-password') {
+      if (!target) {
+        return res.status(404).json({ error: 'Utilisateur introuvable' });
+      }
+      if (!password || password.length < 6) {
+        return res.status(400).json({ error: 'Mot de passe trop court (min 6 caractères)' });
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      target.password = hashedPassword;
+      await saveAccessRules(rules);
+    } else if (action === 'delete') {
+      if (!target) {
+        return res.status(404).json({ error: 'Utilisateur introuvable' });
+      }
+      rules.establishments = establishments.filter(est => est.username !== username);
+      await saveAccessRules(rules);
+    } else {
+      if (!ALLOWED_ROLES.includes(role)) {
+        return res.status(400).json({ error: 'Rôle invalide' });
+      }
+      if (!target) {
+        return res.status(404).json({ error: 'Utilisateur introuvable' });
+      }
+      target.role = role;
+      await saveAccessRules(rules);
     }
-
-    target.role = role;
-    await saveAccessRules(rules);
 
     const actor = req.actor || {};
     const afterContent = await fs.readFile(rulesPath, 'utf-8').catch(() => null);
@@ -61,9 +103,9 @@ async function handler(req, res) {
       before: truncateSnapshot(beforeContent),
       after: truncateSnapshot(afterContent),
       meta: {
-        change: 'role-update',
+        change: action,
         username,
-        role,
+        role: role || null,
       },
     });
 

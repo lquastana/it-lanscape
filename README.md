@@ -12,7 +12,7 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
   - `/admin-metier` pour éditer les domaines, processus et applications d’un fichier JSON.
   - `/admin-infra` pour mapper une extraction Excel vers les fichiers `*.infra.json` (mode remplacement ou incrémental, vérification des trigrammes).
   - `/admin-flux` pour importer et harmoniser les flux applicatifs.
-  - `/admin-habilitations` pour gérer les rôles d’accès des comptes autorisés.
+  - `/admin-habilitations` pour gérer les rôles, mots de passe et comptes autorisés.
 - **Contrôles d’accès** : middleware `iron-session` + règles IP et Basic Auth définies dans `data/auth`, complétés par un **RBAC** (viewer/editor/admin) et un **audit append-only** JSONL. La page `/login` permet d’ouvrir une session utilisateur avant d’accéder aux pages protégées (`/applications`, `/network`) et aux APIs sensibles.
 
 ## Structure des données
@@ -69,7 +69,30 @@ Endpoints protégés par RBAC :
 Accès pages :
 - Vue métier (`/`) : pas de restriction de groupe (auth standard si activée).
 - Vue applicative (`/applications`), flux (`/flux`), réseau (`/network`), incident (`/incident`) : rôle **viewer** minimum.
-- Administration (`/admin-*`) : rôle **editor** minimum.
+- Administration (`/admin-*`) : rôle **editor** minimum (sauf `/admin-habilitations` en **admin**).
+
+## Accès UI & API (IP + login)
+Les pages protégées s’appuient sur la session (`/login`) et le middleware `iron-session`. Les APIs sensibles utilisent `withAuthz` qui accepte **session** ou **Basic Auth depuis une IP autorisée**. En pratique : 
+- **Pages** : session obligatoire (login) pour les routes listées dans `data/auth/auth-config.json` et rôle minimal selon la vue. 
+- **APIs protégées** : session **ou** Basic Auth **ET** IP allowlist (`data/auth/access-rules.json`).
+
+### Résumé des endpoints et restrictions
+| Type | Endpoint | Description | Restriction |
+| --- | --- | --- | --- |
+| UI | `/` | Vue métier | Public (pas de rôle) |
+| UI | `/applications` | Vue applicative | viewer+ |
+| UI | `/flux` | Vue flux | viewer+ |
+| UI | `/network` | Vue réseau | viewer+ |
+| UI | `/incident` | Simulation incident | viewer+ |
+| UI | `/admin-*` | Écrans d’administration | editor+ |
+| UI | `/admin-habilitations` | Gestion des comptes & rôles | admin+ |
+| API | `GET /api/flux` | Flux (lecture) | viewer+ |
+| API | `GET /api/infrastructure` | Infrastructure (lecture) | viewer+ |
+| API | `GET /api/network` | Réseau (lecture) | viewer+ |
+| API | `GET /api/files` | Liste des fichiers | viewer+ |
+| API | `GET /api/export` | Export ZIP + audit | admin+ |
+| API | `POST /api/file/[name]` | Écriture JSON + audit | editor+ |
+| API | `GET/POST /api/admin/roles` | Gestion des habilitations | admin+ |
 
 Le journal `data/audit-log.jsonl` est append-only et contient notamment :
 - `ts` (timestamp ISO)

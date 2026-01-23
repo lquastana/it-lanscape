@@ -20,6 +20,9 @@ function hasRequiredRole(userRole, requiredRole) {
 }
 
 function requiredRoleForPath(pathname) {
+  if (pathname.startsWith('/admin-habilitations')) {
+    return 'admin';
+  }
   if (pathname.startsWith('/admin')) {
     return 'editor';
   }
