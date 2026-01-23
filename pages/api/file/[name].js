@@ -3,7 +3,7 @@ import path from 'path';
 import { evaluateAccess, sendUnauthorizedJson } from '../../../lib/accessControl';
 
 export default async function handler(req, res) {
-  const access = await evaluateAccess(req);
+  const access = await evaluateAccess(req, res);
   if (!access.allowed) {
     return sendUnauthorizedJson(res);
   }
