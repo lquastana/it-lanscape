@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -14,6 +14,8 @@ export default function AdminHabilitations() {
   const [users, setUsers] = useState([]);
   const [status, setStatus] = useState('');
   const [saving, setSaving] = useState(null);
+  const [actionMessages, setActionMessages] = useState({});
+  const statusRef = useRef(null);
   const [newUser, setNewUser] = useState({
     username: '',
     role: 'viewer',
@@ -42,6 +44,17 @@ export default function AdminHabilitations() {
     }
   };
 
+  const announceStatus = message => {
+    setStatus(message);
+    if (statusRef.current) {
+      statusRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const setActionMessage = (key, message) => {
+    setActionMessages(prev => ({ ...prev, [key]: message }));
+  };
+
   useEffect(() => {
     loadUsers();
   }, []);
@@ -49,6 +62,7 @@ export default function AdminHabilitations() {
   const updateRole = async (username, role) => {
     setSaving(username);
     setStatus('');
+    setActionMessage(username, '');
     try {
       const res = await fetch('/api/admin/roles', {
         method: 'POST',
@@ -62,9 +76,11 @@ export default function AdminHabilitations() {
       setUsers(prev =>
         prev.map(user => (user.username === username ? { ...user, role } : user))
       );
-      setStatus(`✅ Rôle mis à jour pour ${username}`);
+      setActionMessage(username, '✅ Rôle mis à jour.');
+      announceStatus(`✅ Rôle mis à jour pour ${username}`);
     } catch (error) {
-      setStatus(error.message || 'Erreur mise à jour rôle');
+      setActionMessage(username, error.message || 'Erreur mise à jour rôle');
+      announceStatus(error.message || 'Erreur mise à jour rôle');
     } finally {
       setSaving(null);
     }
@@ -74,15 +90,15 @@ export default function AdminHabilitations() {
     event.preventDefault();
     const username = newUser.username.trim();
     if (!username) {
-      setStatus('Nom d’utilisateur requis.');
+      announceStatus('Nom d’utilisateur requis.');
       return;
     }
     if (!newUser.password || newUser.password.length < 6) {
-      setStatus('Le mot de passe doit contenir au moins 6 caractères.');
+      announceStatus('Le mot de passe doit contenir au moins 6 caractères.');
       return;
     }
     if (newUser.password !== newUser.confirmPassword) {
-      setStatus('Les mots de passe ne correspondent pas.');
+      announceStatus('Les mots de passe ne correspondent pas.');
       return;
     }
     setSaving('create');
@@ -102,11 +118,11 @@ export default function AdminHabilitations() {
       if (!res.ok) {
         throw new Error(data.error || 'Erreur création utilisateur');
       }
-      setStatus(`✅ Utilisateur ${username} créé.`);
+      announceStatus(`✅ Utilisateur ${username} créé.`);
       setNewUser({ username: '', role: 'viewer', password: '', confirmPassword: '' });
       await loadUsers();
     } catch (error) {
-      setStatus(error.message || 'Erreur création utilisateur');
+      announceStatus(error.message || 'Erreur création utilisateur');
     } finally {
       setSaving(null);
     }
@@ -115,11 +131,12 @@ export default function AdminHabilitations() {
   const updatePassword = async username => {
     const password = passwordDrafts[username] || '';
     if (!password || password.length < 6) {
-      setStatus('Le mot de passe doit contenir au moins 6 caractères.');
+      announceStatus('Le mot de passe doit contenir au moins 6 caractères.');
       return;
     }
     setSaving(`password-${username}`);
     setStatus('');
+    setActionMessage(username, '');
     try {
       const res = await fetch('/api/admin/roles', {
         method: 'POST',
@@ -131,9 +148,11 @@ export default function AdminHabilitations() {
         throw new Error(data.error || 'Erreur mise à jour mot de passe');
       }
       setPasswordDrafts(prev => ({ ...prev, [username]: '' }));
-      setStatus(`✅ Mot de passe mis à jour pour ${username}.`);
+      setActionMessage(username, '✅ Mot de passe mis à jour.');
+      announceStatus(`✅ Mot de passe mis à jour pour ${username}.`);
     } catch (error) {
-      setStatus(error.message || 'Erreur mise à jour mot de passe');
+      setActionMessage(username, error.message || 'Erreur mise à jour mot de passe');
+      announceStatus(error.message || 'Erreur mise à jour mot de passe');
     } finally {
       setSaving(null);
     }
@@ -143,6 +162,7 @@ export default function AdminHabilitations() {
     if (!window.confirm(`Supprimer l'utilisateur ${username} ?`)) return;
     setSaving(`delete-${username}`);
     setStatus('');
+    setActionMessage(username, '');
     try {
       const res = await fetch('/api/admin/roles', {
         method: 'POST',
@@ -154,9 +174,10 @@ export default function AdminHabilitations() {
         throw new Error(data.error || 'Erreur suppression utilisateur');
       }
       setUsers(prev => prev.filter(user => user.username !== username));
-      setStatus(`✅ Utilisateur ${username} supprimé.`);
+      announceStatus(`✅ Utilisateur ${username} supprimé.`);
     } catch (error) {
-      setStatus(error.message || 'Erreur suppression utilisateur');
+      setActionMessage(username, error.message || 'Erreur suppression utilisateur');
+      announceStatus(error.message || 'Erreur suppression utilisateur');
     } finally {
       setSaving(null);
     }
@@ -189,7 +210,9 @@ export default function AdminHabilitations() {
       </header>
 
       <section className="page-shell" style={{ padding: '1.5rem 0' }}>
-        {status && <p className="status">{status}</p>}
+        <div ref={statusRef} aria-live="polite" className="status-banner">
+          {status && <p className="status">{status}</p>}
+        </div>
 
         <div className="grid columns">
           <section className="card">
@@ -235,7 +258,7 @@ export default function AdminHabilitations() {
                   required
                 />
               </label>
-              <button type="submit" className="primary" disabled={saving === 'create'}>
+              <button type="submit" className="primary" disabled={saving === 'create'} aria-busy={saving === 'create'}>
                 {saving === 'create' ? 'Création…' : 'Créer le compte'}
               </button>
             </form>
@@ -264,6 +287,7 @@ export default function AdminHabilitations() {
                       className="danger"
                       onClick={() => deleteUser(user.username)}
                       disabled={saving === `delete-${user.username}`}
+                      aria-busy={saving === `delete-${user.username}`}
                     >
                       {saving === `delete-${user.username}` ? 'Suppression…' : 'Supprimer'}
                     </button>
@@ -276,6 +300,7 @@ export default function AdminHabilitations() {
                         value={user.role || 'editor'}
                         onChange={e => updateRole(user.username, e.target.value)}
                         disabled={saving === user.username}
+                        aria-busy={saving === user.username}
                       >
                         {ROLE_OPTIONS.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -300,10 +325,14 @@ export default function AdminHabilitations() {
                       className="secondary"
                       onClick={() => updatePassword(user.username)}
                       disabled={saving === `password-${user.username}`}
+                      aria-busy={saving === `password-${user.username}`}
                     >
                       {saving === `password-${user.username}` ? 'Mise à jour…' : 'Mettre à jour le mot de passe'}
                     </button>
                     {saving === user.username && <span className="muted">Enregistrement du rôle…</span>}
+                    {actionMessages[user.username] && (
+                      <span className="action-message">{actionMessages[user.username]}</span>
+                    )}
                   </div>
                 </article>
               ))}
@@ -318,6 +347,13 @@ export default function AdminHabilitations() {
           margin-bottom: 1rem;
           font-weight: 600;
           color: var(--color-primary, #003366);
+          padding: 0.75rem 1rem;
+          background: #f0f6ff;
+          border: 1px solid #cfe0ff;
+          border-radius: 12px;
+        }
+        .status-banner:empty {
+          display: none;
         }
         label {
           font-weight: 600;
@@ -419,6 +455,11 @@ export default function AdminHabilitations() {
           align-items: center;
           gap: 12px;
           margin-top: 12px;
+          flex-wrap: wrap;
+        }
+        .action-message {
+          font-weight: 600;
+          color: #0f4bb5;
         }
         .secondary {
           background: #eaf2ff;
