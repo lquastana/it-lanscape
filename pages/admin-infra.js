@@ -229,6 +229,7 @@ export default function InfrastructureImport() {
             <Link className="active" href="/admin-infra">Gestion vue infrastructure</Link>
             <Link href="/admin-flux">Gestion flux</Link>
             <Link href="/admin-trigramme">Référentiel trigrammes</Link>
+            <Link href="/admin-habilitations">Habilitations</Link>
             <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>

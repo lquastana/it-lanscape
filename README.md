@@ -12,6 +12,7 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
   - `/admin-metier` pour éditer les domaines, processus et applications d’un fichier JSON.
   - `/admin-infra` pour mapper une extraction Excel vers les fichiers `*.infra.json` (mode remplacement ou incrémental, vérification des trigrammes).
   - `/admin-flux` pour importer et harmoniser les flux applicatifs.
+  - `/admin-habilitations` pour gérer les rôles d’accès des comptes autorisés.
 - **Contrôles d’accès** : middleware `iron-session` + règles IP et Basic Auth définies dans `data/auth`, complétés par un **RBAC** (viewer/editor/admin) et un **audit append-only** JSONL. La page `/login` permet d’ouvrir une session utilisateur avant d’accéder aux pages protégées (`/applications`, `/network`) et aux APIs sensibles.
 
 ## Structure des données

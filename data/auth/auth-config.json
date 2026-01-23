@@ -7,7 +7,15 @@
     "/admin-metier",
     "/admin-infra",
     "/admin-flux",
-    "/admin-trigramme"
+    "/admin-trigramme",
+    "/admin-habilitations"
   ],
-  "protectedApiRoutes": ["/api/infrastructure", "/api/network", "/api/files", "/api/flux", "/api/file"]
+  "protectedApiRoutes": [
+    "/api/infrastructure",
+    "/api/network",
+    "/api/files",
+    "/api/flux",
+    "/api/file",
+    "/api/admin/roles"
+  ]
 }

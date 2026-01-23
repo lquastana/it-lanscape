@@ -212,6 +212,7 @@ export default function FluxImport() {
             <Link href="/admin-infra">Gestion vue infrastructure</Link>
             <Link className="active" href="/admin-flux">Gestion flux</Link>
             <Link href="/admin-trigramme">Référentiel trigrammes</Link>
+            <Link href="/admin-habilitations">Habilitations</Link>
             <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
           </nav>
         </div>
