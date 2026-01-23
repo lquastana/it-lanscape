@@ -9,7 +9,8 @@ for (const file of fs.readdirSync(dataDir)) {
     !file.endsWith('.json') ||
     file === 'trigrammes.json' ||
     file.endsWith('.infra.json') ||
-    file.endsWith('.network.json')
+    file.endsWith('.network.json') ||
+    file.endsWith('.flux.json')
   ) {
     continue;
   }

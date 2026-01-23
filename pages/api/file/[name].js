@@ -1,7 +1,13 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { evaluateAccess, sendUnauthorizedJson } from '../../../lib/accessControl';
 
 export default async function handler(req, res) {
+  const access = await evaluateAccess(req);
+  if (!access.allowed) {
+    return sendUnauthorizedJson(res);
+  }
+
   const { name } = req.query;
   const safeName = path.basename(name) + '.json';
   console.log(safeName)

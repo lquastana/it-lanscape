@@ -7,12 +7,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  /*
   const access = await evaluateAccess(req);
   if (!access.allowed) {
     return sendUnauthorizedJson(res);
   }
-  */
 
   try {
     const dataDir = path.join(process.cwd(), 'data');
