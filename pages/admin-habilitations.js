@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import AdminNav from '../components/AdminNav';
 
 const ROLE_OPTIONS = [
   { value: 'viewer', label: 'viewer (lecture seule)' },
@@ -10,7 +9,6 @@ const ROLE_OPTIONS = [
 ];
 
 export default function AdminHabilitations() {
-  const router = useRouter();
   const [users, setUsers] = useState([]);
   const [status, setStatus] = useState('');
   const [saving, setSaving] = useState(null);
@@ -198,14 +196,7 @@ export default function AdminHabilitations() {
               <p className="hero-subtitle">Gestion des rôles d'accès pour les comptes autorisés.</p>
             </div>
           </div>
-          <nav className="view-switch" aria-label="Navigation des vues">
-            <NavLink href="/admin-metier" currentPath={router.pathname}>Gestion vue métier</NavLink>
-            <NavLink href="/admin-infra" currentPath={router.pathname}>Gestion vue infrastructure</NavLink>
-            <NavLink href="/admin-flux" currentPath={router.pathname}>Gestion flux</NavLink>
-            <NavLink href="/admin-trigramme" currentPath={router.pathname}>Référentiel trigrammes</NavLink>
-            <NavLink href="/admin-habilitations" currentPath={router.pathname}>Habilitations</NavLink>
-            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
-          </nav>
+          <AdminNav onLogout={handleLogout} />
         </div>
       </header>
 
@@ -486,12 +477,4 @@ export default function AdminHabilitations() {
       `}</style>
     </>
   );
-}
-
-function NavLink({ href, currentPath, children }) {
-  const isActive = currentPath === href;
-  if (isActive) {
-    return <span className="active" aria-current="page">{children}</span>;
-  }
-  return <Link href={href}>{children}</Link>;
 }

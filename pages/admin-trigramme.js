@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
+import AdminNav from '../components/AdminNav';
 
 const normalizeName = (str = '') => str
   .normalize('NFD')
@@ -373,16 +373,9 @@ export default function TrigrammeAdmin() {
               <h1>Référentiel des trigrammes</h1>
             </div>
           </div>
-          <nav className="view-switch" aria-label="Navigation des vues">
-            <Link href="/admin-metier">Gestion vue métier</Link>
-            <Link href="/admin-infra">Gestion vue infrastructure</Link>
-            <Link href="/admin-flux">Gestion flux</Link>
-            <Link className="active" href="/admin-trigramme">Référentiel trigrammes</Link>
-            <Link href="/admin-habilitations">Habilitations</Link>
-            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
-          </nav>
+          <AdminNav onLogout={handleLogout} />
         </div>
-      </header>
+     </header>
 
       <main className="page-shell layout">
         {status && <p className="status warn">{status}</p>}

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
+import AdminNav from '../components/AdminNav';
 
 const FIELD_CATALOG = [
   { key: 'VM', label: 'VM (identifiant unique)', hint: 'Nom ou identifiant machine' },
@@ -224,14 +224,7 @@ export default function InfrastructureImport() {
               <p className="hero-subtitle">Chargez un extrait, mappez les colonnes et choisissez le mode d'intégration.</p>
             </div>
           </div>
-          <nav className="view-switch" aria-label="Navigation des vues">
-            <Link href="/admin-metier">Gestion vue métier</Link>
-            <Link className="active" href="/admin-infra">Gestion vue infrastructure</Link>
-            <Link href="/admin-flux">Gestion flux</Link>
-            <Link href="/admin-trigramme">Référentiel trigrammes</Link>
-            <Link href="/admin-habilitations">Habilitations</Link>
-            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
-          </nav>
+          <AdminNav onLogout={handleLogout} />
         </div>
       </header>
 
