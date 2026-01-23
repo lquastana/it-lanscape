@@ -2,7 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import JSZip from 'jszip';
 import * as XLSX from 'xlsx';
-import { evaluateAccess, sendUnauthorizedJson } from '../../lib/accessControl';
+import { appendAudit } from '../../lib/audit.js';
+import { withAuthz } from '../../lib/authz.js';
+import { getDataDir } from '../../lib/dataPaths.js';
 
 const MAX_SHEET_NAME_LENGTH = 31;
 const INVALID_SHEET_CHARS = /[\\/?*\[\]:]/g;
@@ -53,18 +55,13 @@ function buildSheetFromRows(rows) {
   return XLSX.utils.json_to_sheet(rows);
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const access = await evaluateAccess(req, res);
-  if (!access.allowed) {
-    return sendUnauthorizedJson(res);
-  }
-
   try {
-    const dataDir = path.join(process.cwd(), 'data');
+    const dataDir = getDataDir();
     const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.json'));
 
     const zip = new JSZip();
@@ -114,6 +111,22 @@ export default async function handler(req, res) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
 
+    const actor = req.actor || {};
+    await appendAudit({
+      action: 'export',
+      target: 'export',
+      actor: {
+        user: actor.user || 'unknown',
+        role: actor.role || 'unknown',
+      },
+      via: actor.via || 'unknown',
+      clientIp: actor.clientIp || null,
+      meta: {
+        format: 'zip',
+        files: files.length,
+      },
+    });
+
     res.setHeader('Content-Type', 'application/zip');
     res.setHeader('Content-Disposition', `attachment; filename="it-landscape-snapshot-${timestamp}.zip"`);
     res.status(200).send(zipBuffer);
@@ -122,3 +135,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Erreur génération export' });
   }
 }
+
+export default withAuthz('read', handler);

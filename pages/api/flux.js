@@ -1,19 +1,15 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { evaluateAccess, sendUnauthorizedJson } from '../../lib/accessControl';
+import { withAuthz } from '../../lib/authz.js';
+import { getDataDir } from '../../lib/dataPaths.js';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const access = await evaluateAccess(req, res);
-  if (!access.allowed) {
-    return sendUnauthorizedJson(res);
-  }
-
   try {
-    const dataDir = path.join(process.cwd(), 'data');
+    const dataDir = getDataDir();
     const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.flux.json'));
     const etablissements = [];
     for (const file of files) {
@@ -29,3 +25,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Erreur lecture JSON' });
   }
 }
+
+export default withAuthz('read', handler);

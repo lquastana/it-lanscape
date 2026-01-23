@@ -40,6 +40,7 @@ export default async function loginRoute(req, res) {
     session.user = {
       username: user.username,
       id: user.id,
+      role: user.role || 'editor',
       isLoggedIn: true,
     };
     await session.save();

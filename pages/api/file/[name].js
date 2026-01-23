@@ -1,30 +1,17 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { getIronSession } from 'iron-session';
-import { appendAuditEvent } from '../../../lib/auditLog';
-import { evaluateAccess, extractBasicAuthUser, extractClientIp, sendUnauthorizedJson } from '../../../lib/accessControl';
-import { sessionOptions } from '../../../lib/session';
+import crypto from 'crypto';
+import { appendAudit, hashContent, truncateSnapshot } from '../../../lib/audit.js';
+import { withAuthz } from '../../../lib/authz.js';
+import { resolveDataPath } from '../../../lib/dataPaths.js';
 
-export default async function handler(req, res) {
-  const access = await evaluateAccess(req, res);
-  if (!access.allowed) {
-    return sendUnauthorizedJson(res);
-  }
-
-  const session = await getIronSession(req, res, sessionOptions);
-  const sessionUser = session?.user?.username || null;
-  const authHeader = req.headers['authorization'] || req.headers['Authorization'];
-  const basicUser = extractBasicAuthUser(authHeader);
-  const actor = sessionUser || basicUser || 'unknown';
-  const clientIp = extractClientIp(req);
-
+async function handler(req, res) {
   const { name } = req.query;
   const safeName = path.basename(name) + '.json';
-  console.log(safeName)
   if (!safeName.endsWith('.json')) {
     return res.status(400).json({ error: 'Fichier invalide' });
   }
-  const filePath = path.join(process.cwd(), 'data', safeName);
+  const filePath = resolveDataPath(safeName);
 
   if (req.method === 'GET') {
     try {
@@ -36,14 +23,27 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
+      const beforeContent = await fs.readFile(filePath, 'utf-8').catch(() => null);
       const payload = JSON.stringify(req.body, null, 2);
-      await fs.writeFile(filePath, payload, 'utf-8');
-      await appendAuditEvent({
+      const tempPath = `${filePath}.${crypto.randomUUID()}.tmp`;
+      await fs.mkdir(path.dirname(filePath), { recursive: true });
+      await fs.writeFile(tempPath, payload, 'utf-8');
+      await fs.rename(tempPath, filePath);
+
+      const actor = req.actor || {};
+      await appendAudit({
         action: 'write',
-        target: safeName,
-        actor,
-        via: access.via || 'unknown',
-        clientIp,
+        target: `data/${safeName}`,
+        actor: {
+          user: actor.user || 'unknown',
+          role: actor.role || 'unknown',
+        },
+        via: actor.via || 'unknown',
+        clientIp: actor.clientIp || null,
+        beforeHash: hashContent(beforeContent),
+        afterHash: hashContent(payload),
+        before: truncateSnapshot(beforeContent),
+        after: truncateSnapshot(payload),
         bytes: Buffer.byteLength(payload, 'utf-8'),
       });
       res.status(200).json({ ok: true });
@@ -53,4 +53,14 @@ export default async function handler(req, res) {
   } else {
     res.status(405).end();
   }
+}
+
+export default async function routeHandler(req, res) {
+  if (req.method === 'GET') {
+    return withAuthz('read', handler)(req, res);
+  }
+  if (req.method === 'POST') {
+    return withAuthz('write', handler)(req, res);
+  }
+  return res.status(405).end();
 }
