@@ -12,7 +12,8 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
   - `/admin-metier` pour éditer les domaines, processus et applications d’un fichier JSON.
   - `/admin-infra` pour mapper une extraction Excel vers les fichiers `*.infra.json` (mode remplacement ou incrémental, vérification des trigrammes).
   - `/admin-flux` pour importer et harmoniser les flux applicatifs.
-- **Contrôles d’accès** : middleware `iron-session` + règles IP et Basic Auth définies dans `data/auth`. La page `/login` permet d’ouvrir une session utilisateur avant d’accéder aux pages protégées (`/applications`, `/network`) et aux APIs sensibles.
+  - `/admin-habilitations` pour gérer les rôles, mots de passe et comptes autorisés.
+- **Contrôles d’accès** : middleware `iron-session` + règles IP et Basic Auth définies dans `data/auth`, complétés par un **RBAC** (viewer/editor/admin) et un **audit append-only** JSONL. La page `/login` permet d’ouvrir une session utilisateur avant d’accéder aux pages protégées (`/applications`, `/network`) et aux APIs sensibles.
 
 ## Structure des données
 - `data/*.json` : vue fonctionnelle (`etablissements → domaines → processus → applications`).
@@ -20,9 +21,9 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
 - `data/*.network.json` : informations réseau par établissement (`vlans[]`).
 - `data/*.flux.json` : flux applicatifs par établissement (`flux[]`).
 - `data/trigrammes.json` : dictionnaire trigramme → application (utilisé pour les imports infra et les scripts).
-- `data/auth/access-rules.json` : IP autorisées, comptes Basic Auth (mots de passe hachés `bcrypt`).
+- `data/auth/access-rules.json` : IP autorisées, comptes Basic Auth (mots de passe hachés `bcrypt`) + rôle (`viewer`, `editor`, `admin`).
 - `data/auth/auth-config.json` : liste des pages et routes API protégées par session.
-- `data/audit-log.jsonl` : journal append-only des modifications (écritures via API).
+- `data/audit-log.jsonl` : journal append-only des modifications (écritures via API) et exports.
 
 ## Prérequis
 - Node.js 18 ou version supérieure.
@@ -49,10 +50,59 @@ L’application est accessible sur http://localhost:3000.
 ```bash
 npm test
 ```
-Les tests vérifient la cohérence des fichiers JSON et la configuration des contrôles d’accès.
+Les tests vérifient la cohérence des fichiers JSON, la configuration des contrôles d’accès et le RBAC/audit sans base de données.
 
 ## Export snapshot
 Un export zip est disponible via `GET /api/export` : il contient les fichiers JSON dans `data/` et un fichier `snapshot.xlsx` multi-onglets avec des feuilles exploitables (applications, flux, infra, réseau, trigrammes).
+
+## RBAC & audit
+Rôles disponibles :
+- **viewer** : lecture seule.
+- **editor** : lecture + écriture.
+- **admin** : toutes actions + gestion des rôles.
+
+Endpoints protégés par RBAC :
+- `GET /api/flux`, `GET /api/infrastructure`, `GET /api/network`, `GET /api/files` → `read`.
+- `GET /api/export` → `admin` + audit `action="export"`.
+- `POST /api/file/[name]` → `write` + audit complet.
+
+Accès pages :
+- Vue métier (`/`) : pas de restriction de groupe (auth standard si activée).
+- Vue applicative (`/applications`), flux (`/flux`), réseau (`/network`), incident (`/incident`) : rôle **viewer** minimum.
+- Administration (`/admin-*`) : rôle **editor** minimum (sauf `/admin-habilitations` en **admin**).
+
+## Accès UI & API (IP + login)
+Les pages protégées s’appuient sur la session (`/login`) et le middleware `iron-session`. Les APIs sensibles utilisent `withAuthz` qui accepte **session** ou **Basic Auth depuis une IP autorisée**. En pratique : 
+- **Pages** : session obligatoire (login) pour les routes listées dans `data/auth/auth-config.json` et rôle minimal selon la vue. 
+- **APIs protégées** : session **ou** Basic Auth **ET** IP allowlist (`data/auth/access-rules.json`).
+
+### Résumé des endpoints et restrictions
+| Type | Endpoint | Description | Restriction |
+| --- | --- | --- | --- |
+| UI | `/` | Vue métier | Public (pas de rôle) |
+| UI | `/applications` | Vue applicative | viewer+ |
+| UI | `/flux` | Vue flux | viewer+ |
+| UI | `/network` | Vue réseau | viewer+ |
+| UI | `/incident` | Simulation incident | viewer+ |
+| UI | `/admin-*` | Écrans d’administration | editor+ |
+| UI | `/admin-habilitations` | Gestion des comptes & rôles | admin+ |
+| API | `GET /api/flux` | Flux (lecture) | viewer+ |
+| API | `GET /api/infrastructure` | Infrastructure (lecture) | viewer+ |
+| API | `GET /api/network` | Réseau (lecture) | viewer+ |
+| API | `GET /api/files` | Liste des fichiers | viewer+ |
+| API | `GET /api/export` | Export ZIP + audit | admin+ |
+| API | `POST /api/file/[name]` | Écriture JSON + audit | editor+ |
+| API | `GET/POST /api/admin/roles` | Gestion des habilitations | admin+ |
+
+Le journal `data/audit-log.jsonl` est append-only et contient notamment :
+- `ts` (timestamp ISO)
+- `action` (`write` ou `export`)
+- `target`
+- `actor.user`, `actor.role`
+- `via` (`session` ou `basic`)
+- `clientIp`
+- `beforeHash`, `afterHash`
+- `before` / `after` (snapshots tronqués)
 
 ## Documentation
 - [Simulation d'incident](docs/incident-simulation.md)
@@ -76,10 +126,14 @@ Variables d’environnement utiles :
 - `SESSION_SECRET` : secret pour la session `iron-session`.
 - `DISABLE_AUTH=true` : désactive l’authentification (développement uniquement).
 - `ACCESS_CONTROL_ENABLED=false` : contourne le filtrage IP/Basic Auth défini dans `access-rules.json`.
+- `DATA_DIR=/chemin/vers/data` : redirige le dossier contenant les JSON (utile pour les tests).
 
 Identifiants de test (données fictives) :
 - `valdellys` / `password`
 - `dunes` / `password`
 - `saintroch` / `password`
+- `viewer` / `password` (rôle viewer)
+- `editor` / `password` (rôle editor)
+- `admin` / `password` (rôle admin)
 
 Les règles d’accès et les données sont chargées depuis le dossier `data`; adaptez-les avant un déploiement.

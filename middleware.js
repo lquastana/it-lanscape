@@ -10,6 +10,33 @@ const sessionOptions = {
   },
 };
 
+const ROLE_ORDER = ['viewer', 'editor', 'admin'];
+
+function hasRequiredRole(userRole, requiredRole) {
+  const userIndex = ROLE_ORDER.indexOf(userRole || '');
+  const requiredIndex = ROLE_ORDER.indexOf(requiredRole);
+  if (userIndex === -1 || requiredIndex === -1) return false;
+  return userIndex >= requiredIndex;
+}
+
+function requiredRoleForPath(pathname) {
+  if (pathname.startsWith('/admin-habilitations')) {
+    return 'admin';
+  }
+  if (pathname.startsWith('/admin')) {
+    return 'editor';
+  }
+  if (
+    pathname.startsWith('/applications') ||
+    pathname.startsWith('/flux') ||
+    pathname.startsWith('/network') ||
+    pathname.startsWith('/incident')
+  ) {
+    return 'viewer';
+  }
+  return null;
+}
+
 export async function middleware(req) {
   const res = NextResponse.next(); // Create the response object once
   const session = await getIronSession(req, res, sessionOptions); // Pass req and the created res
@@ -45,6 +72,21 @@ export async function middleware(req) {
       loginUrl.searchParams.set('redirectedFrom', pathname);
       return NextResponse.redirect(loginUrl);
     }
+  }
+
+  const requiredRole = requiredRoleForPath(pathname);
+  const effectiveRole = user?.role || 'editor';
+  if (requiredRole && !hasRequiredRole(effectiveRole, requiredRole)) {
+    if (isProtectedApi) {
+      return new NextResponse(JSON.stringify({ error: 'Accès interdit' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    const unauthorizedUrl = new URL('/unauthorized', req.url);
+    unauthorizedUrl.searchParams.set('from', pathname);
+    unauthorizedUrl.searchParams.set('requiredRole', requiredRole);
+    return NextResponse.redirect(unauthorizedUrl);
   }
 
   return res; // User is logged in and route is protected, continue with the response

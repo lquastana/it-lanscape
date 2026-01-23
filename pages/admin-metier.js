@@ -7,7 +7,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
+import AdminNav from '../components/AdminNav';
 
 /* ---------- structures vides ---------- */
 const EMPTY_PROCESS = { nom: '', description: '', applications: [] };
@@ -139,13 +139,7 @@ export default function Admin() {
               <p className="hero-subtitle">Gestion centralisée des établissements, domaines et applications.</p>
             </div>
           </div>
-          <nav className="view-switch" aria-label="Navigation des vues">
-            <Link className="active" href="/admin-metier">Gestion vue métier</Link>
-            <Link href="/admin-infra">Gestion vue infrastructure</Link>
-            <Link href="/admin-flux">Gestion flux</Link>
-            <Link href="/admin-trigramme">Référentiel trigrammes</Link>
-            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
-          </nav>
+          <AdminNav onLogout={handleLogout} />
         </div>
       </header>
 

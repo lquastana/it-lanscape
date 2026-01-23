@@ -5,17 +5,38 @@
     {
       "id": "ch_val_de_lys",
       "username": "valdellys",
-      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK"
+      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK",
+      "role": "editor"
     },
     {
       "id": "clinique_des_dunes",
       "username": "dunes",
-      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK"
+      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK",
+      "role": "editor"
     },
     {
       "id": "hopital_saint_roch",
       "username": "saintroch",
-      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK"
+      "password": "$2b$10$Oxo6uNdhVSRN02P1wqtL7OvtElM6orOy970qvghb8BsmIkOqmuvjK",
+      "role": "editor"
+    },
+    {
+      "id": "dev_viewer",
+      "username": "viewer",
+      "password": "$2b$10$3jG7hSCVmYgBuLK6/uX97ur/0iRcwkFfxZyH88Myt0YAQqs1kMLCy",
+      "role": "viewer"
+    },
+    {
+      "id": "dev_editor",
+      "username": "editor",
+      "password": "$2b$10$3jG7hSCVmYgBuLK6/uX97ur/0iRcwkFfxZyH88Myt0YAQqs1kMLCy",
+      "role": "editor"
+    },
+    {
+      "id": "dev_admin",
+      "username": "admin",
+      "password": "$2b$10$3jG7hSCVmYgBuLK6/uX97ur/0iRcwkFfxZyH88Myt0YAQqs1kMLCy",
+      "role": "admin"
     }
   ]
 }
