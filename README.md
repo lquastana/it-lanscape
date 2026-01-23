@@ -51,6 +51,9 @@ npm test
 ```
 Les tests vérifient la cohérence des fichiers JSON et la configuration des contrôles d’accès.
 
+## Export snapshot
+Un export zip est disponible via `GET /api/export` : il contient les fichiers JSON dans `data/` et un fichier `snapshot.xlsx` multi-onglets (un onglet par fichier JSON).
+
 ## Documentation
 - [Simulation d'incident](docs/incident-simulation.md)
 - [Architecture](docs/architecture.md)
