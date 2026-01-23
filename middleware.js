@@ -80,7 +80,10 @@ export async function middleware(req) {
         headers: { 'Content-Type': 'application/json' },
       });
     }
-    return new NextResponse('Accès interdit', { status: 403 });
+    const unauthorizedUrl = new URL('/unauthorized', req.url);
+    unauthorizedUrl.searchParams.set('from', pathname);
+    unauthorizedUrl.searchParams.set('requiredRole', requiredRole);
+    return NextResponse.redirect(unauthorizedUrl);
   }
 
   return res; // User is logged in and route is protected, continue with the response
