@@ -1,9 +1,15 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { evaluateAccess, sendUnauthorizedJson } from '../../lib/accessControl';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const access = await evaluateAccess(req, res);
+  if (!access.allowed) {
+    return sendUnauthorizedJson(res);
   }
 
   try {

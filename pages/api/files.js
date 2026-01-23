@@ -7,12 +7,10 @@ export default async function handler(req, res) {
     return res.status(405).end();
   }
 
-  /*
-  const access = await evaluateAccess(req);
+  const access = await evaluateAccess(req, res);
   if (!access.allowed) {
     return sendUnauthorizedJson(res);
   }
-  */
 
   try {
     const dataDir = path.join(process.cwd(), 'data');
