@@ -319,6 +319,10 @@ export default function AdminHabilitations() {
           font-weight: 600;
           color: var(--color-primary, #003366);
         }
+        label {
+          font-weight: 600;
+          color: var(--color-primary, #003366);
+        }
         .columns {
           grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
           gap: 1.5rem;
@@ -339,15 +343,31 @@ export default function AdminHabilitations() {
         .user-card input,
         .user-card select {
           margin-top: 6px;
+          width: 100%;
+          padding: 10px 12px;
+          border: 1px solid #cfd8e3;
+          border-radius: 12px;
+          background: #ffffff;
+          font-size: 0.95rem;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-stack input:focus,
+        .form-stack select:focus,
+        .user-card input:focus,
+        .user-card select:focus {
+          border-color: #1d74e7;
+          box-shadow: 0 0 0 3px rgba(29, 116, 231, 0.15);
+          outline: none;
         }
         .primary {
-          background: #1d74e7;
+          background: linear-gradient(135deg, #1d74e7, #0f5bd6);
           color: #fff;
           border: none;
           border-radius: 10px;
           padding: 10px 14px;
           font-weight: 600;
           cursor: pointer;
+          box-shadow: 0 8px 18px rgba(29, 116, 231, 0.2);
         }
         .primary:disabled {
           opacity: 0.6;
@@ -362,10 +382,12 @@ export default function AdminHabilitations() {
         }
         .ghost {
           border: 1px solid #c8d6e5;
-          background: transparent;
+          background: #f5f8ff;
           padding: 8px 12px;
           border-radius: 10px;
           cursor: pointer;
+          font-weight: 600;
+          color: #1b4d9b;
         }
         .user-list {
           display: grid;
@@ -399,19 +421,22 @@ export default function AdminHabilitations() {
           margin-top: 12px;
         }
         .secondary {
-          background: #eef4ff;
-          border: 1px solid #c7d8f5;
+          background: #eaf2ff;
+          border: 1px solid #bcd3ff;
+          color: #0f4bb5;
           border-radius: 10px;
           padding: 8px 12px;
           cursor: pointer;
+          font-weight: 600;
         }
         .danger {
-          background: #ffe9ea;
-          border: 1px solid #f5b7ba;
+          background: #fff1f2;
+          border: 1px solid #f2b8bd;
           color: #b4232a;
           border-radius: 10px;
           padding: 6px 10px;
           cursor: pointer;
+          font-weight: 600;
         }
         .muted {
           opacity: 0.7;
