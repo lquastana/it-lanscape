@@ -136,4 +136,4 @@ async function handler(req, res) {
   }
 }
 
-export default withAuthz('read', handler);
+export default withAuthz('admin', handler);

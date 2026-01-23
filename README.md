@@ -62,8 +62,13 @@ Rôles disponibles :
 
 Endpoints protégés par RBAC :
 - `GET /api/flux`, `GET /api/infrastructure`, `GET /api/network`, `GET /api/files` → `read`.
-- `GET /api/export` → `read` + audit `action="export"`.
+- `GET /api/export` → `admin` + audit `action="export"`.
 - `POST /api/file/[name]` → `write` + audit complet.
+
+Accès pages :
+- Vue métier (`/`) : pas de restriction de groupe (auth standard si activée).
+- Vue applicative (`/applications`), flux (`/flux`), réseau (`/network`), incident (`/incident`) : rôle **viewer** minimum.
+- Administration (`/admin-*`) : rôle **editor** minimum.
 
 Le journal `data/audit-log.jsonl` est append-only et contient notamment :
 - `ts` (timestamp ISO)
