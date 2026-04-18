@@ -1,0 +1,24 @@
+import fs from 'fs/promises';
+import path from 'path';
+import { getDataDir } from '../../lib/dataPaths.js';
+
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  try {
+    const dataDir = getDataDir();
+    const files = (await fs.readdir(dataDir)).filter(
+      f => f.endsWith('.json') && !f.endsWith('.infra.json')
+    );
+    const etablissements = [];
+    for (const file of files) {
+      const content = await fs.readFile(path.join(dataDir, file), 'utf-8');
+      const { etablissements: e = [] } = JSON.parse(content);
+      etablissements.push(...e);
+    }
+    res.status(200).json({ etablissements });
+  } catch {
+    res.status(500).json({ error: 'Erreur lecture JSON' });
+  }
+}

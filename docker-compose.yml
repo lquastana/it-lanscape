@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: .
+    expose:
+      - "3000"
+    volumes:
+      - data:/app/data
+volumes:
+  data:

@@ -1,0 +1,66 @@
+import fs from 'fs/promises';
+import path from 'path';
+import crypto from 'crypto';
+import { appendAudit, hashContent, truncateSnapshot } from '../../../lib/audit.js';
+import { withAuthz } from '../../../lib/authz.js';
+import { resolveDataPath } from '../../../lib/dataPaths.js';
+
+async function handler(req, res) {
+  const { name } = req.query;
+  const safeName = path.basename(name) + '.json';
+  if (!safeName.endsWith('.json')) {
+    return res.status(400).json({ error: 'Fichier invalide' });
+  }
+  const filePath = resolveDataPath(safeName);
+
+  if (req.method === 'GET') {
+    try {
+      const data = await fs.readFile(filePath, 'utf-8');
+      res.setHeader('Content-Type', 'application/json');
+      res.send(data);
+    } catch {
+      res.status(500).json({ error: 'Erreur lecture fichier' });
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const beforeContent = await fs.readFile(filePath, 'utf-8').catch(() => null);
+      const payload = JSON.stringify(req.body, null, 2);
+      const tempPath = `${filePath}.${crypto.randomUUID()}.tmp`;
+      await fs.mkdir(path.dirname(filePath), { recursive: true });
+      await fs.writeFile(tempPath, payload, 'utf-8');
+      await fs.rename(tempPath, filePath);
+
+      const actor = req.actor || {};
+      await appendAudit({
+        action: 'write',
+        target: `data/${safeName}`,
+        actor: {
+          user: actor.user || 'unknown',
+          role: actor.role || 'unknown',
+        },
+        via: actor.via || 'unknown',
+        clientIp: actor.clientIp || null,
+        beforeHash: hashContent(beforeContent),
+        afterHash: hashContent(payload),
+        before: truncateSnapshot(beforeContent),
+        after: truncateSnapshot(payload),
+        bytes: Buffer.byteLength(payload, 'utf-8'),
+      });
+      res.status(200).json({ ok: true });
+    } catch {
+      res.status(500).json({ error: 'Erreur écriture fichier' });
+    }
+  } else {
+    res.status(405).end();
+  }
+}
+
+export default async function routeHandler(req, res) {
+  if (req.method === 'GET') {
+    return withAuthz('read', handler)(req, res);
+  }
+  if (req.method === 'POST') {
+    return withAuthz('write', handler)(req, res);
+  }
+  return res.status(405).end();
+}

@@ -1,0 +1,63 @@
+{
+  "etablissement": "Clinique des Dunes",
+  "vlans": [
+    {
+      "id": 110,
+      "nom": "VLAN-ADMIN",
+      "description": "Applications administratives et support",
+      "network": "10.20.10.0/24",
+      "interco": "INTERCO-ADMIN",
+      "gateway": "10.20.10.254",
+      "serveurs": [
+        { "ip": "10.20.10.10", "nom": "cdn-gap-01" },
+        { "ip": "10.20.10.11", "nom": "cdn-ifact-01" },
+        { "ip": "10.20.10.12", "nom": "cdn-sage-01" },
+        { "ip": "10.20.10.13", "nom": "cdn-sfr-01" },
+        { "ip": "10.20.10.14", "nom": "cdn-carl-01" },
+        { "ip": "10.20.10.15", "nom": "cdn-sax-01" }
+      ]
+    },
+    {
+      "id": 120,
+      "nom": "VLAN-SOINS",
+      "description": "DPI, urgences et pharmacie",
+      "network": "10.20.20.0/24",
+      "interco": "INTERCO-SOIN",
+      "gateway": "10.20.20.254",
+      "serveurs": [
+        { "ip": "10.20.20.10", "nom": "cdn-orbis-app-01" },
+        { "ip": "10.20.20.11", "nom": "cdn-orbis-db-01" },
+        { "ip": "10.20.20.12", "nom": "cdn-orbis-plan-01" },
+        { "ip": "10.20.20.13", "nom": "cdn-pyxis-01" },
+        { "ip": "10.20.20.14", "nom": "cdn-sillage-01" },
+        { "ip": "10.20.20.15", "nom": "cdn-urg-01" }
+      ]
+    },
+    {
+      "id": 130,
+      "nom": "VLAN-IMAGERIE",
+      "description": "Plateau d'imagerie et PACS",
+      "network": "10.20.30.0/24",
+      "interco": "INTERCO-IMAG",
+      "gateway": "10.20.30.254",
+      "serveurs": [
+        { "ip": "10.20.30.10", "nom": "cdn-ris-01" },
+        { "ip": "10.20.30.11", "nom": "cdn-pacs-01" }
+      ]
+    },
+    {
+      "id": 140,
+      "nom": "VLAN-TECH",
+      "description": "Supervision, EAI et téléphonie",
+      "network": "10.20.40.0/24",
+      "interco": "INTERCO-TECH",
+      "gateway": "10.20.40.254",
+      "serveurs": [
+        { "ip": "10.20.40.10", "nom": "cdn-eai-01" },
+        { "ip": "10.20.40.11", "nom": "cdn-centreon-01" },
+        { "ip": "10.20.40.12", "nom": "cdn-glpi-01" },
+        { "ip": "10.20.40.13", "nom": "cdn-ucm-01" }
+      ]
+    }
+  ]
+}

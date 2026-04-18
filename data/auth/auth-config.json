@@ -1,0 +1,21 @@
+{
+  "protectedPages": [
+    "/applications",
+    "/flux",
+    "/network",
+    "/incident",
+    "/admin-metier",
+    "/admin-infra",
+    "/admin-flux",
+    "/admin-trigramme",
+    "/admin-habilitations"
+  ],
+  "protectedApiRoutes": [
+    "/api/infrastructure",
+    "/api/network",
+    "/api/files",
+    "/api/flux",
+    "/api/file",
+    "/api/admin/roles"
+  ]
+}
