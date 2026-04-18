@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import AdminNav from '../components/AdminNav';
+import { LOGO_URL, ORG_NAME } from '../lib/branding';
 
 const FIELD_CATALOG = [
   { key: 'VM', label: 'VM (identifiant unique)', hint: 'Nom ou identifiant machine' },
@@ -216,10 +217,10 @@ export default function InfrastructureImport() {
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
-              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+              {LOGO_URL && <img src={LOGO_URL} alt={ORG_NAME} />}
             </div>
             <div>
-              <p className="eyebrow">GCS E-santé Corse</p>
+              <p className="eyebrow">{ORG_NAME}</p>
               <h1>Import Excel infrastructure</h1>
               <p className="hero-subtitle">Chargez un extrait, mappez les colonnes et choisissez le mode d'intégration.</p>
             </div>

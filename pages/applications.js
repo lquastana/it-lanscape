@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Legend from '../components/Legend';
 import Filters from '../components/Filters';
+import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 import ApplicativeView from '../components/ApplicativeView';
 import { useLandscapeData } from '../hooks/useLandscapeData';
 
@@ -17,19 +18,19 @@ export default function ApplicationsPage() {
   return (
     <>
       <Head>
-        <title>Applications - Cartographie des Hôpitaux Publics de Corse</title>
+        <title>Applications - {APP_TITLE}</title>
         <meta charSet="UTF-8" />
       </Head>
       <header className="hero">
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
-              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+              {LOGO_URL && <img src={LOGO_URL} alt={ORG_NAME} />}
             </div>
             <div>
-              <p className="eyebrow">GCS E-santé Corse</p>
+              <p className="eyebrow">{ORG_NAME}</p>
               <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                Cartographie des Hôpitaux Publics de Corse
+                {APP_TITLE}
               </motion.h1>
               <p className="hero-subtitle">Explorez les applications et leurs serveurs.</p>
             </div>

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
 // --- Définition des Variables CSS (Tokens de la charte) pour une application en ligne ---
 // En production, ces variables seraient définies dans un fichier CSS global ou un composant <style>
@@ -149,7 +150,7 @@ export default function LoginPage() {
   return (
     <>
       <Head>
-        <title>Connexion - Cartographie des Hôpitaux Publics de Corse</title>
+        <title>Connexion - {APP_TITLE}</title>
         <meta charSet="UTF-8" />
         {/* Inclusion des polices via Head (alternative au CSS global) */}
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -162,11 +163,11 @@ export default function LoginPage() {
         <div className="page-shell hero-grid">
           <div className="hero-brand" style={{ gridColumn: '1 / -1', fontFamily: designTokens.fontBody }}>
             <div className="brand-mark">
-              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" style={{ maxHeight: '60px' }} />
+              {LOGO_URL && <img src={LOGO_URL} alt={ORG_NAME} style={{ maxHeight: '60px' }} />}
             </div>
             <div style={{ marginLeft: '1rem' }}>
               <p className="eyebrow" style={{ color: designTokens.colorPrimary, fontWeight: '500', fontSize: '14px' }}>
-                GCS E-santé Corse
+                {ORG_NAME}
               </p>
               <motion.h1 
                 initial={{ opacity: 0, y: -10 }} 
@@ -189,7 +190,7 @@ export default function LoginPage() {
         
         <form onSubmit={handleSubmit}>
           
-          <label htmlFor="username" style={styles.label}>Nom d'utilisateur (Identifiant GCS)</label>
+          <label htmlFor="username" style={styles.label}>Nom d'utilisateur</label>
           <input 
             type="text" 
             id="username" 

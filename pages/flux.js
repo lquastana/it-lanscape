@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { INTERFACE_COLORS } from '../lib/constants';
+import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
 const INTERFACE_TYPES = ['Administrative', 'Medicale', 'Facturation', 'Planification', 'Autre'];
 
@@ -274,17 +275,17 @@ export default function FluxPage() {
   return (
     <>
       <Head>
-        <title>Flux applicatifs - Cartographie des Hôpitaux Publics de Corse</title>
+        <title>Flux applicatifs - {APP_TITLE}</title>
         <meta charSet="UTF-8" />
       </Head>
       <header className="hero">
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
-              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+              {LOGO_URL && <img src={LOGO_URL} alt={ORG_NAME} />}
             </div>
             <div>
-              <p className="eyebrow">GCS E-santé Corse</p>
+              <p className="eyebrow">{ORG_NAME}</p>
               <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                 Flux applicatifs
               </motion.h1>

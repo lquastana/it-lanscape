@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import NetworkFilters from '../components/NetworkFilters';
 import NetworkView from '../components/NetworkView';
+import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 import useNetworkData from '../hooks/useNetworkData';
 
 export default function NetworkPage() {
@@ -16,19 +17,19 @@ export default function NetworkPage() {
   return (
     <>
       <Head>
-        <title>Réseau - Cartographie des Hôpitaux Publics de Corse</title>
+        <title>Réseau - {APP_TITLE}</title>
         <meta charSet="UTF-8" />
       </Head>
       <header className="hero">
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
-              <img src="/logo-gcs.png" alt="Logo GCS E-santé Corse" />
+              {LOGO_URL && <img src={LOGO_URL} alt={ORG_NAME} />}
             </div>
             <div>
-              <p className="eyebrow">GCS E-santé Corse</p>
+              <p className="eyebrow">{ORG_NAME}</p>
               <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                Cartographie des Hôpitaux Publics de Corse
+                {APP_TITLE}
               </motion.h1>
               <p className="hero-subtitle">Explorez les VLANs et leurs serveurs.</p>
             </div>
