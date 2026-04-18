@@ -13,7 +13,7 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
   - `/admin-infra` pour mapper une extraction Excel vers les fichiers `*.infra.json` (mode remplacement ou incrémental, vérification des trigrammes).
   - `/admin-flux` pour importer et harmoniser les flux applicatifs.
   - `/admin-habilitations` pour gérer les rôles, mots de passe et comptes autorisés.
-- **Contrôles d’accès** : middleware `iron-session` + règles IP et Basic Auth définies dans `data/auth`, complétés par un **RBAC** (viewer/editor/admin) et un **audit append-only** JSONL. La page `/login` permet d’ouvrir une session utilisateur avant d’accéder aux pages protégées (`/applications`, `/network`) et aux APIs sensibles.
+- **Contrôles d’accès** : authentification via **NextAuth.js** (Credentials en dev, Azure AD en prod), complétée par un **RBAC** (viewer/editor/admin) et un **audit append-only** JSONL. La page `/login` permet d’ouvrir une session avant d’accéder aux pages protégées.
 
 ## Structure des données
 - `data/*.json` : vue fonctionnelle (`etablissements → domaines → processus → applications`).
@@ -21,7 +21,7 @@ Tableau de bord Next.js pour visualiser la cartographie applicative et technique
 - `data/*.network.json` : informations réseau par établissement (`vlans[]`).
 - `data/*.flux.json` : flux applicatifs par établissement (`flux[]`).
 - `data/trigrammes.json` : dictionnaire trigramme → application (utilisé pour les imports infra et les scripts).
-- `data/auth/access-rules.json` : IP autorisées, comptes Basic Auth (mots de passe hachés `bcrypt`) + rôle (`viewer`, `editor`, `admin`).
+- `data/auth/access-rules.json` : comptes utilisateurs (mots de passe hachés `bcrypt`) + rôle (`viewer`, `editor`, `admin`).
 - `data/auth/auth-config.json` : liste des pages et routes API protégées par session.
 - `data/audit-log.jsonl` : journal append-only des modifications (écritures via API) et exports.
 
@@ -128,12 +128,12 @@ Variables d’environnement utiles :
 - `ACCESS_CONTROL_ENABLED=false` : contourne le filtrage IP/Basic Auth défini dans `access-rules.json`.
 - `DATA_DIR=/chemin/vers/data` : redirige le dossier contenant les JSON (utile pour les tests).
 
-Identifiants de test (données fictives) :
-- `valdellys` / `password`
-- `dunes` / `password`
-- `saintroch` / `password`
-- `viewer` / `password` (rôle viewer)
-- `editor` / `password` (rôle editor)
-- `admin` / `password` (rôle admin)
+Compte dev principal :
+
+| Utilisateur | Mot de passe | Rôle  |
+|-------------|--------------|-------|
+| `admin`     | `password`   | admin |
+
+Autres comptes de test : `viewer/password` (viewer), `editor/password` (editor), `valdellys/password`, `dunes/password`, `saintroch/password` (editor).
 
 Les règles d’accès et les données sont chargées depuis le dossier `data`; adaptez-les avant un déploiement.

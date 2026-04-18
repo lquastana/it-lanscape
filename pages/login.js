@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 
@@ -132,28 +133,16 @@ export default function LoginPage() {
     event.preventDefault();
     setError('');
 
-    const body = {
+    const result = await signIn('credentials', {
       username: event.currentTarget.username.value,
       password: event.currentTarget.password.value,
-    };
+      redirect: false,
+    });
 
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      if (res.ok) {
-        // Redirect to the page they came from, or home page if none
-        router.push(redirectedFrom || '/');
-      } else {
-        const errorData = await res.json();
-        setError(errorData.message || 'Échec de la connexion. Veuillez vérifier vos identifiants.');
-      }
-    } catch (error) {
-      console.error('An unexpected error occurred:', error);
-      setError('Une erreur inattendue s\'est produite lors de la tentative de connexion.');
+    if (result?.ok) {
+      router.push(redirectedFrom || '/');
+    } else {
+      setError('Échec de la connexion. Veuillez vérifier vos identifiants.');
     }
   }
 

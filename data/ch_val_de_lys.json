@@ -12,13 +12,13 @@
               "description": "Gestion Administrative du Patient.",
               "applications": [
                 {
-                  "nom": "Maincare iGAP",
+                  "nom": "Maincare IGAP",
                   "description": "Gestion des admissions, identités et mouvements.",
                   "editeur": "Maincare",
-                  "referent": null,
+                  "referent": "",
                   "hebergement": "CH Val-de-Lys",
-                  "multiEtablissement": false,
                   "criticite": "Critique",
+                  "multiEtablissement": false,
                   "lienPRTG": null,
                   "interfaces": {
                     "Planification": false,

@@ -32,5 +32,6 @@
   "SFR": "Sage FRP 1000",
   "CAR": "CardioReport",
   "ONC": "OncoSuite",
-  "BLO": "BlocManager"
+  "BLO": "BlocManager",
+  "X99": "App Test"
 }

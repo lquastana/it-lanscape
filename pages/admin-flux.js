@@ -100,17 +100,10 @@ export default function FluxImport() {
   }, [selectedFile]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
     if (window.XLSX) { setLibReady(true); return; }
-    const script = document.createElement('script');
-    script.src = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
-    script.async = true;
-    script.onload = () => setLibReady(true);
-    script.onerror = () => setLibError('Librairie Excel non chargée (connexion requise)');
-    document.body.appendChild(script);
-    return () => {
-      if (script.parentNode) script.parentNode.removeChild(script);
-    };
+    import('xlsx')
+      .then(mod => { window.XLSX = mod.default || mod; setLibReady(true); })
+      .catch(() => setLibError('Impossible de charger la librairie Excel'));
   }, []);
 
   useEffect(() => {
@@ -150,12 +143,12 @@ export default function FluxImport() {
     try {
       const buffer = await file.arrayBuffer();
       const workbook = window.XLSX.read(buffer, { type: 'array' });
-      const firstSheet = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[firstSheet];
+      const sheetName = workbook.SheetNames.find(n => /flux/i.test(n)) ?? workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
       const rows = window.XLSX.utils.sheet_to_json(sheet, { defval: '' });
       setExcelRows(rows);
       setColumns(rows.length ? Object.keys(rows[0]) : []);
-      setStatus(`${rows.length} lignes détectées dans ${firstSheet}`);
+      setStatus(`${rows.length} lignes détectées dans « ${sheetName} »`);
     } catch (err) {
       console.error(err);
       setStatus('Erreur lors de la lecture du fichier Excel');

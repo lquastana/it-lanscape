@@ -1,5 +1,6 @@
-import { getIronSession } from 'iron-session';
-import { sessionOptions } from '../../../lib/session';
+import * as _nextAuthNext from 'next-auth/next';
+const getServerSession = _nextAuthNext.getServerSession ?? _nextAuthNext.default?.getServerSession;
+import { authOptions } from '../../../lib/authOptions.js';
 
 export default async function meRoute(req, res) {
   if (req.method !== 'GET') {
@@ -7,15 +8,11 @@ export default async function meRoute(req, res) {
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
-  const session = await getIronSession(req, res, sessionOptions);
+  if (process.env.AUTH_ENABLED === 'false') {
+    return res.status(200).json({ user: { username: 'dev', role: 'admin', isLoggedIn: true } });
+  }
+
+  const session = await getServerSession(req, res, authOptions);
   const user = session?.user?.isLoggedIn ? session.user : null;
-  return res.status(200).json({
-    user: user
-      ? {
-        username: user.username,
-        role: user.role || 'editor',
-        isLoggedIn: true,
-      }
-      : null,
-  });
+  return res.status(200).json({ user });
 }
