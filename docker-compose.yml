@@ -2,14 +2,16 @@ version: '3.9'
 services:
   web:
     build: .
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     volumes:
       - data:/app/data
     environment:
       NETBOX_URL: ${NETBOX_URL:-http://netbox:8080}
-      NETBOX_TOKEN: ${NETBOX_TOKEN:-}
+      NETBOX_TOKEN: ${NETBOX_TOKEN:-0123456789abcdef0123456789abcdef01234567}
       NETBOX_TRIGRAMME_TAG_PREFIX: ${NETBOX_TRIGRAMME_TAG_PREFIX:-app:}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-un-secret-local-de-dev-suffisamment-long-32c}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
     depends_on:
       netbox:
         condition: service_started
@@ -65,11 +67,12 @@ services:
       REDIS_DATABASE: 0
       REDIS_CACHE_HOST: redis
       REDIS_CACHE_DATABASE: 1
-      SECRET_KEY: ${NETBOX_SECRET_KEY:-change-me-in-prod}
+      SECRET_KEY: ${NETBOX_SECRET_KEY:-gGwjimyq1EbZaWnxqUgjEmB2urjs9AGGSXNL0l0ZyeXOmUdRVKActF-Yz5kJIKkAWRTzyH2SPuyaWpvzBow4iQ}
       SUPERUSER_NAME: ${NETBOX_SUPERUSER_NAME:-admin}
       SUPERUSER_EMAIL: ${NETBOX_SUPERUSER_EMAIL:-admin@example.local}
-      SUPERUSER_PASSWORD: ${NETBOX_SUPERUSER_PASSWORD:-admin}
+      SUPERUSER_PASSWORD: ${NETBOX_SUPERUSER_PASSWORD:-password}
       ALLOWED_HOSTS: "*"
+      CSRF_TRUSTED_ORIGINS: ${NETBOX_CSRF_TRUSTED_ORIGINS:-http://localhost:8080 https://localhost:8080 http://127.0.0.1:8080 https://127.0.0.1:8080 https://animated-disco-rr6xww57pjfwxvv-8080.app.github.dev}
       SKIP_SUPERUSER: "false"
     volumes:
       - netbox-media-files:/opt/netbox/netbox/media

@@ -10,7 +10,8 @@ export default function NetworkView({ data }) {
     if (infra?.etablissements) {
       infra.etablissements.forEach(e => {
         (e.serveurs || []).forEach(s => {
-          if (s.VM) map.set(s.VM.toLowerCase(), s);
+          const key = (s.nom || s.VM || '').toLowerCase();
+          if (key) map.set(key, s);
         });
       });
     }
@@ -41,7 +42,7 @@ export default function NetworkView({ data }) {
                           <table className="server-details">
                             <tbody>
                               {Object.entries(info)
-                                .filter(([k]) => !['VM', 'trigramme'].includes(k))
+                                .filter(([k]) => !['VM', 'nom', 'trigramme', 'type', 'site'].includes(k))
                                 .map(([k, v]) => (
                                   <tr key={k}>
                                     <th className="server-key">{prettyLabel(k)}</th>
