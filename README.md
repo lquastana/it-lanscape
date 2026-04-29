@@ -58,6 +58,13 @@ docker compose --profile netbox up -d
 - NetBox sera disponible sur `http://localhost:8080`.
 - L’application utilisera automatiquement `NETBOX_URL=http://netbox:8080` (réseau Docker interne).
 
+En cas de démarrage lent de NetBox, vérifiez l’état des dépendances :
+```bash
+docker compose --profile netbox ps
+docker compose --profile netbox logs -f postgres netbox
+```
+Le compose attend maintenant que PostgreSQL/Redis soient **healthy** avant de lancer NetBox.
+
 ## Tests
 ```bash
 npm test
