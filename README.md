@@ -84,7 +84,7 @@ Accès pages :
 - Administration (`/admin-*`) : rôle **editor** minimum (sauf `/admin-habilitations` en **admin**).
 
 ## Accès UI & API (IP + login)
-Les pages protégées s’appuient sur la session (`/login`) et le middleware `iron-session`. Les APIs sensibles utilisent `withAuthz` qui accepte **session** ou **Basic Auth depuis une IP autorisée**. En pratique : 
+Les pages protégées s’appuient sur la session NextAuth (`/login`) et le middleware JWT. Les APIs sensibles utilisent `withAuthz` qui accepte **session** ou **Basic Auth depuis une IP autorisée**. En pratique : 
 - **Pages** : session obligatoire (login) pour les routes listées dans `data/auth/auth-config.json` et rôle minimal selon la vue. 
 - **APIs protégées** : session **ou** Basic Auth **ET** IP allowlist (`data/auth/access-rules.json`).
 
@@ -135,13 +135,15 @@ Ce projet est distribué sous licence MIT. Voir le fichier [LICENSE](LICENSE).
 
 ## Configuration
 Variables d’environnement utiles :
-- `SESSION_SECRET` : secret pour la session `iron-session`.
-- `DISABLE_AUTH=true` : désactive l’authentification (développement uniquement).
+- `NEXTAUTH_SECRET` : secret utilisé par NextAuth/JWT (obligatoire en environnement réel).
+- `NEXTAUTH_URL` : URL publique de l’application (ex: `http://localhost:3000`).
+- `AUTH_ENABLED=false` : désactive l’authentification (développement uniquement).
 - `ACCESS_CONTROL_ENABLED=false` : contourne le filtrage IP/Basic Auth défini dans `access-rules.json`.
 - `DATA_DIR=/chemin/vers/data` : redirige le dossier contenant les JSON (utile pour les tests).
 - `NETBOX_URL` : URL racine de NetBox (ex: `https://netbox.exemple.fr`).
 - `NETBOX_TOKEN` : token API NetBox (lecture).
 - `NETBOX_TRIGRAMME_TAG_PREFIX` : préfixe de tag pour mapper une application (défaut `app:` ; exemple `app:LAB`).
+- `AZURE_AD_CLIENT_ID`, `AZURE_AD_CLIENT_SECRET`, `AZURE_AD_TENANT_ID` : paramètres SSO Azure AD (production).
 
 Compte dev principal :
 
