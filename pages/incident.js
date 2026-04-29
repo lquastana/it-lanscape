@@ -87,17 +87,44 @@ const describeStatus = (status) => {
   }
 };
 
-const actionsByStatus = (status) => {
+const actionsByContext = (status, causes = []) => {
+  const types = new Set(causes.map(c => c.type));
+  const actions = [];
+
   if (status === 'hs') {
-    return ['Bascule PRA/PCA', 'Communication aux équipes', 'Redémarrage ciblé'];
+    actions.push('Déclencher le PRA/PCA si disponible');
+    actions.push('Notifier la DSI et les équipes support');
   }
-  if (status === 'degrade') {
-    return ['Mode dégradé', 'Priorisation des flux critiques', 'Surveillance renforcée'];
+  if (types.has('Infrastructure')) {
+    actions.push("Vérifier l'état du serveur (monitoring, logs système)");
+    if (status === 'hs') actions.push('Basculer sur le serveur de secours ou redémarrer');
+    else actions.push('Surveiller les métriques (CPU, RAM, disque)');
+  }
+  if (types.has('Interface') || types.has('Interface sortante')) {
+    actions.push("Vérifier la disponibilité du middleware / de l'interface");
+    actions.push('Activer le mode dégradé sans les flux dépendants');
+    if (status === 'hs') actions.push('Identifier un canal de substitution pour les données critiques');
+  }
+  if (types.has('Hébergeur')) {
+    actions.push("Contacter l'hébergeur et obtenir un ETA de rétablissement");
+    actions.push('Vérifier les engagements SLA contractuels');
+  }
+  if (types.has('Dépendance amont')) {
+    actions.push('Identifier et traiter le composant source en priorité');
+    actions.push('Activer un mode de saisie manuelle si possible');
+  }
+  if (status === 'degrade' || status === 'latence') {
+    actions.push('Prioriser les flux et processus critiques');
+    actions.push('Informer les utilisateurs du mode dégradé');
+  }
+  if (status === 'intermittent') {
+    actions.push("Analyser les logs pour identifier le pattern d'instabilité");
+    actions.push('Planifier une fenêtre de maintenance préventive');
   }
   if (status === 'latence') {
-    return ['Vérifier la capacité réseau', 'Réduire les charges non critiques'];
+    actions.push('Vérifier la saturation réseau et les ressources applicatives');
   }
-  return ['Analyse des logs', 'Planifier une fenêtre de maintenance'];
+  return [...new Set(actions)];
 };
 
 export default function IncidentSimulationPage() {
@@ -113,6 +140,7 @@ export default function IncidentSimulationPage() {
   const [analysis, setAnalysis] = useState(null);
   const [scenarioName, setScenarioName] = useState('');
   const [savedScenarios, setSavedScenarios] = useState([]);
+  const [autoRun, setAutoRun] = useState(false);
   const printDetailsStateRef = useRef(null);
 
   const handleLogout = async () => {
@@ -134,6 +162,13 @@ export default function IncidentSimulationPage() {
       })
       .catch(() => setStatus('Impossible de charger les données.'));
   }, []);
+
+  useEffect(() => {
+    if (autoRun && selectedComponents.length > 0) {
+      runAnalysis();
+      setAutoRun(false);
+    }
+  }, [autoRun, selectedComponents, runAnalysis]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -218,15 +253,16 @@ export default function IncidentSimulationPage() {
     if (infrastructure?.etablissements) {
       infrastructure.etablissements.forEach(etab => {
         Object.entries(etab.applications || {}).forEach(([tri, list]) => {
-          serversByTri.set(tri, list);
+          serversByTri.set(tri, [...(serversByTri.get(tri) || []), ...list]);
           list.forEach(server => {
-            const value = `${etab.nom}::${server.VM}`;
+            const vmName = server.VM || server.nom;
+            const value = `${etab.nom}::${vmName}`;
             servers.push({
               value,
-              label: `${server.VM} (${tri}) • ${etab.nom}`,
+              label: `${vmName} (${tri}) • ${etab.nom}`,
               trigramme: tri,
               etablissement: etab.nom,
-              vm: server.VM,
+              vm: vmName,
             });
           });
         });
@@ -351,23 +387,43 @@ export default function IncidentSimulationPage() {
     const impactedFlows = new Map();
     const impactedOther = [];
     const propagationEdges = [];
+    const visited = new Set();
+    const MAX_DEPTH = 5;
 
     const addAppImpact = (tri, status, source, depth) => {
       if (!tri) return false;
       const current = impactedApps.get(tri);
       const mergedStatus = mergeStatus(current?.status, status);
       const causes = current?.causes ? [...current.causes] : [];
-      if (source) causes.push(source);
-      const shouldUpdate = !current || mergedStatus !== current.status || depth < current.depth;
-      if (shouldUpdate) {
-        impactedApps.set(tri, {
-          trigramme: tri,
-          status: mergedStatus,
-          causes,
-          depth: Math.min(depth, current?.depth ?? depth),
-        });
+      if (source && !causes.some(c => c.label === source.label)) causes.push(source);
+      const newDepth = current ? Math.min(depth, current.depth) : depth;
+      const statusChanged = !current || mergedStatus !== current.status;
+      const depthImproved = !current || depth < current.depth;
+      // Toujours persister les causes ; signaler un changement si statut ou profondeur s'améliore
+      impactedApps.set(tri, { trigramme: tri, status: mergedStatus, causes, depth: newDepth });
+      return statusChanged || depthImproved;
+    };
+
+    // Atténue le statut propagé selon la profondeur et le type d'interface
+    const propagateStatus = (status, depth, interfaceType) => {
+      if (depth >= MAX_DEPTH) return null;
+      const isSync = /(sync|temps.r[eé]el|eai|middleware|api)/i.test(interfaceType || '');
+      const rank = STATUS_RANK[status] || 0;
+      if (depth === 0) return status;
+      // Depth 1 : sync → atténuation légère, async/batch → atténuation forte
+      if (depth === 1) {
+        if (isSync) return mapIndirectStatus(status); // hs→degrade, degrade→degrade
+        return rank >= STATUS_RANK.degrade ? 'latence' : null;
       }
-      return shouldUpdate;
+      // Depth 2+ : seulement si le statut source est sévère
+      if (rank >= STATUS_RANK.degrade) return 'latence';
+      return null;
+    };
+
+    // Détecte si un serveur est un point de défaillance unique (DB, etc.)
+    const isCriticalServer = (server) => {
+      const role = (server?.RoleServeur || server?.role || '').toLowerCase();
+      return /\b(db|database|base|bdd|sql|oracle|mysql|postgres|mongo|data)\b/.test(role);
     };
 
     selectedComponents.forEach(component => {
@@ -378,24 +434,44 @@ export default function IncidentSimulationPage() {
           status: component.status,
         }, 0);
       }
+
       if (component.type === 'serveur') {
-        const servers = serversByApp.get(component.trigramme) || [];
+        const allServers = serversByApp.get(component.trigramme) || [];
         const status = normalizeStatus(component.status);
-        const appStatus = servers.length <= 1 && status === 'hs' ? 'hs' : status === 'hs' ? 'degrade' : status;
+        const impactedServer = allServers.find(s => (s.VM || s.nom) === component.vm);
+        const critical = isCriticalServer(impactedServer);
+        // DB ou seul serveur → HS complet ; sinon dégradé
+        const appStatus = (critical || allServers.length <= 1) ? status : status === 'hs' ? 'degrade' : status;
         addAppImpact(component.trigramme, appStatus, {
           type: 'Infrastructure',
           label: component.label,
           status: component.status,
+          detail: critical ? 'Serveur de base de données — point de défaillance unique' : null,
         }, 0);
       }
+
       if (component.type === 'flux') {
         impactedFlows.set(component.flowId, component);
-        addAppImpact(component.targetTrigramme, 'degrade', {
+        const flow = flowOptions.find(f => f.value === component.flowId);
+        const status = normalizeStatus(component.status);
+        // Impact sur la CIBLE (ne peut plus recevoir)
+        const targetStatus = propagateStatus(status, 1, flow?.interfaceType) || 'latence';
+        addAppImpact(component.targetTrigramme, targetStatus, {
           type: 'Interface',
           label: component.label,
           status: component.status,
         }, 0);
+        // Impact sur la SOURCE (ne peut plus envoyer — atténué)
+        const sourceStatus = mapIndirectStatus(targetStatus);
+        if (sourceStatus && component.sourceTrigramme) {
+          addAppImpact(component.sourceTrigramme, sourceStatus, {
+            type: 'Interface sortante',
+            label: component.label,
+            status: component.status,
+          }, 0);
+        }
       }
+
       if (component.type === 'hebergeur') {
         const status = normalizeStatus(component.status);
         appMeta.forEach((meta, tri) => {
@@ -407,11 +483,13 @@ export default function IncidentSimulationPage() {
           }, 0);
         });
       }
+
       if (component.type === 'custom') {
         impactedOther.push(component);
       }
     });
 
+    // BFS avec détection de cycles et atténuation par profondeur
     const queue = Array.from(impactedApps.values()).map(item => ({
       trigramme: item.trigramme,
       status: item.status,
@@ -420,24 +498,32 @@ export default function IncidentSimulationPage() {
 
     while (queue.length) {
       const current = queue.shift();
+      const visitKey = `${current.trigramme}:${current.depth}`;
+      if (visited.has(visitKey)) continue;
+      visited.add(visitKey);
+
       const outgoing = links.filter(link => link.source === current.trigramme);
       outgoing.forEach(link => {
+        const propagated = propagateStatus(current.status, current.depth + 1, link.interfaceType);
+        if (!propagated) return;
+
         propagationEdges.push({
           source: link.source,
           target: link.target,
           sourceLabel: link.sourceLabel,
           targetLabel: link.targetLabel,
-          status: current.status,
+          status: propagated,
           interfaceType: link.interfaceType,
         });
-        if (addAppImpact(link.target, mapIndirectStatus(current.status), {
+
+        if (addAppImpact(link.target, propagated, {
           type: 'Dépendance amont',
           label: `${link.sourceLabel} → ${link.targetLabel}`,
-          status: current.status,
+          status: propagated,
         }, current.depth + 1)) {
           queue.push({
             trigramme: link.target,
-            status: mapIndirectStatus(current.status),
+            status: propagated,
             depth: current.depth + 1,
           });
         }
@@ -485,7 +571,7 @@ export default function IncidentSimulationPage() {
       blockedFlows,
       propagationEdges,
     });
-  }, [selectedComponents, links, appMeta, serversByApp]);
+  }, [selectedComponents, links, appMeta, serversByApp, flowOptions]);
 
   const handleSaveScenario = () => {
     if (!scenarioName.trim()) return;
@@ -503,6 +589,7 @@ export default function IncidentSimulationPage() {
   const handleLoadScenario = (scenario) => {
     setSelectedComponents(scenario.components || []);
     setAnalysis(null);
+    setAutoRun(true);
   };
 
   const handleDeleteScenario = (id) => {
@@ -901,7 +988,7 @@ export default function IncidentSimulationPage() {
                             <strong>{report.etablissement}</strong>
                             <span className="muted">
                               {' '}
-                              • {report.impactedApps.length} application(s)
+                              • {new Set(report.impactedApps.map(a => a.trigramme)).size} application(s)
                               • {report.blockedFlows.length} flux
                               • {report.impactedProcesses.length} processus
                             </span>
@@ -1095,7 +1182,7 @@ export default function IncidentSimulationPage() {
                                     <div>
                                       <span className="label">Actions recommandées</span>
                                       <ul>
-                                        {actionsByStatus(app.status).map(action => (
+                                        {actionsByContext(app.status, app.causes).map(action => (
                                           <li key={action}>{action}</li>
                                         ))}
                                       </ul>

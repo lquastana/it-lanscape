@@ -20,7 +20,7 @@ function appMatches(app, serverIndex, term) {
   if (app.nom.toLowerCase().includes(term)) return true;
   if (app.trigramme) {
     const servers = serverIndex.get(app.trigramme) || [];
-    return servers.some(s => s.VM.toLowerCase().includes(term));
+    return servers.some(s => (s.nom || s.VM || '').toLowerCase().includes(term));
   }
   return false;
 }
@@ -226,12 +226,12 @@ function EtabNormal({
                                         <>
                                           {servers.length > 0 ? (
                                             servers.map(s => (
-                                              <details key={s.VM} className="server">
-                                                <summary>{s.VM}</summary>
+                                              <details key={s.nom || s.VM} className="server">
+                                                <summary>{s.nom || s.VM}</summary>
                                                 <table className="server-details">
                                                   <tbody>
                                                     {Object.entries(s)
-                                                      .filter(([k]) => !['VM', 'trigramme'].includes(k))
+                                                      .filter(([k]) => !['VM', 'nom', 'trigramme', 'type', 'site'].includes(k))
                                                       .map(([k, v]) => (
                                                         <tr key={k}>
                                                           <th className="server-key">{prettyLabel(k)}</th>
