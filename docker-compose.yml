@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   web:
     build: .
@@ -6,5 +6,62 @@ services:
       - "3000"
     volumes:
       - data:/app/data
+    environment:
+      NETBOX_URL: ${NETBOX_URL:-http://netbox:8080}
+      NETBOX_TOKEN: ${NETBOX_TOKEN:-}
+      NETBOX_TRIGRAMME_TAG_PREFIX: ${NETBOX_TRIGRAMME_TAG_PREFIX:-app:}
+    depends_on:
+      - netbox
+
+  postgres:
+    image: postgres:15-alpine
+    profiles: ["netbox"]
+    environment:
+      POSTGRES_DB: netbox
+      POSTGRES_USER: netbox
+      POSTGRES_PASSWORD: netbox
+    volumes:
+      - netbox-postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    profiles: ["netbox"]
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - netbox-redis-data:/data
+
+  netbox:
+    image: netboxcommunity/netbox:v4.3
+    profiles: ["netbox"]
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DB_HOST: postgres
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: netbox
+      REDIS_HOST: redis
+      REDIS_DATABASE: 0
+      REDIS_CACHE_HOST: redis
+      REDIS_CACHE_DATABASE: 1
+      SECRET_KEY: ${NETBOX_SECRET_KEY:-change-me-in-prod}
+      SUPERUSER_NAME: ${NETBOX_SUPERUSER_NAME:-admin}
+      SUPERUSER_EMAIL: ${NETBOX_SUPERUSER_EMAIL:-admin@example.local}
+      SUPERUSER_PASSWORD: ${NETBOX_SUPERUSER_PASSWORD:-admin}
+      ALLOWED_HOSTS: "*"
+      SKIP_SUPERUSER: "false"
+    volumes:
+      - netbox-media-files:/opt/netbox/netbox/media
+      - netbox-reports-files:/opt/netbox/netbox/reports
+      - netbox-scripts-files:/opt/netbox/netbox/scripts
+
 volumes:
   data:
+  netbox-postgres-data:
+  netbox-redis-data:
+  netbox-media-files:
+  netbox-reports-files:
+  netbox-scripts-files:

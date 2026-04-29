@@ -46,6 +46,18 @@ npm start
 ```
 L’application est accessible sur http://localhost:3000.
 
+Avec Docker Compose (application seule) :
+```bash
+docker compose up -d web
+```
+
+Avec Docker Compose + NetBox local :
+```bash
+docker compose --profile netbox up -d
+```
+- NetBox sera disponible sur `http://localhost:8080`.
+- L’application utilisera automatiquement `NETBOX_URL=http://netbox:8080` (réseau Docker interne).
+
 ## Tests
 ```bash
 npm test
@@ -127,6 +139,9 @@ Variables d’environnement utiles :
 - `DISABLE_AUTH=true` : désactive l’authentification (développement uniquement).
 - `ACCESS_CONTROL_ENABLED=false` : contourne le filtrage IP/Basic Auth défini dans `access-rules.json`.
 - `DATA_DIR=/chemin/vers/data` : redirige le dossier contenant les JSON (utile pour les tests).
+- `NETBOX_URL` : URL racine de NetBox (ex: `https://netbox.exemple.fr`).
+- `NETBOX_TOKEN` : token API NetBox (lecture).
+- `NETBOX_TRIGRAMME_TAG_PREFIX` : préfixe de tag pour mapper une application (défaut `app:` ; exemple `app:LAB`).
 
 Compte dev principal :
 
@@ -137,3 +152,12 @@ Compte dev principal :
 Autres comptes de test : `viewer/password` (viewer), `editor/password` (editor), `valdellys/password`, `dunes/password`, `saintroch/password` (editor).
 
 Les règles d’accès et les données sont chargées depuis le dossier `data`; adaptez-les avant un déploiement.
+
+### Synchronisation NetBox (source de vérité)
+Quand `NETBOX_URL` et `NETBOX_TOKEN` sont définis, les endpoints `GET /api/infrastructure` et `GET /api/network` lisent NetBox via API et n’utilisent plus les JSON locaux.
+
+Mapping recommandé du trigramme applicatif :
+- **Tag préfixé** sur VM/Device (ex: `app:LAB`) — configurable via `NETBOX_TRIGRAMME_TAG_PREFIX`.
+- Fallback pris en charge : tag de 3 caractères (`LAB`) ou champ custom NetBox (`trigramme`, `app_code`, `application_code`).
+
+Alternative au trigramme : utiliser un **identifiant applicatif unique** (`app_code`) dans un custom field NetBox pour éviter les collisions et conserver le trigramme uniquement comme alias d’affichage.

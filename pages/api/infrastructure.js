@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { withAuthz } from '../../lib/authz.js';
 import { getDataDir } from '../../lib/dataPaths.js';
+import { getInfrastructureFromNetbox, isNetboxEnabled } from '../../lib/netbox.js';
 
 async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -9,6 +10,11 @@ async function handler(req, res) {
   }
 
   try {
+    if (isNetboxEnabled()) {
+      const data = await getInfrastructureFromNetbox();
+      return res.status(200).json(data);
+    }
+
     const dataDir = getDataDir();
     const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.infra.json'));
     const etablissements = [];
