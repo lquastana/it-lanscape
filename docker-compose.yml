@@ -11,7 +11,9 @@ services:
       NETBOX_TOKEN: ${NETBOX_TOKEN:-}
       NETBOX_TRIGRAMME_TAG_PREFIX: ${NETBOX_TRIGRAMME_TAG_PREFIX:-app:}
     depends_on:
-      - netbox
+      netbox:
+        condition: service_started
+        required: false
 
   postgres:
     image: postgres:15-alpine
@@ -57,7 +59,8 @@ services:
       DB_USER: netbox
       DB_PASSWORD: netbox
       DB_PORT: 5432
-      DB_WAIT_TIMEOUT: 120
+      DB_WAIT_TIMEOUT: ${NETBOX_DB_WAIT_TIMEOUT:-120}
+      DB_WAIT_DEBUG: ${NETBOX_DB_WAIT_DEBUG:-0}
       REDIS_HOST: redis
       REDIS_DATABASE: 0
       REDIS_CACHE_HOST: redis

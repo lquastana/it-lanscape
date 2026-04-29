@@ -61,9 +61,17 @@ docker compose --profile netbox up -d
 En cas de démarrage lent de NetBox, vérifiez l’état des dépendances :
 ```bash
 docker compose --profile netbox ps
-docker compose --profile netbox logs -f postgres netbox
+docker compose --profile netbox logs -f postgres redis netbox
 ```
-Le compose attend maintenant que PostgreSQL/Redis soient **healthy** avant de lancer NetBox.
+Le compose attend que PostgreSQL/Redis soient **healthy** avant de lancer NetBox.
+Si NetBox boucle sur `Waiting on DB... (0s / 30s)`, forcez un démarrage propre :
+```bash
+docker compose --profile netbox down -v
+docker compose --profile netbox up -d postgres redis
+docker compose --profile netbox logs -f postgres
+docker compose --profile netbox up -d netbox
+```
+Vous pouvez aussi augmenter l’attente DB via `NETBOX_DB_WAIT_TIMEOUT` et activer le debug avec `NETBOX_DB_WAIT_DEBUG=1`.
 
 ## Tests
 ```bash
