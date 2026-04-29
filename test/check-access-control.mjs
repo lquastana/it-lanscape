@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { isIpAllowed } from '../lib/accessControl.js';
+import { loadAccessRules } from '../lib/accessControl.js';
 
 const dataPath = path.join(process.cwd(), 'data', 'auth', 'access-rules.json');
 
@@ -10,33 +10,41 @@ try {
   const content = await fs.readFile(dataPath, 'utf-8');
   const rules = JSON.parse(content);
 
-  if (!Array.isArray(rules.allowedIps)) {
-    console.error('access-rules.json: allowedIps manquant ou invalide');
-    ok = false;
-  }
-
-  if (!Array.isArray(rules.allowedCidrs)) {
-    console.error('access-rules.json: allowedCidrs manquant ou invalide');
-    ok = false;
-  }
-
   if (!Array.isArray(rules.establishments)) {
     console.error('access-rules.json: establishments manquant ou invalide');
     ok = false;
   }
 
-  const localAllowed = isIpAllowed('127.0.0.1', rules);
-  if (!localAllowed) {
-    console.error('access-rules.json: 127.0.0.1 devrait être autorisée par défaut');
+  const hasAdmin = rules.establishments.some(e => e.role === 'admin');
+  if (!hasAdmin) {
+    console.error('access-rules.json: aucun compte admin défini');
     ok = false;
+  }
+
+  const validRoles = new Set(['viewer', 'editor', 'admin']);
+  for (const e of rules.establishments) {
+    if (!e.username || !e.password || !validRoles.has(e.role)) {
+      console.error(`access-rules.json: entrée invalide — ${JSON.stringify(e)}`);
+      ok = false;
+    }
   }
 } catch (error) {
   console.error('Erreur lecture access-rules.json', error);
   ok = false;
 }
 
-if (!ok) {
-  process.exit(1);
+// Vérifie que loadAccessRules retourne une structure normalisée
+try {
+  const loaded = await loadAccessRules();
+  if (!Array.isArray(loaded.establishments)) {
+    console.error('loadAccessRules: establishments manquant');
+    ok = false;
+  }
+} catch (error) {
+  console.error('loadAccessRules: erreur inattendue', error);
+  ok = false;
 }
 
-console.log('Contrôles d’accès : OK');
+if (!ok) process.exit(1);
+
+console.log("Contrôles d'accès : OK");
