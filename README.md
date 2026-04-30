@@ -1,4 +1,4 @@
-<img src="public/it-landscape-logo-with-text.png" alt="it-landscape" width="280" />
+<table><tr><td bgcolor="white"><img src="public/it-landscape-logo-with-text.png" alt="it-landscape" width="280" /></td></tr></table>
 
 [![CI](https://github.com/lquastana/it-landscape/actions/workflows/ci.yml/badge.svg)](https://github.com/lquastana/it-landscape/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
