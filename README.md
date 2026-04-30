@@ -2,7 +2,7 @@
 
 MVP Next.js pour cartographier un système d'information hospitalier : applications, processus métier, serveurs, VLANs, flux applicatifs et impacts d'incident.
 
-Le nom produit et technique retenu est **it-landscape**. Pour une publication plus explicite, les noms cibles recommandés sont `hospital-it-landscape` ou `sih-landscape`.
+![Vue métier de la cartographie SI](docs/assets/gifs/screen-metier.gif)
 
 ## Ce que fait le produit
 - **Vue métier** : lecture par établissements, domaines, processus et applications.
@@ -12,6 +12,29 @@ Le nom produit et technique retenu est **it-landscape**. Pour une publication pl
 - **Simulation d'incident** : recherche des impacts directs et indirects d'un serveur, d'une application ou d'un flux indisponible.
 - **Administration** : édition des référentiels JSON, imports Excel, gestion des trigrammes et habilitations.
 - **Sécurité MVP** : authentification NextAuth, rôles `viewer` / `editor` / `admin`, audit append-only JSONL des écritures et exports.
+
+## Aperçu
+
+<details>
+<summary>Voir les captures animées</summary>
+
+### Flux applicatifs
+
+![Vue des flux applicatifs](docs/assets/gifs/screen-flux.gif)
+
+### Infrastructure applicative
+
+![Vue infrastructure](docs/assets/gifs/screen-infra.gif)
+
+### Réseau
+
+![Vue réseau](docs/assets/gifs/screen-network.gif)
+
+### Simulation d'incident
+
+![Simulation d'incident](docs/assets/gifs/screen-incident.gif)
+
+</details>
 
 ## Données
 - `data/*.json` : vue fonctionnelle.

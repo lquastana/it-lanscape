@@ -8,6 +8,7 @@ services:
       - data:/app/data
     environment:
       NODE_ENV: production
+      IT_LANDSCAPE_ENV: ${IT_LANDSCAPE_ENV:-development}
       NETBOX_URL: ${NETBOX_URL:-}
       NETBOX_TOKEN: ${NETBOX_TOKEN:-}
       NETBOX_TRIGRAMME_TAG_PREFIX: ${NETBOX_TRIGRAMME_TAG_PREFIX:-app:}

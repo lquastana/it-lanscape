@@ -66,7 +66,8 @@ export function validateStartupSecurity({
 } = {}) {
   const errors = [];
   const warnings = [];
-  const isProduction = env.NODE_ENV === 'production';
+  const applicationEnv = env.IT_LANDSCAPE_ENV || env.APP_ENV || env.NODE_ENV;
+  const isProduction = applicationEnv === 'production';
 
   if (!isProduction) return { errors, warnings };
 
@@ -101,8 +102,8 @@ export function validateStartupSecurity({
 
   try {
     if (findDefaultAdminAccount(cwd, env)) {
-      warnings.push(
-        'Configuration de production risquee: le compte admin/password est encore present dans data/auth/access-rules.json.'
+      errors.push(
+        'Configuration de production invalide: le compte admin/password est encore present dans data/auth/access-rules.json.'
       );
     }
   } catch (error) {

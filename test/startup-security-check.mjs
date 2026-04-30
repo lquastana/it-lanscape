@@ -60,6 +60,28 @@ await withAccessRules(
 );
 
 await withAccessRules(
+  [{ username: 'admin', password: defaultAdminHash, role: 'admin' }],
+  async dataDir => {
+    const { warnings, errors, logger } = captureLogger();
+    const result = validateStartupSecurity({
+      env: {
+        NODE_ENV: 'production',
+        IT_LANDSCAPE_ENV: 'development',
+        NEXTAUTH_SECRET: 'change_me_at_least_32_chars',
+        AUTH_ENABLED: 'false',
+        DATA_DIR: dataDir,
+      },
+      logger,
+    });
+
+    assert.deepEqual(result.errors, []);
+    assert.deepEqual(result.warnings, []);
+    assert.deepEqual(warnings, []);
+    assert.deepEqual(errors, []);
+  }
+);
+
+await withAccessRules(
   [{ username: 'admin', password: safeAdminHash, role: 'admin' }],
   async dataDir => {
     const { logger } = captureLogger();
@@ -121,7 +143,7 @@ await withAccessRules(
 await withAccessRules(
   [{ username: 'admin', password: defaultAdminHash, role: 'admin' }],
   async dataDir => {
-    const { warnings, logger } = captureLogger();
+    const { warnings, errors, logger } = captureLogger();
     const result = validateStartupSecurity({
       env: {
         NODE_ENV: 'production',
@@ -133,10 +155,11 @@ await withAccessRules(
       logger,
     });
 
-    assert.deepEqual(result.errors, []);
-    assert.equal(result.warnings.length, 1);
-    assert.match(result.warnings[0], /admin\/password/);
-    assert.equal(warnings.length, 1);
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /admin\/password/);
+    assert.deepEqual(result.warnings, []);
+    assert.deepEqual(warnings, []);
+    assert.equal(errors.length, 1);
   }
 );
 

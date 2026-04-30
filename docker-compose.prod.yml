@@ -1,0 +1,29 @@
+name: it-landscape-prod
+
+services:
+  web:
+    build: .
+    image: ${IT_LANDSCAPE_IMAGE:-it-landscape:prod}
+    restart: unless-stopped
+    ports:
+      - "${IT_LANDSCAPE_HTTP_BIND:-127.0.0.1:3000}:3000"
+    volumes:
+      - data:/app/data
+    environment:
+      NODE_ENV: production
+      IT_LANDSCAPE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?NEXTAUTH_SECRET is required in production}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:?NEXTAUTH_URL is required in production}
+      AUTH_ENABLED: "true"
+      NETBOX_URL: ${NETBOX_URL:-}
+      NETBOX_TOKEN: ${NETBOX_TOKEN:-}
+      NETBOX_TRIGRAMME_TAG_PREFIX: ${NETBOX_TRIGRAMME_TAG_PREFIX:-app:}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  data:
+    name: it-landscape-prod_data

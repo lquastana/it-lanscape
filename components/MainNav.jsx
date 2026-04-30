@@ -11,8 +11,6 @@ const NAV_ITEMS = [
   { href: '/incident',     label: "Simulation d'incident" },
 ];
 
-const ADMIN_URL = 'https://animated-disco-rr6xww57pjfwxvv-3000.app.github.dev/admin-metier';
-
 export default function MainNav({ onLogout }) {
   const router = useRouter();
   const [canAdmin, setCanAdmin] = useState(false);
@@ -46,16 +44,14 @@ export default function MainNav({ onLogout }) {
         </Link>
       ))}
       {canAdmin && (
-        <a
-          href={ADMIN_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/admin-metier"
           className="nav-settings"
           title="Administration"
           aria-label="Ouvrir l'administration"
         >
           <Settings size={17} strokeWidth={2.4} aria-hidden="true" />
-        </a>
+        </Link>
       )}
       <button className="nav-logout" onClick={onLogout}>
         Déconnexion

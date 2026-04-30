@@ -5,31 +5,58 @@ import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
+function normalizeRedirect(value) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw || typeof raw !== 'string') return '/';
+  if (!raw.startsWith('/') || raw.startsWith('//')) return '/';
+  if (raw.startsWith('/login')) return '/';
+  return raw;
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState('');
-  const [redirectedFrom, setRedirectedFrom] = useState('');
+  const [redirectedFrom, setRedirectedFrom] = useState('/');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (router.query.redirectedFrom) {
-      setRedirectedFrom(router.query.redirectedFrom);
-    }
-  }, [router.query]);
+    if (!router.isReady) return;
+    setRedirectedFrom(normalizeRedirect(router.query.redirectedFrom));
+  }, [router.isReady, router.query.redirectedFrom]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    let cancelled = false;
+
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        if (!cancelled && data?.user?.isLoggedIn) {
+          router.replace(normalizeRedirect(router.query.redirectedFrom));
+        }
+      })
+      .catch(() => {});
+
+    return () => { cancelled = true; };
+  }, [router]);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
+    setLoading(true);
 
     const result = await signIn('credentials', {
       username: event.currentTarget.username.value,
       password: event.currentTarget.password.value,
       redirect: false,
+      callbackUrl: redirectedFrom,
     });
 
     if (result?.ok) {
-      router.push(redirectedFrom || '/');
+      router.replace(redirectedFrom);
     } else {
       setError('Échec de la connexion. Veuillez vérifier vos identifiants.');
+      setLoading(false);
     }
   }
 
@@ -75,7 +102,7 @@ export default function LoginPage() {
             <h2>Se connecter</h2>
           </div>
 
-          <form onSubmit={handleSubmit} noValidate>
+          <form className="login-form" onSubmit={handleSubmit} noValidate>
             <div className="login-field">
               <label htmlFor="username">Nom d&apos;utilisateur</label>
               <input
@@ -106,8 +133,8 @@ export default function LoginPage() {
               Le mot de passe se trouve dans votre coffre-fort sous la clé <strong>CARTOGRAPHIE-SI</strong>.
             </p>
 
-            <button type="submit" className="login-submit">
-              Se connecter
+            <button type="submit" className="login-submit" disabled={loading}>
+              {loading ? 'Connexion...' : 'Se connecter'}
             </button>
           </form>
         </motion.div>
