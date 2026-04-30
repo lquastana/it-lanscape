@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import JSZip from 'jszip';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import { appendAudit } from '../../lib/audit.js';
 import { withAuthz } from '../../lib/authz.js';
 import { getDataDir } from '../../lib/dataPaths.js';
@@ -48,11 +48,28 @@ function flattenLandscape(json, file) {
   return rows;
 }
 
-function buildSheetFromRows(rows) {
+function appendWorksheet(workbook, sheetName, rows) {
+  const worksheet = workbook.addWorksheet(sheetName);
+
   if (!rows.length) {
-    return XLSX.utils.aoa_to_sheet([['empty']]);
+    worksheet.addRow(['empty']);
+    return;
   }
-  return XLSX.utils.json_to_sheet(rows);
+
+  const columns = Array.from(
+    rows.reduce((keys, row) => {
+      Object.keys(row).forEach(key => keys.add(key));
+      return keys;
+    }, new Set())
+  );
+
+  worksheet.columns = columns.map(key => ({
+    header: key,
+    key,
+    width: Math.max(14, Math.min(42, key.length + 4)),
+  }));
+  rows.forEach(row => worksheet.addRow(row));
+  worksheet.getRow(1).font = { bold: true };
 }
 
 async function handler(req, res) {
@@ -65,7 +82,9 @@ async function handler(req, res) {
     const files = (await fs.readdir(dataDir)).filter(f => f.endsWith('.json'));
 
     const zip = new JSZip();
-    const workbook = XLSX.utils.book_new();
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'it-landscape';
+    workbook.created = new Date();
 
     for (const [index, file] of files.entries()) {
       const content = await fs.readFile(path.join(dataDir, file), 'utf-8');
@@ -101,11 +120,10 @@ async function handler(req, res) {
         sheetRows = [{ fichier: file, json: content }];
       }
 
-      const sheet = buildSheetFromRows(sheetRows);
-      XLSX.utils.book_append_sheet(workbook, sheet, sheetName);
+      appendWorksheet(workbook, sheetName, sheetRows);
     }
 
-    const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+    const xlsxBuffer = await workbook.xlsx.writeBuffer();
     zip.file('snapshot.xlsx', xlsxBuffer);
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');

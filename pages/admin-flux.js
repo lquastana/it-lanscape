@@ -50,6 +50,82 @@ const ensureId = () => (crypto.randomUUID ? crypto.randomUUID() : Math.random().
 
 const getMatchKey = (flow) => flow.id || `${flow.sourceTrigramme || ''}|${flow.targetTrigramme || ''}|${flow.protocol || ''}|${flow.messageType || ''}`;
 
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"' && inQuotes && next === '"') {
+      cell += '"';
+      i++;
+    } else if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      row.push(cell);
+      cell = '';
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') i++;
+      row.push(cell);
+      if (row.some(value => value !== '')) rows.push(row);
+      row = [];
+      cell = '';
+    } else {
+      cell += char;
+    }
+  }
+
+  row.push(cell);
+  if (row.some(value => value !== '')) rows.push(row);
+  return rows;
+}
+
+function rowsToObjects(matrix) {
+  const [headers = [], ...rows] = matrix;
+  const columns = headers.map((header, index) => String(header || `Colonne ${index + 1}`).trim());
+  return rows.map(values => Object.fromEntries(
+    columns.map((column, index) => [column, values[index] ?? ''])
+  ));
+}
+
+function cellValueToText(value) {
+  if (value === null || value === undefined) return '';
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value !== 'object') return value;
+  if ('text' in value) return value.text ?? '';
+  if ('result' in value) return value.result ?? '';
+  if ('richText' in value) return value.richText.map(part => part.text).join('');
+  return String(value);
+}
+
+async function readSpreadsheet(file) {
+  if (/\.csv$/i.test(file.name)) {
+    const text = await file.text();
+    return { rows: rowsToObjects(parseCsv(text)), sheetName: file.name };
+  }
+
+  const mod = await import('exceljs/dist/exceljs.min.js');
+  const ExcelJS = mod.default || mod;
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(await file.arrayBuffer());
+  const worksheet = workbook.worksheets.find(sheet => /flux/i.test(sheet.name)) ?? workbook.worksheets[0];
+  if (!worksheet) return { rows: [], sheetName: '' };
+
+  const matrix = [];
+  worksheet.eachRow({ includeEmpty: false }, row => {
+    const values = [];
+    for (let i = 1; i <= worksheet.columnCount; i++) {
+      values.push(cellValueToText(row.getCell(i).value));
+    }
+    matrix.push(values);
+  });
+  return { rows: rowsToObjects(matrix), sheetName: worksheet.name };
+}
+
 const mergeIncremental = (existing = [], incoming = []) => {
   const merged = new Map();
   existing.forEach(flow => {
@@ -117,9 +193,8 @@ export default function FluxImport() {
   }, [selectedFile]);
 
   useEffect(() => {
-    if (window.XLSX) { setLibReady(true); return; }
-    import('xlsx')
-      .then(mod => { window.XLSX = mod.default || mod; setLibReady(true); })
+    import('exceljs/dist/exceljs.min.js')
+      .then(() => { setLibReady(true); })
       .catch(() => setLibError('Impossible de charger la librairie Excel'));
   }, []);
 
@@ -155,20 +230,16 @@ export default function FluxImport() {
 
   const handleFile = async (evt) => {
     const file = evt.target.files?.[0];
-    if (!file || !libReady || !window.XLSX) return;
+    if (!file || !libReady) return;
     setStatus('Lecture du fichier…');
     try {
-      const buffer = await file.arrayBuffer();
-      const workbook = window.XLSX.read(buffer, { type: 'array' });
-      const sheetName = workbook.SheetNames.find(n => /flux/i.test(n)) ?? workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const rows = window.XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      const { rows, sheetName } = await readSpreadsheet(file);
       setExcelRows(rows);
       setColumns(rows.length ? Object.keys(rows[0]) : []);
       setStatus(`${rows.length} lignes détectées dans « ${sheetName} »`);
     } catch (err) {
       console.error(err);
-      setStatus('Erreur lors de la lecture du fichier Excel');
+      setStatus('Erreur lors de la lecture du fichier Excel ou CSV');
     }
   };
 
