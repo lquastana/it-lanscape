@@ -92,9 +92,9 @@ small { font-size: 12px; line-height: 16px; }
 }
 
 .brand-mark img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
 }
 
 .eyebrow {
@@ -1395,9 +1395,9 @@ small { font-size: 12px; line-height: 16px; }
 }
 
 .business-hero .brand-mark img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
 }
 
 .business-hero .hero-subtitle {
