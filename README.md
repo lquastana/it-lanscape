@@ -2,7 +2,7 @@
 
 MVP Next.js pour cartographier un système d'information hospitalier : applications, processus métier, serveurs, VLANs, flux applicatifs et impacts d'incident.
 
-Le dépôt a pu être cloné dans un répertoire historique nommé `it-lanscape`. Le nom produit et technique retenu est **it-landscape**. Pour une publication plus explicite, les noms cibles recommandés sont `hospital-it-landscape` ou `sih-landscape`.
+Le nom produit et technique retenu est **it-landscape**. Pour une publication plus explicite, les noms cibles recommandés sont `hospital-it-landscape` ou `sih-landscape`.
 
 ## Ce que fait le produit
 - **Vue métier** : lecture par établissements, domaines, processus et applications.

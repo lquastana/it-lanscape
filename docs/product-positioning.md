@@ -9,8 +9,6 @@ Noms de publication possibles :
 - **sih-landscape** : plus aligné vocabulaire SI hospitalier francophone ;
 - un nom de marque dédié si le projet devient un produit autonome.
 
-Le nom historique `it-lanscape` est considéré comme une faute de dépôt ou de répertoire, pas comme le nom produit.
-
 ## Proposition de valeur
 
 it-landscape donne une lecture opérationnelle du système d'information hospitalier en reliant métier, applications, infrastructure, réseau et flux.
