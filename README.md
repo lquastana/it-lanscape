@@ -1,214 +1,136 @@
-# 🗺️ it-landscape
+# it-landscape
 
-Tableau de bord Next.js pour visualiser la cartographie applicative et technique des hôpitaux publics de Corse. L'interface est construite avec **Next.js 15** et **React 18**, et s'appuie sur des fichiers JSON ou sur **NetBox** (source de vérité) pour représenter les domaines, processus, applications et infrastructures.
+MVP Next.js pour cartographier un système d'information hospitalier : applications, processus métier, serveurs, VLANs, flux applicatifs et impacts d'incident.
 
-## Fonctionnalités principales
-- **Vue métier** : navigation par domaines et processus, filtres multi-critères, recherche clavier (/), légende des interfaces et panneau de synthèse (alignement, mutualisation, complétude…).
-- **Vue applicative** : regroupement des applications par trigramme, affichage des serveurs logiques associés (CPU, RAM, disque, OS, backup…) et mode « vue paysage » imprimable.
-- **Vue réseau** : exploration des VLANs (id, réseau, passerelle, serveurs associés), filtrage par identifiant, description, réseau ou IP.
-- **Vue flux** : visualisation des flux applicatifs (source/cible, protocole, type de message, EAI, criticité).
-- **Simulation d'incident** : évaluation des impacts applicatifs/infra/flux, scénarios sauvegardés et export PDF.
-- **Administration des données** :
-  - `/admin-metier` pour éditer les domaines, processus et applications d'un fichier JSON.
-  - `/admin-infra` pour mapper une extraction Excel vers les fichiers `*.infra.json` (mode remplacement ou incrémental, vérification des trigrammes).
-  - `/admin-flux` pour importer et harmoniser les flux applicatifs.
-  - `/admin-habilitations` pour gérer les rôles, mots de passe et comptes autorisés.
-- **Contrôles d'accès** : authentification via **NextAuth.js** (Credentials en dev, Azure AD en prod), complétée par un **RBAC** (viewer/editor/admin) et un **audit append-only** JSONL.
+Le dépôt a pu être cloné dans un répertoire historique nommé `it-lanscape`. Le nom produit et technique retenu est **it-landscape**. Pour une publication plus explicite, les noms cibles recommandés sont `hospital-it-landscape` ou `sih-landscape`.
 
-## Structure des données
-- `data/*.json` : vue fonctionnelle (`etablissements → domaines → processus → applications`).
-- `data/*.infra.json` : inventaire des serveurs (`serveurs[]`) reliés aux applications par le champ `trigramme`.
-- `data/*.network.json` : informations réseau par établissement (`vlans[]`).
-- `data/*.flux.json` : flux applicatifs par établissement (`flux[]`).
-- `data/trigrammes.json` : dictionnaire trigramme → application.
-- `data/auth/access-rules.json` : comptes utilisateurs (mots de passe hachés `bcrypt`) + rôle.
-- `data/auth/auth-config.json` : liste des pages et routes API protégées par session.
-- `data/audit-log.jsonl` : journal append-only des modifications et exports.
+## Ce que fait le produit
+- **Vue métier** : lecture par établissements, domaines, processus et applications.
+- **Vue applicative** : applications regroupées par trigramme avec serveurs associés.
+- **Vue réseau** : VLANs, réseaux, passerelles et serveurs par établissement.
+- **Vue flux** : source, cible, protocole, type de message et EAI.
+- **Simulation d'incident** : recherche des impacts directs et indirects d'un serveur, d'une application ou d'un flux indisponible.
+- **Administration** : édition des référentiels JSON, imports Excel, gestion des trigrammes et habilitations.
+- **Sécurité MVP** : authentification NextAuth, rôles `viewer` / `editor` / `admin`, audit append-only JSONL des écritures et exports.
 
-## Prérequis
-- Node.js 18 ou version supérieure.
-- Docker + Docker Compose (pour le mode conteneurisé).
+## Données
+- `data/*.json` : vue fonctionnelle.
+- `data/*.infra.json` : inventaire serveurs.
+- `data/*.network.json` : VLANs et réseaux.
+- `data/*.flux.json` : flux applicatifs.
+- `data/trigrammes.json` : dictionnaire trigramme vers application.
+- `data/auth/access-rules.json` : comptes de démonstration avec mots de passe hachés.
+- `data/auth/auth-config.json` : règles de protection UI/API.
+- `data/audit-log.jsonl` : journal local non versionné des actions auditées.
 
-## Installation
+## Démarrage rapide
+
 ```bash
 npm install
-```
-
-## Lancement
-
-### Développement local
-```bash
 npm run dev
 ```
-L'application est accessible sur http://localhost:3000.
 
-### Production locale (sans Docker)
-```bash
-npm run build
-npm start
-```
+Application : http://localhost:3000
 
-### Docker Compose — application seule
+Avec Docker :
+
 ```bash
+cp .env.example .env
 docker compose up -d --build
 ```
 
-### Docker Compose — application + NetBox intégré
+Avec NetBox intégré :
+
 ```bash
+cp .env.example .env
 docker compose --profile netbox up -d --build
-```
-
-| Service  | URL                    |
-|----------|------------------------|
-| Web app  | http://localhost:3000  |
-| NetBox   | http://localhost:8080  |
-
-Au premier démarrage, NetBox applique ses migrations Django (~1-2 min). L'application web démarre en parallèle et se connecte à NetBox dès qu'il est prêt.
-
-#### Accès GitHub Codespaces / reverse proxy
-Si l'accès se fait via un proxy (Codespaces, ngrok…), ajoutez l'URL publique dans un fichier `.env` à la racine :
-
-```env
-NETBOX_CSRF_TRUSTED_ORIGINS=https://your-codespace-8080.app.github.dev
-NEXTAUTH_URL=https://your-codespace-3000.app.github.dev
-```
-
-#### Diagnostic
-```bash
-docker compose --profile netbox ps
-docker compose --profile netbox logs -f netbox
-```
-
-Si NetBox boucle sur `Waiting on DB...`, forcez un redémarrage propre :
-```bash
-docker compose --profile netbox down -v
-docker compose --profile netbox up -d
-```
-
-## Peupler NetBox depuis les JSON locaux
-
-Un script importe automatiquement les données des fichiers JSON vers NetBox (sites, VMs, IPs, VLANs, préfixes, passerelles) :
-
-```bash
 node scripts/netbox-seed.js
 ```
 
-Le script est idempotent : il ne crée que les objets manquants. Il peut être relancé sans risque après un `down -v`.
+Voir la démo guidée : [docs/demo-5-minutes.md](docs/demo-5-minutes.md).
 
-Objets créés par établissement :
+## Comptes de démonstration
 
-| Objet      | Détail                                              |
-|------------|-----------------------------------------------------|
-| Site       | 1 par établissement                                 |
-| VMs        | Avec CPU, RAM, disque, OS, backup, éditeur, contact |
-| Tags       | `app:XXX` par trigramme applicatif                  |
-| IPs        | 1 par VM, assignée à l'interface `eth0`             |
-| VLANs      | Avec identifiant, nom et description                |
-| Préfixes   | Liés aux VLANs                                      |
-| Passerelles| IP anycast par VLAN                                 |
+Application web :
 
-## Tests
-```bash
-npm test
-```
-Les tests vérifient la cohérence des fichiers JSON, la configuration des contrôles d'accès et le RBAC/audit sans base de données.
+| Utilisateur | Mot de passe | Rôle |
+|-------------|--------------|------|
+| `viewer` | `password` | Lecture seule |
+| `editor` | `password` | Lecture + écriture |
+| `admin` | `password` | Administration complète |
+| `valdellys` | `password` | Éditeur établissement |
+| `dunes` | `password` | Éditeur établissement |
+| `saintroch` | `password` | Éditeur établissement |
 
-## Export snapshot
-Un export zip est disponible via `GET /api/export` : il contient les fichiers JSON dans `data/` et un fichier `snapshot.xlsx` multi-onglets.
-
-## RBAC & audit
-Rôles disponibles :
-- **viewer** : lecture seule.
-- **editor** : lecture + écriture.
-- **admin** : toutes actions + gestion des rôles.
-
-| Type | Endpoint | Description | Restriction |
-|------|----------|-------------|-------------|
-| UI | `/` | Vue métier | Public |
-| UI | `/applications` | Vue applicative | viewer+ |
-| UI | `/flux` | Vue flux | viewer+ |
-| UI | `/network` | Vue réseau | viewer+ |
-| UI | `/incident` | Simulation incident | viewer+ |
-| UI | `/admin-*` | Écrans d'administration | editor+ |
-| UI | `/admin-habilitations` | Gestion des comptes & rôles | admin+ |
-| API | `GET /api/flux` | Flux (lecture) | viewer+ |
-| API | `GET /api/infrastructure` | Infrastructure (lecture) | viewer+ |
-| API | `GET /api/network` | Réseau (lecture) | viewer+ |
-| API | `GET /api/files` | Liste des fichiers | viewer+ |
-| API | `GET /api/export` | Export ZIP + audit | admin+ |
-| API | `POST /api/file/[name]` | Écriture JSON + audit | editor+ |
-| API | `GET/POST /api/admin/roles` | Gestion des habilitations | admin+ |
-
-## Configuration
-
-Variables d'environnement :
-
-| Variable | Description | Défaut |
-|----------|-------------|--------|
-| `NEXTAUTH_SECRET` | Secret JWT NextAuth (obligatoire en prod) | généré |
-| `NEXTAUTH_URL` | URL publique de l'application | `http://localhost:3000` |
-| `NETBOX_URL` | URL racine de NetBox | `http://netbox:8080` |
-| `NETBOX_TOKEN` | Token API NetBox | token par défaut |
-| `NETBOX_TRIGRAMME_TAG_PREFIX` | Préfixe de tag trigramme | `app:` |
-| `NETBOX_SECRET_KEY` | Clé secrète NetBox (≥ 50 caractères) | générée |
-| `NETBOX_CSRF_TRUSTED_ORIGINS` | Origines CSRF autorisées pour NetBox (séparées par des espaces) | localhost |
-| `NETBOX_SUPERUSER_NAME` | Login admin NetBox | `admin` |
-| `NETBOX_SUPERUSER_PASSWORD` | Mot de passe admin NetBox | `password` |
-| `AUTH_ENABLED=false` | Désactive l'authentification (dev uniquement) | — |
-| `AZURE_AD_CLIENT_ID/SECRET/TENANT_ID` | SSO Azure AD (production) | — |
-
-### Comptes par défaut
-
-**Application web** (`http://localhost:3000`) :
-
-| Utilisateur | Mot de passe | Rôle   |
-|-------------|--------------|--------|
-| `admin`     | `password`   | admin  |
-| `editor`    | `password`   | editor |
-| `viewer`    | `password`   | viewer |
-| `valdellys` | `password`   | editor |
-| `dunes`     | `password`   | editor |
-| `saintroch` | `password`   | editor |
-
-**NetBox** (`http://localhost:8080`) :
+NetBox, si le profil Docker `netbox` est activé :
 
 | Utilisateur | Mot de passe |
 |-------------|--------------|
-| `admin`     | `password`   |
+| `admin` | `password` |
 
-> Si le volume Postgres existe déjà avec un ancien mot de passe, réinitialisez-le via :
-> ```bash
-> docker exec it-lanscape-netbox-1 /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py shell -c \
->   "from django.contrib.auth import get_user_model; u=get_user_model().objects.get(username='admin'); u.set_password('password'); u.save()"
-> ```
+> Warning production : ne jamais utiliser les comptes, mots de passe, tokens ou secrets par défaut en production.
 
-## Synchronisation NetBox
+## Secrets et environnements
 
-Quand `NETBOX_URL` et `NETBOX_TOKEN` sont définis, les endpoints `GET /api/infrastructure` et `GET /api/network` lisent NetBox via API et n'utilisent plus les JSON locaux.
+Le modèle versionné est `.env.example`. Il sépare :
+- les valeurs acceptables en développement local ;
+- les secrets à remplacer en staging/production ;
+- les variables optionnelles NetBox et Azure AD.
 
-Mapping du trigramme applicatif (par ordre de priorité) :
-1. **Tag préfixé** sur VM/Device : `app:LAB` (configurable via `NETBOX_TRIGRAMME_TAG_PREFIX`)
-2. **Tag court** : tag de 3 caractères `LAB`
-3. **Custom field** : `trigramme`, `app_code` ou `application_code`
+Bonnes pratiques :
+- copier `.env.example` vers `.env` en local ;
+- ne jamais commiter `.env`, `.env.local`, `.env.production` ou un token réel ;
+- générer un `NEXTAUTH_SECRET` fort pour tout environnement partagé ;
+- remplacer les comptes de démonstration dans `data/auth/access-rules.json` avant une mise en production ;
+- activer Azure AD ou un fournisseur d'identité d'entreprise pour la production.
 
-Données remontées depuis NetBox :
-- **Infrastructure** : sites → établissements, VMs/devices → serveurs (CPU, RAM, disque, OS, backup depuis `comments`)
-- **Réseau** : sites → établissements, VLANs → vlans (avec préfixes et passerelles anycast)
+## RBAC et audit
 
-## Scripts utilitaires
-- `npm run check:trigrammes` : contrôle les trigrammes et génère `data/rapport-trigrammes.csv`.
-- `npm run check:infra-missing-trigramme` : liste les serveurs sans trigramme.
-- `node generate_hash.js <motdepasse>` : génère un hash `bcrypt` pour `data/auth/access-rules.json`.
-- `node scripts/netbox-seed.js` : peuple NetBox depuis les fichiers JSON locaux.
+Rôles :
+- `viewer` : lecture seule ;
+- `editor` : lecture + écriture sur les données ;
+- `admin` : écriture, exports et gestion des habilitations.
+
+Principales restrictions :
+
+| Surface | Restriction |
+|---------|-------------|
+| `/` | Public |
+| `/applications`, `/flux`, `/network`, `/incident` | `viewer+` |
+| `/admin-*` | `editor+` |
+| `/admin-habilitations` | `admin` |
+| `GET /api/export` | `admin` |
+| `POST /api/file/[name]` | `editor+` |
+| `GET/POST /api/admin/roles` | `admin` |
+
+Les écritures et exports alimentent `data/audit-log.jsonl`.
+
+## NetBox
+
+Quand `NETBOX_URL` et `NETBOX_TOKEN` sont définis, les endpoints infrastructure et réseau peuvent lire NetBox comme source de vérité. Le script `node scripts/netbox-seed.js` peuple NetBox depuis les JSON locaux pour une démonstration.
+
+Mapping du trigramme applicatif, par priorité :
+1. tag préfixé, par exemple `app:LAB` ;
+2. tag court de trois caractères, par exemple `LAB` ;
+3. custom field `trigramme`, `app_code` ou `application_code`.
+
+## Tests
+
+```bash
+npm test
+npm run build
+```
+
+Les tests couvrent la cohérence JSON, la configuration d'accès et les helpers RBAC/audit.
 
 ## Documentation
-- [Simulation d'incident](docs/incident-simulation.md)
+- [Positionnement produit](docs/product-positioning.md)
+- [Démo en 5 minutes](docs/demo-5-minutes.md)
 - [Architecture](docs/architecture.md)
+- [Simulation d'incident](docs/incident-simulation.md)
 - [Roadmap](docs/roadmap.md)
-- [ADR](docs/adr/0001-data-storage-json.md)
-
-## CI
-Pipeline CI via GitHub Actions (`.github/workflows/ci.yml`).
+- [ADR stockage JSON](docs/adr/0001-data-storage-json.md)
 
 ## Licence
-Ce projet est distribué sous licence MIT. Voir le fichier [LICENSE](LICENSE).
+
+MIT. Voir [LICENSE](LICENSE).

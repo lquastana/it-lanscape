@@ -4,36 +4,49 @@
 
 ```mermaid
 flowchart LR
-  subgraph Client
-    UI[Next.js UI<br/>/ pages/*]
-  end
-
-  subgraph Server
-    API[API Next.js<br/>/pages/api/*]
-    Auth[Session + Access control<br/>iron-session + IP/Basic]
-  end
-
-  subgraph Data
-    JSON[JSON files<br/>/data/*.json]
-  end
-
-  UI -->|fetch| API
-  API --> Auth
-  API --> JSON
+  Browser[Navigateur] --> UI[Next.js pages router]
+  UI --> API[API Next.js]
+  UI --> Auth[NextAuth session]
+  API --> Guard[RBAC + authz]
+  Guard --> JSON[(Fichiers JSON)]
+  Guard --> Audit[(audit-log.jsonl)]
+  API -. optionnel .-> NetBox[(NetBox API)]
 ```
 
-## Composants principaux
-- **UI Next.js** : vues métier, applicative, réseau, flux et simulation d’incident. Les pages consomment l’API interne et mettent en forme les données. 
-- **API Next.js** : endpoints REST simples en lecture/écriture pour les JSON (`/api/landscape`, `/api/flux`, `/api/infrastructure`, `/api/file/*`).
-- **Données** : fichiers JSON versionnables, séparés par établissement pour les vues métier, infra, réseau et flux.
-- **Journal d'audit** : append-only JSONL pour tracer les écritures effectuées via l’API.
-- **Sécurité d’accès** : session `iron-session` + filtrage IP/Basic Auth, appliqués sur les routes API sensibles.
+## Composants
 
-## Flux de données (exemple)
-1. L’utilisateur se connecte via `/login` (session).
-2. Les pages demandent les données via `/api/*`.
-3. Les APIs lisent/écrivent les fichiers JSON dans `/data`.
+- **Frontend Next.js / React** : vues métier, applicative, flux, réseau, simulation d'incident et écrans admin.
+- **API Next.js** : endpoints internes pour agréger les JSON, écrire les référentiels, exporter un snapshot et gérer les rôles.
+- **Authentification** : NextAuth avec provider Credentials en développement et Azure AD possible en production.
+- **Autorisation** : RBAC `viewer`, `editor`, `admin`, appliqué par middleware et helpers serveur.
+- **Audit** : fichier append-only `data/audit-log.jsonl` pour tracer écritures, exports et changements d'habilitation.
+- **Stockage MVP** : fichiers JSON versionnables sous `data/`, séparés par établissement et par vue.
+- **NetBox optionnel** : source de vérité possible pour l'infrastructure et le réseau lorsque `NETBOX_URL` et `NETBOX_TOKEN` sont configurés.
 
-## Limites connues
-- Modèle de données simple sans historisation en base.
-- RBAC fin et audit non implémentés (à envisager si usage SI hospitalier).
+## Flux de données
+
+1. L'utilisateur se connecte via `/login`.
+2. Le middleware vérifie la session et le rôle requis.
+3. Les pages consomment les endpoints `/api/*`.
+4. Les APIs lisent les JSON locaux ou NetBox selon la configuration.
+5. Les opérations d'écriture passent par les endpoints admin et ajoutent une entrée d'audit.
+
+## Surfaces principales
+
+| Surface | Rôle minimal |
+|---------|--------------|
+| Vue métier `/` | Public |
+| Vues consultation détaillées | `viewer` |
+| Imports et éditions admin | `editor` |
+| Habilitations et exports snapshot | `admin` |
+
+## Limites assumées du MVP
+
+- Pas encore de base de données applicative pour l'historisation fine.
+- Audit append-only local, pas encore expédié vers un SIEM.
+- Multi-tenant logique par données et rôles, pas encore cloisonnement fort par tenant.
+- Les comptes de démonstration existent dans le référentiel local et doivent être remplacés avant production.
+
+## Évolution cible
+
+Le passage à une version industrialisée doit prioriser PostgreSQL, migrations de modèle, gestion de secrets externe, observabilité et durcissement du modèle d'autorisation.

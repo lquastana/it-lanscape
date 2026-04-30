@@ -1,4 +1,4 @@
-version: '3.9'
+name: it-landscape
 services:
   web:
     build: .
@@ -7,8 +7,8 @@ services:
     volumes:
       - data:/app/data
     environment:
-      NETBOX_URL: ${NETBOX_URL:-http://netbox:8080}
-      NETBOX_TOKEN: ${NETBOX_TOKEN:-0123456789abcdef0123456789abcdef01234567}
+      NETBOX_URL: ${NETBOX_URL:-}
+      NETBOX_TOKEN: ${NETBOX_TOKEN:-}
       NETBOX_TRIGRAMME_TAG_PREFIX: ${NETBOX_TRIGRAMME_TAG_PREFIX:-app:}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-un-secret-local-de-dev-suffisamment-long-32c}
       NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
