@@ -1,5 +1,11 @@
 # it-landscape
 
+[![CI](https://github.com/lquastana/it-landscape/actions/workflows/ci.yml/badge.svg)](https://github.com/lquastana/it-landscape/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED)](docker-compose.yml)
+[![Zod](https://img.shields.io/badge/Zod-validated-3E67B1)](lib/schemas)
+
 MVP Next.js pour cartographier un système d'information hospitalier : applications, processus métier, serveurs, VLANs, flux applicatifs et impacts d'incident.
 
 ![Vue métier de la cartographie SI](docs/assets/gifs/screen-metier.gif)
