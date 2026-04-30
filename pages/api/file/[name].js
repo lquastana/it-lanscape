@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
-import crypto from 'crypto';
 import { appendAudit, hashContent, truncateSnapshot } from '../../../lib/audit.js';
 import { withAuthz } from '../../../lib/authz.js';
 import { resolveDataPath } from '../../../lib/dataPaths.js';
+import { writeJsonFileSafely } from '../../../lib/jsonFileStore.js';
 import { resolveSchema, formatZodErrors } from '../../../lib/schemas/index.js';
 
 const ALLOWED_NAME_RE = /^[a-z0-9_-]+(\.flux|\.infra|\.network)?\.json$/i;
@@ -38,14 +38,17 @@ async function handler(req, res) {
         }
       }
 
-      const beforeContent = await fs.readFile(filePath, 'utf-8').catch(() => null);
       const payload = JSON.stringify(req.body, null, 2);
-      const tempPath = `${filePath}.${crypto.randomUUID()}.tmp`;
-      await fs.mkdir(path.dirname(filePath), { recursive: true });
-      await fs.writeFile(tempPath, payload, 'utf-8');
-      await fs.rename(tempPath, filePath);
-
       const actor = req.actor || {};
+      const writeResult = await writeJsonFileSafely(filePath, req.body, {
+        target: safeName,
+        actor: {
+          user: actor.user || 'unknown',
+          role: actor.role || 'unknown',
+        },
+        action: 'data-file-write',
+      });
+
       await appendAudit({
         action: 'write',
         target: `data/${safeName}`,
@@ -55,14 +58,19 @@ async function handler(req, res) {
         },
         via: actor.via || 'unknown',
         clientIp: actor.clientIp || null,
-        beforeHash: hashContent(beforeContent),
+        beforeHash: writeResult.beforeHash || hashContent(writeResult.beforeContent),
         afterHash: hashContent(payload),
-        before: truncateSnapshot(beforeContent),
+        before: truncateSnapshot(writeResult.beforeContent),
         after: truncateSnapshot(payload),
         bytes: Buffer.byteLength(payload, 'utf-8'),
+        snapshot: writeResult.snapshot,
+        historyId: writeResult.historyId,
       });
       res.status(200).json({ ok: true });
-    } catch {
+    } catch (error) {
+      if (error.code === 'JSON_STORE_LOCKED') {
+        return res.status(423).json({ error: 'Fichier verrouillé, réessayez dans quelques secondes' });
+      }
       res.status(500).json({ error: 'Erreur écriture fichier' });
     }
   } else {

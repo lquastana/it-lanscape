@@ -1414,6 +1414,7 @@ small { font-size: 12px; line-height: 16px; }
 }
 
 .business-hero .view-switch a,
+.business-hero .admin-home-link,
 .business-hero .nav-logout {
   border-radius: 18px;
 }
@@ -1421,6 +1422,11 @@ small { font-size: 12px; line-height: 16px; }
 .business-hero .admin-nav {
   width: auto;
   max-width: none;
+}
+
+.admin-home-link {
+  min-width: 40px;
+  text-align: center;
 }
 
 .nav-logout {
@@ -1703,6 +1709,57 @@ small { font-size: 12px; line-height: 16px; }
 .login-submit:disabled {
   cursor: wait;
   opacity: 0.72;
+}
+
+.login-sso {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.login-divider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  color: #607989;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.login-divider span:first-child,
+.login-divider span:last-child {
+  height: 1px;
+  background: rgba(10, 46, 74, 0.13);
+}
+
+.login-sso-button {
+  min-height: 52px;
+  border: 1.5px solid rgba(10, 46, 74, 0.18);
+  border-radius: 16px;
+  background: #fff;
+  color: #0a2e4a;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  font-weight: 900;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.login-sso-button:hover:not(:disabled) {
+  border-color: rgba(31, 166, 168, 0.52);
+  box-shadow: 0 16px 30px rgba(10, 46, 74, 0.12);
+  transform: translateY(-1px);
+}
+
+.login-sso-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
 }
 
 .business-filter-panel .legend {

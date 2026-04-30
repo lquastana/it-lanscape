@@ -25,6 +25,9 @@ export default function AdminNav({ onLogout }) {
 
   return (
     <nav className="view-switch admin-nav" aria-label="Navigation admin">
+      <Link className="admin-home-link" href="/" aria-label="Retour à l'accueil">
+        🏠
+      </Link>
       {NAV_ITEMS.map(item => (
         <NavLink key={item.href} href={item.href} currentPath={currentPath}>
           {item.label}

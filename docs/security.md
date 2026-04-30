@@ -104,6 +104,7 @@ Donnees a sauvegarder :
 - `data/trigrammes.json` ;
 - `data/auth/access-rules.json` et `data/auth/auth-config.json` ;
 - `data/audit-log.jsonl` ;
+- `data/.history/history.jsonl` et `data/.history/snapshots/` ;
 - configuration d'environnement hors secrets, et references des secrets dans le
   gestionnaire dedie ;
 - donnees NetBox si le profil NetBox est utilise comme source de verite.

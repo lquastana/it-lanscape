@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import { ShieldCheck } from 'lucide-react';
 import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
 function normalizeRedirect(value) {
@@ -18,6 +19,8 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [redirectedFrom, setRedirectedFrom] = useState('/');
   const [loading, setLoading] = useState(false);
+  const [ssoLoading, setSsoLoading] = useState(false);
+  const [hasAzureProvider, setHasAzureProvider] = useState(null);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -40,6 +43,23 @@ export default function LoginPage() {
     return () => { cancelled = true; };
   }, [router]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/auth/providers')
+      .then(r => r.json())
+      .then(providers => {
+        if (!cancelled) {
+          setHasAzureProvider(Boolean(providers?.['azure-ad']));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setHasAzureProvider(false);
+      });
+
+    return () => { cancelled = true; };
+  }, []);
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
@@ -58,6 +78,12 @@ export default function LoginPage() {
       setError('Échec de la connexion. Veuillez vérifier vos identifiants.');
       setLoading(false);
     }
+  }
+
+  async function handleAzureSignIn() {
+    setError('');
+    setSsoLoading(true);
+    await signIn('azure-ad', { callbackUrl: redirectedFrom });
   }
 
   return (
@@ -137,6 +163,24 @@ export default function LoginPage() {
               {loading ? 'Connexion...' : 'Se connecter'}
             </button>
           </form>
+
+          <div className="login-sso">
+            <div className="login-divider" aria-hidden="true">
+              <span />
+              <span>ou</span>
+              <span />
+            </div>
+            <button
+              type="button"
+              className="login-sso-button"
+              onClick={handleAzureSignIn}
+              disabled={!hasAzureProvider || ssoLoading}
+              title={hasAzureProvider === false ? 'Provider Azure AD non configuré' : 'Connexion Entra ID / Azure AD'}
+            >
+              <ShieldCheck aria-hidden="true" size={19} />
+              {ssoLoading ? 'Redirection SSO...' : 'Continuer avec Entra ID / Azure AD'}
+            </button>
+          </div>
         </motion.div>
       </main>
     </>

@@ -1,10 +1,8 @@
-import fs from 'fs/promises';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { appendAudit, hashContent, truncateSnapshot } from '../../../lib/audit.js';
 import { withAuthz } from '../../../lib/authz.js';
 import { loadAccessRules, saveAccessRules } from '../../../lib/accessControl.js';
-import { resolveDataPath } from '../../../lib/dataPaths.js';
 
 const ALLOWED_ROLES = ['viewer', 'editor', 'admin'];
 
@@ -35,11 +33,23 @@ async function handler(req, res) {
   }
 
   try {
-    const rulesPath = resolveDataPath('auth', 'access-rules.json');
-    const beforeContent = await fs.readFile(rulesPath, 'utf-8').catch(() => null);
     const rules = await loadAccessRules();
     const establishments = Array.isArray(rules.establishments) ? rules.establishments : [];
     const target = establishments.find(est => est.username === username);
+    const actor = req.actor || {};
+    const writeOptions = {
+      includeWriteResult: true,
+      actor: {
+        user: actor.user || 'unknown',
+        role: actor.role || 'unknown',
+      },
+      meta: {
+        change: action,
+        username,
+        role: role || null,
+      },
+    };
+    let writeResult = null;
 
     if (action === 'create') {
       if (!ALLOWED_ROLES.includes(role)) {
@@ -59,7 +69,7 @@ async function handler(req, res) {
         password: hashedPassword,
       });
       rules.establishments = establishments;
-      await saveAccessRules(rules);
+      ({ writeResult } = await saveAccessRules(rules, writeOptions));
     } else if (action === 'update-password') {
       if (!target) {
         return res.status(404).json({ error: 'Utilisateur introuvable' });
@@ -69,13 +79,13 @@ async function handler(req, res) {
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       target.password = hashedPassword;
-      await saveAccessRules(rules);
+      ({ writeResult } = await saveAccessRules(rules, writeOptions));
     } else if (action === 'delete') {
       if (!target) {
         return res.status(404).json({ error: 'Utilisateur introuvable' });
       }
       rules.establishments = establishments.filter(est => est.username !== username);
-      await saveAccessRules(rules);
+      ({ writeResult } = await saveAccessRules(rules, writeOptions));
     } else {
       if (!ALLOWED_ROLES.includes(role)) {
         return res.status(400).json({ error: 'Rôle invalide' });
@@ -84,11 +94,9 @@ async function handler(req, res) {
         return res.status(404).json({ error: 'Utilisateur introuvable' });
       }
       target.role = role;
-      await saveAccessRules(rules);
+      ({ writeResult } = await saveAccessRules(rules, writeOptions));
     }
 
-    const actor = req.actor || {};
-    const afterContent = await fs.readFile(rulesPath, 'utf-8').catch(() => null);
     await appendAudit({
       action: 'write',
       target: 'data/auth/access-rules.json',
@@ -98,10 +106,12 @@ async function handler(req, res) {
       },
       via: actor.via || 'unknown',
       clientIp: actor.clientIp || null,
-      beforeHash: hashContent(beforeContent),
-      afterHash: hashContent(afterContent),
-      before: truncateSnapshot(beforeContent),
-      after: truncateSnapshot(afterContent),
+      beforeHash: writeResult?.beforeHash || hashContent(writeResult?.beforeContent),
+      afterHash: writeResult?.afterHash || hashContent(writeResult?.afterContent),
+      before: truncateSnapshot(writeResult?.beforeContent),
+      after: truncateSnapshot(writeResult?.afterContent),
+      snapshot: writeResult?.snapshot || null,
+      historyId: writeResult?.historyId || null,
       meta: {
         change: action,
         username,
@@ -111,6 +121,9 @@ async function handler(req, res) {
 
     return res.status(200).json({ ok: true });
   } catch (error) {
+    if (error.code === 'JSON_STORE_LOCKED') {
+      return res.status(423).json({ error: 'Règles d’accès verrouillées, réessayez dans quelques secondes' });
+    }
     console.error(error);
     return res.status(500).json({ error: 'Erreur mise à jour rôle' });
   }

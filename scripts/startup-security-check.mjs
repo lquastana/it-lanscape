@@ -42,6 +42,10 @@ function findDefaultAdminAccount(cwd, env) {
   );
 }
 
+function accessRulesPathFor(cwd, env) {
+  return path.join(dataDirFor(cwd, env), 'auth', 'access-rules.json');
+}
+
 export function loadStartupEnv(cwd = process.cwd()) {
   const nodeEnv = process.env.NODE_ENV || 'development';
   const envFiles = [
@@ -100,16 +104,23 @@ export function validateStartupSecurity({
     );
   }
 
-  try {
-    if (findDefaultAdminAccount(cwd, env)) {
+  const accessRulesPath = accessRulesPathFor(cwd, env);
+  if (!fs.existsSync(accessRulesPath)) {
+    errors.push(
+      'Configuration de production invalide: data/auth/access-rules.json est obligatoire.'
+    );
+  } else {
+    try {
+      if (findDefaultAdminAccount(cwd, env)) {
+        errors.push(
+          'Configuration de production invalide: le compte admin/password est encore present dans data/auth/access-rules.json.'
+        );
+      }
+    } catch (error) {
       errors.push(
-        'Configuration de production invalide: le compte admin/password est encore present dans data/auth/access-rules.json.'
+        `Configuration de production invalide: controle de data/auth/access-rules.json impossible: ${error.message}`
       );
     }
-  } catch (error) {
-    warnings.push(
-      `Controle du compte admin/password impossible: ${error.message}`
-    );
   }
 
   for (const warning of warnings) logger.warn(`[startup-security] WARNING: ${warning}`);

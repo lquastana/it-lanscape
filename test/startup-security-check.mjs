@@ -140,6 +140,29 @@ await withAccessRules(
   }
 );
 
+{
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'it-landscape-startup-missing-rules-'));
+  try {
+    const { logger } = captureLogger();
+    const result = validateStartupSecurity({
+      env: {
+        NODE_ENV: 'production',
+        NEXTAUTH_SECRET: 'strong-production-secret-value',
+        NEXTAUTH_URL: 'https://it-landscape.example.org',
+        AUTH_ENABLED: 'true',
+        DATA_DIR: tempDir,
+      },
+      logger,
+    });
+
+    assert.equal(result.errors.length, 1);
+    assert.match(result.errors[0], /access-rules\.json est obligatoire/);
+    assert.deepEqual(result.warnings, []);
+  } finally {
+    await fs.rm(tempDir, { recursive: true, force: true });
+  }
+}
+
 await withAccessRules(
   [{ username: 'admin', password: defaultAdminHash, role: 'admin' }],
   async dataDir => {
