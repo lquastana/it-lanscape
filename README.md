@@ -1,5 +1,9 @@
 # it-landscape
 
+<p align="center">
+  <img src="public/it-landscape-logo-with-text.png" alt="it-landscape" width="320" />
+</p>
+
 [![CI](https://github.com/lquastana/it-landscape/actions/workflows/ci.yml/badge.svg)](https://github.com/lquastana/it-landscape/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
