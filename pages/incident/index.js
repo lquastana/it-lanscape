@@ -832,7 +832,7 @@ export default function IncidentSimulationPage() {
   return (
     <>
       <Head>
-        <title>Simulation d'incident - {APP_TITLE}</title>
+        <title>Simulation d&apos;incident - {APP_TITLE}</title>
         <meta charSet="UTF-8" />
       </Head>
       <header className="hero business-hero incident-hero">
@@ -844,7 +844,7 @@ export default function IncidentSimulationPage() {
             <div>
               <p className="eyebrow">{ORG_NAME}</p>
               <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                Simulation d'incident
+                Simulation d&apos;incident
               </motion.h1>
               <p className="hero-subtitle">
                 Simulez une indisponibilité et visualisez les impacts directs et indirects.
@@ -858,7 +858,7 @@ export default function IncidentSimulationPage() {
       <section className="business-command-center incident-command-center page-shell">
         <div className="business-command-intro">
           <span className="business-section-kicker">Crise & continuité</span>
-          <h2>Simulation d'impact SIH</h2>
+          <h2>Simulation d&apos;impact SIH</h2>
           <p>
             Composez un scénario, qualifiez la panne et obtenez une lecture
             priorisée des applications, processus et flux touchés.
@@ -893,7 +893,7 @@ export default function IncidentSimulationPage() {
           <span className="business-section-kicker">Préparation</span>
           <h2>Construire un scénario</h2>
           <p className="muted">
-            Sélectionnez un ou plusieurs composants du SI, définissez leur statut, puis lancez l'analyse.
+            Sélectionnez un ou plusieurs composants du SI, définissez leur statut, puis lancez l&apos;analyse.
           </p>
           {status && <p className="status">{status}</p>}
           <div className="incident-form">
@@ -942,7 +942,7 @@ export default function IncidentSimulationPage() {
                 Ajouter au scénario
               </button>
               <button type="button" onClick={runAnalysis}>
-                Lancer l'analyse
+                Lancer l&apos;analyse
               </button>
             </div>
           </div>

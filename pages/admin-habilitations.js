@@ -135,7 +135,7 @@ export default function AdminHabilitations() {
               <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 Habilitations
               </motion.h1>
-              <p className="hero-subtitle">Gestion des comptes et des niveaux d'accès.</p>
+              <p className="hero-subtitle">Gestion des comptes et des niveaux d&apos;accès.</p>
             </div>
           </div>
           <AdminNav onLogout={handleLogout} />
@@ -158,11 +158,11 @@ export default function AdminHabilitations() {
                 <h2>Ajouter un utilisateur</h2>
               </div>
             </div>
-            <p className="admin-card-intro">Créez un compte et attribuez-lui un rôle d'accès.</p>
+            <p className="admin-card-intro">Créez un compte et attribuez-lui un rôle d&apos;accès.</p>
 
             <form onSubmit={createUser} className="admin-form-stack">
               <label className="admin-label">
-                Nom d'utilisateur
+                Nom d&apos;utilisateur
                 <input className="admin-input" type="text" value={newUser.username}
                   onChange={e => setNewUser(p => ({ ...p, username: e.target.value }))}
                   placeholder="ex : jdupont" autoComplete="off" required />

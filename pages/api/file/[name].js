@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { appendAudit, hashContent, truncateSnapshot } from '../../../lib/audit.js';
 import { withAuthz } from '../../../lib/authz.js';
 import { resolveDataPath } from '../../../lib/dataPaths.js';
+import { resolveSchema, formatZodErrors } from '../../../lib/schemas/index.js';
 
 async function handler(req, res) {
   const { name } = req.query;
@@ -23,6 +24,18 @@ async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
+      const baseName = path.basename(name);
+      const schema = resolveSchema(baseName);
+      if (schema) {
+        const result = schema.safeParse(req.body);
+        if (!result.success) {
+          return res.status(422).json({
+            error: 'Données invalides',
+            details: formatZodErrors(result.error),
+          });
+        }
+      }
+
       const beforeContent = await fs.readFile(filePath, 'utf-8').catch(() => null);
       const payload = JSON.stringify(req.body, null, 2);
       const tempPath = `${filePath}.${crypto.randomUUID()}.tmp`;

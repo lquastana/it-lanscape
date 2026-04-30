@@ -299,7 +299,7 @@ export default function FluxImport() {
               Fusion incrémentale
             </label>
             <button className="admin-btn primary" onClick={handleImport} disabled={!selectedFile || !mappedRows.length}>
-              Lancer l'import
+              Lancer l&apos;import
             </button>
           </div>
         </section>

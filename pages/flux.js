@@ -448,7 +448,7 @@ export default function FluxPage() {
               </datalist>
             </label>
             <label className="filter-item">
-              <span>Type d'interface</span>
+              <span>Type d&apos;interface</span>
               <select value={interfaceType} onChange={e => setInterfaceType(e.target.value)}>
                 <option value="">Tous</option>
                 {INTERFACE_TYPES.map(type => (

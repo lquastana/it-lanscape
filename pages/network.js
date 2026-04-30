@@ -63,7 +63,7 @@ export default function NetworkPage() {
           <h2>Topologie opérationnelle</h2>
           <p>
             Filtrez par VLAN ou serveur pour retrouver rapidement les segments,
-            adresses IP et détails d'infrastructure.
+            adresses IP et détails d&apos;infrastructure.
           </p>
         </div>
         <div className="business-kpi-grid" aria-label="Indicateurs réseau">
@@ -85,7 +85,7 @@ export default function NetworkPage() {
           <article className="business-kpi-card">
             <span>Passerelles</span>
             <strong>{metrics.gateways}</strong>
-            <em>Points d'entrée réseau</em>
+            <em>Points d&apos;entrée réseau</em>
           </article>
         </div>
       </section>

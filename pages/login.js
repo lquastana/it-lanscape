@@ -56,7 +56,7 @@ export default function LoginPage() {
                 {APP_TITLE}
               </motion.h1>
               <p className="hero-subtitle">
-                Connectez-vous pour accéder à la cartographie du système d'information.
+                Connectez-vous pour accéder à la cartographie du système d&apos;information.
               </p>
             </div>
           </div>
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="login-field">
-              <label htmlFor="username">Nom d'utilisateur</label>
+              <label htmlFor="username">Nom d&apos;utilisateur</label>
               <input
                 type="text"
                 id="username"
