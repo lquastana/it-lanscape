@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
+import MainNav from '../../components/MainNav';
+import { LOGO_URL, ORG_NAME, APP_TITLE } from '../../lib/branding';
 
 const STATUS_OPTIONS = [
   { value: 'hs', label: 'HS' },
@@ -162,13 +162,6 @@ export default function IncidentSimulationPage() {
       })
       .catch(() => setStatus('Impossible de charger les données.'));
   }, []);
-
-  useEffect(() => {
-    if (autoRun && selectedComponents.length > 0) {
-      runAnalysis();
-      setAutoRun(false);
-    }
-  }, [autoRun, selectedComponents, runAnalysis]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -573,6 +566,13 @@ export default function IncidentSimulationPage() {
     });
   }, [selectedComponents, links, appMeta, serversByApp, flowOptions]);
 
+  useEffect(() => {
+    if (autoRun && selectedComponents.length > 0) {
+      runAnalysis();
+      setAutoRun(false);
+    }
+  }, [autoRun, selectedComponents, runAnalysis]);
+
   const handleSaveScenario = () => {
     if (!scenarioName.trim()) return;
     setSavedScenarios(prev => [
@@ -812,13 +812,30 @@ export default function IncidentSimulationPage() {
     return diagrams;
   }, [reportByEtablissement]);
 
+  const incidentMetrics = useMemo(() => {
+    if (!analysis) {
+      return {
+        selected: selectedComponents.length,
+        applications: 0,
+        processes: 0,
+        flows: 0,
+      };
+    }
+    return {
+      selected: selectedComponents.length,
+      applications: new Set(analysis.impactedApps.map(app => app.trigramme)).size,
+      processes: new Set(analysis.impactedApps.map(app => `${app.domaine} / ${app.processus}`)).size,
+      flows: analysis.blockedFlows.length,
+    };
+  }, [analysis, selectedComponents.length]);
+
   return (
     <>
       <Head>
         <title>Simulation d'incident - {APP_TITLE}</title>
         <meta charSet="UTF-8" />
       </Head>
-      <header className="hero">
+      <header className="hero business-hero incident-hero">
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
@@ -834,19 +851,46 @@ export default function IncidentSimulationPage() {
               </p>
             </div>
           </div>
-          <nav className="view-switch" aria-label="Navigation des vues">
-            <Link href="/">Vue Métier</Link>
-            <Link href="/applications">Vue Applicative</Link>
-            <Link href="/flux">Vue Flux</Link>
-            <Link href="/network">Vue Réseau</Link>
-            <Link href="/incident" className="active">Simulation d'incident</Link>
-            <button onClick={handleLogout} style={{cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline'}}>Déconnexion</button>
-          </nav>
+          <MainNav onLogout={handleLogout} />
         </div>
       </header>
 
-      <main className="page-shell incident-page">
+      <section className="business-command-center incident-command-center page-shell">
+        <div className="business-command-intro">
+          <span className="business-section-kicker">Crise & continuité</span>
+          <h2>Simulation d'impact SIH</h2>
+          <p>
+            Composez un scénario, qualifiez la panne et obtenez une lecture
+            priorisée des applications, processus et flux touchés.
+          </p>
+        </div>
+        <div className="business-kpi-grid" aria-label="Indicateurs incident">
+          <article className="business-kpi-card highlight">
+            <span>Composants</span>
+            <strong>{incidentMetrics.selected}</strong>
+            <em>Sélectionnés dans le scénario</em>
+          </article>
+          <article className="business-kpi-card">
+            <span>Applications</span>
+            <strong>{incidentMetrics.applications}</strong>
+            <em>Potentiellement impactées</em>
+          </article>
+          <article className="business-kpi-card">
+            <span>Processus</span>
+            <strong>{incidentMetrics.processes}</strong>
+            <em>Métiers concernés</em>
+          </article>
+          <article className="business-kpi-card">
+            <span>Flux</span>
+            <strong>{incidentMetrics.flows}</strong>
+            <em>Bloqués ou dégradés</em>
+          </article>
+        </div>
+      </section>
+
+      <main className="page-shell incident-page incident-modern">
         <section className="incident-panel">
+          <span className="business-section-kicker">Préparation</span>
           <h2>Construire un scénario</h2>
           <p className="muted">
             Sélectionnez un ou plusieurs composants du SI, définissez leur statut, puis lancez l'analyse.
@@ -961,7 +1005,10 @@ export default function IncidentSimulationPage() {
 
         <section className="incident-results">
           <div className="incident-results-header">
-            <h2>Résultats &amp; impacts</h2>
+            <div>
+              <span className="business-section-kicker">Analyse</span>
+              <h2>Résultats &amp; impacts</h2>
+            </div>
             <button type="button" className="btn-secondary no-print" onClick={() => window.print()}>
               Exporter en PDF
             </button>
@@ -984,7 +1031,7 @@ export default function IncidentSimulationPage() {
                         className={`impact-card impact-report${index > 0 ? ' print-page-break' : ''}`}
                       >
                         <summary>
-                          <div>
+                          <span className="summary-main">
                             <strong>{report.etablissement}</strong>
                             <span className="muted">
                               {' '}
@@ -992,7 +1039,7 @@ export default function IncidentSimulationPage() {
                               • {report.blockedFlows.length} flux
                               • {report.impactedProcesses.length} processus
                             </span>
-                          </div>
+                          </span>
                         </summary>
                         <div className="impact-body">
                           <div>
@@ -1144,14 +1191,14 @@ export default function IncidentSimulationPage() {
                               report.impactedApps.map(app => (
                                 <details key={`${app.trigramme}-${app.etablissement}`} className="impact-card">
                                   <summary>
-                                    <div>
+                                    <span className="summary-main">
                                       <strong>{app.label}</strong>
                                       <span className="muted"> • {app.domaine} / {app.processus}</span>
-                                    </div>
-                                    <div>
+                                    </span>
+                                    <span className="summary-badges">
                                       <span className={`status-pill status-${app.status}`}>{formatStatus(app.status)}</span>
                                       <span className="crit-pill">{app.criticite}</span>
-                                    </div>
+                                    </span>
                                   </summary>
                                   <div className="impact-body">
                                     <p>{describeStatus(app.status)}</p>

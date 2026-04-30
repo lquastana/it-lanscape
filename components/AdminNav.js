@@ -3,10 +3,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const NAV_ITEMS = [
-  { href: '/admin-metier', label: 'Gestion vue métier' },
-  { href: '/admin-infra', label: 'Gestion vue infrastructure' },
-  { href: '/admin-flux', label: 'Gestion flux' },
-  { href: '/admin-trigramme', label: 'Référentiel trigrammes' },
+  { href: '/admin-metier',    label: 'Vue métier' },
+  { href: '/admin-flux',      label: 'Flux' },
+  { href: '/admin-trigramme', label: 'Trigrammes' },
 ];
 
 export default function AdminNav({ onLogout }) {
@@ -15,27 +14,17 @@ export default function AdminNav({ onLogout }) {
 
   useEffect(() => {
     let cancelled = false;
-    const loadRole = async () => {
-      try {
-        const res = await fetch('/api/auth/me');
-        const data = await res.json();
-        if (!cancelled) {
-          setRole(data?.user?.role || null);
-        }
-      } catch {
-        if (!cancelled) setRole(null);
-      }
-    };
-    loadRole();
-    return () => {
-      cancelled = true;
-    };
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => { if (!cancelled) setRole(data?.user?.role ?? null); })
+      .catch(() => { if (!cancelled) setRole(null); });
+    return () => { cancelled = true; };
   }, []);
 
   const currentPath = router.pathname;
 
   return (
-    <nav className="view-switch" aria-label="Navigation des vues">
+    <nav className="view-switch admin-nav" aria-label="Navigation admin">
       {NAV_ITEMS.map(item => (
         <NavLink key={item.href} href={item.href} currentPath={currentPath}>
           {item.label}
@@ -46,16 +35,7 @@ export default function AdminNav({ onLogout }) {
           Habilitations
         </NavLink>
       )}
-      <button
-        onClick={onLogout}
-        style={{
-          cursor: 'pointer',
-          background: 'none',
-          border: 'none',
-          color: 'var(--pico-primary)',
-          textDecoration: 'underline',
-        }}
-      >
+      <button className="nav-logout" onClick={onLogout}>
         Déconnexion
       </button>
     </nav>
@@ -64,8 +44,9 @@ export default function AdminNav({ onLogout }) {
 
 function NavLink({ href, currentPath, children }) {
   const isActive = currentPath === href;
-  if (isActive) {
-    return <span className="active" aria-current="page">{children}</span>;
-  }
-  return <Link href={href}>{children}</Link>;
+  return (
+    <Link href={href} className={isActive ? 'active' : undefined} aria-current={isActive ? 'page' : undefined}>
+      {children}
+    </Link>
+  );
 }

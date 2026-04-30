@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
+import { motion } from 'framer-motion';
 import AdminNav from '../components/AdminNav';
-import { LOGO_URL, ORG_NAME } from '../lib/branding';
+import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
 const normalizeName = (str = '') => str
   .normalize('NFD')
@@ -361,85 +362,86 @@ export default function TrigrammeAdmin() {
   return (
     <>
       <Head>
-        <title>Administration des trigrammes</title>
+        <title>Référentiel trigrammes — {APP_TITLE}</title>
       </Head>
-      <header className="hero">
+      <header className="hero business-hero">
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
               {LOGO_URL && <img src={LOGO_URL} alt={ORG_NAME} />}
             </div>
             <div>
-              <p className="eyebrow">{ORG_NAME}</p>
-              <h1>Référentiel des trigrammes</h1>
+              <p className="eyebrow">{ORG_NAME} — Administration</p>
+              <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                Référentiel des trigrammes
+              </motion.h1>
+              <p className="hero-subtitle">Gestion, contrôle et cohérence des identifiants applicatifs.</p>
             </div>
           </div>
           <AdminNav onLogout={handleLogout} />
         </div>
-     </header>
+      </header>
 
-      <main className="page-shell layout">
-        {status && <p className="status warn">{status}</p>}
-        {loading && <p className="status">Chargement…</p>}
+      <main className="page-shell admin-page">
+        {status && <p className={`admin-status ${status.startsWith('✅') ? 'ok' : 'warn'}`}>{status}</p>}
+        {loading && <p className="admin-status info">Chargement…</p>}
 
         {!loading && (
           <>
-            <section className="card">
-              <h2>Référentiel</h2>
-              <p className="hint">{Object.keys(trigrammes).length} trigrammes déclarés dans trigrammes.json.</p>
-
-              <form className="add-trigram" onSubmit={handleAddTrigram}>
+            <section className="admin-card">
+              <div className="admin-card-header">
                 <div>
-                  <label>Trigramme</label>
-                  <input value={newTri} onChange={e => setNewTri(e.target.value)} maxLength={10} placeholder="EXE" className="input" />
-                </div>
-                <div>
-                  <label>Libellé</label>
-                  <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé applicatif" className="input" />
-                </div>
-                <button className="btn primary" type="submit">Ajouter</button>
-              </form>
-
-              <div className="table-controls">
-                <div className="field">
-                  <label>Recherche</label>
-                  <input
-                    className="input"
-                    type="search"
-                    placeholder="Trigramme ou libellé"
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                  />
-                </div>
-                <div className="pagination">
-                  <span className="muted">Page {currentPage}/{totalPages}</span>
-                  <button className="btn ghost" type="button" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
-                  <button className="btn ghost" type="button" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
+                  <span className="business-section-kicker">Référentiel</span>
+                  <h2>{Object.keys(trigrammes).length} trigrammes déclarés</h2>
                 </div>
               </div>
 
-              <div className="table-wrapper">
-                <table>
+              <form style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr)) auto', gap: 12, alignItems: 'end', marginBottom: 20 }} onSubmit={handleAddTrigram}>
+                <label className="admin-label">
+                  Trigramme
+                  <input className="admin-input" value={newTri} onChange={e => setNewTri(e.target.value)} maxLength={10} placeholder="EXE" />
+                </label>
+                <label className="admin-label">
+                  Libellé
+                  <input className="admin-input" value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="Libellé applicatif" />
+                </label>
+                <button className="admin-btn primary" type="submit">Ajouter</button>
+              </form>
+
+              <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 14, flexWrap: 'wrap' }}>
+                <label className="admin-label" style={{ flex: 1, minWidth: 200 }}>
+                  Recherche
+                  <input className="admin-input" type="search" placeholder="Trigramme ou libellé" value={search} onChange={e => setSearch(e.target.value)} />
+                </label>
+                <div className="admin-pagination">
+                  <span style={{ opacity: 0.6 }}>Page {currentPage}/{totalPages}</span>
+                  <button className="admin-btn ghost sm" type="button" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>◀</button>
+                  <button className="admin-btn ghost sm" type="button" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>▶</button>
+                </div>
+              </div>
+
+              <div className="admin-table-wrap">
+                <table className="admin-table">
                   <thead>
                     <tr>
-                      <th onClick={() => setSort('tri')} className="sortable">Trigramme {sortKey === 'tri' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
-                      <th onClick={() => setSort('label')} className="sortable">Libellé {sortKey === 'label' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
-                      <th onClick={() => setSort('metier')} className="sortable">Applications (métier) {sortKey === 'metier' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
-                      <th onClick={() => setSort('infra')} className="sortable">Serveurs (infra) {sortKey === 'infra' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
-                      <th onClick={() => setSort('etablissements')} className="sortable">Établissements concernés {sortKey === 'etablissements' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
-                      <th>Actions</th>
+                      <th className="sortable" onClick={() => setSort('tri')}>Trigramme {sortKey === 'tri' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th className="sortable" onClick={() => setSort('label')}>Libellé {sortKey === 'label' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th className="sortable" onClick={() => setSort('metier')}>Apps métier {sortKey === 'metier' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th className="sortable" onClick={() => setSort('infra')}>Serveurs {sortKey === 'infra' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th className="sortable" onClick={() => setSort('etablissements')}>Établissements {sortKey === 'etablissements' ? (sortDir === 'asc' ? '▲' : '▼') : ''}</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     {paginatedStats.map(stat => (
                       <tr key={stat.tri} className="clickable" onClick={() => setDetailTri(stat.tri)}>
-                        <td><code>{stat.tri}</code></td>
+                        <td><span className="admin-code">{stat.tri}</span></td>
                         <td>{stat.label || '—'}</td>
-                        <td>{stat.metier}</td>
+                        <td><span className="admin-badge accent">{stat.metier}</span></td>
                         <td>{stat.infra}</td>
                         <td>{stat.etablissements}</td>
                         <td>
-                          <button className="btn ghost danger" onClick={(e) => { e.stopPropagation(); handleDeleteTrigram(stat.tri); }}>🗑️</button>
+                          <button className="admin-btn danger sm" onClick={e => { e.stopPropagation(); handleDeleteTrigram(stat.tri); }}>Supprimer</button>
                         </td>
                       </tr>
                     ))}
@@ -448,14 +450,17 @@ export default function TrigrammeAdmin() {
               </div>
             </section>
 
-            <section className="card">
-              <h2>Contrôles automatiques</h2>
-              <div className="checks">
+            <section className="admin-card">
+              <span className="business-section-kicker">Contrôles</span>
+              <h2 style={{ marginBottom: 16 }}>Contrôles automatiques</h2>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 20 }}>
                 <div>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 10, marginTop: 0 }}>Doublons &amp; incohérences métier</h3>
                   {trigramCheck.duplicates.length === 0 ? (
-                    <p className="ok">Aucun doublon de libellé détecté.</p>
+                    <p className="admin-status ok">Aucun doublon de libellé détecté.</p>
                   ) : (
-                    <ul className="warn-list">
+                    <ul style={{ color: '#dc2626', margin: '8px 0', paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 6 }}>
                       {trigramCheck.duplicates.map((dup, idx) => (
                         <li key={idx}>
                           Libellé <strong>{dup.name}</strong> utilisé par {dup.tris.join(', ')}
@@ -464,10 +469,10 @@ export default function TrigrammeAdmin() {
                     </ul>
                   )}
                   {trigramCheck.issues.length === 0 ? (
-                    <p className="ok">✅ Aucune absence ou incohérence détectée.</p>
+                    <p className="admin-status ok">✅ Aucune absence ou incohérence détectée.</p>
                   ) : (
-                    <div className="table-wrapper">
-                      <table>
+                    <div className="admin-table-wrap" style={{ marginTop: 12 }}>
+                      <table className="admin-table">
                         <thead>
                           <tr>
                             <th>Type</th>
@@ -482,7 +487,7 @@ export default function TrigrammeAdmin() {
                         <tbody>
                           {trigramCheck.issues.map((i, idx) => (
                             <tr key={idx} className="warn-row">
-                              <td><code>{i.type}</code></td>
+                              <td><span className="admin-code">{i.type}</span></td>
                               <td>{i.application}</td>
                               <td>{i.trigramme || '—'}</td>
                               <td>{i.etab}</td>
@@ -498,11 +503,12 @@ export default function TrigrammeAdmin() {
                 </div>
 
                 <div>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 10, marginTop: 0 }}>Serveurs sans trigramme</h3>
                   {infraMissing.length === 0 ? (
-                    <p className="ok">✅ Aucun serveur sans trigramme détecté.</p>
+                    <p className="admin-status ok">✅ Aucun serveur sans trigramme détecté.</p>
                   ) : (
-                    <div className="table-wrapper">
-                      <table>
+                    <div className="admin-table-wrap" style={{ marginTop: 12 }}>
+                      <table className="admin-table">
                         <thead>
                           <tr>
                             <th>Fichier</th>
@@ -540,22 +546,31 @@ export default function TrigrammeAdmin() {
       </main>
 
       {!!detailTri && (
-        <div className="backdrop" onClick={() => setDetailTri('')}>
-          <dialog open className="modal" onClose={() => setDetailTri('')} onClick={e => e.stopPropagation()}>
-            <div className="modal-head">
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(10,46,74,0.45)', backdropFilter: 'blur(3px)', zIndex: 9000, display: 'grid', placeItems: 'center', padding: 20 }}
+          onClick={() => setDetailTri('')}
+        >
+          <dialog
+            open
+            className="admin-dialog"
+            style={{ width: 'min(860px, 94vw)', maxHeight: '85vh', overflowY: 'auto' }}
+            onClose={() => setDetailTri('')}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="admin-dialog-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <p className="eyebrow">Détail trigramme</p>
-                <h3><code>{detailTri}</code> — {trigramDetails[detailTri]?.label || trigrammes[detailTri] || '—'}</h3>
+                <span className="business-section-kicker">Détail trigramme</span>
+                <h2><span className="admin-code">{detailTri}</span> — {trigramDetails[detailTri]?.label || trigrammes[detailTri] || '—'}</h2>
               </div>
-              <button className="btn ghost" onClick={() => setDetailTri('')}>✖</button>
+              <button className="admin-btn ghost" onClick={() => setDetailTri('')}>✖</button>
             </div>
-            <div className="modal-body">
-              <p className="muted">Établissements concernés : {trigramDetails[detailTri]?.etablissements?.join(', ') || '—'}</p>
-              <div className="grid">
+            <div className="admin-dialog-body">
+              <p className="muted" style={{ marginBottom: 16 }}>Établissements concernés : {trigramDetails[detailTri]?.etablissements?.join(', ') || '—'}</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
                 <div>
-                  <h4>Applications (métier)</h4>
+                  <h4 style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 8, marginTop: 0 }}>Applications (métier)</h4>
                   {trigramDetails[detailTri]?.applications?.length ? (
-                    <ul className="list">
+                    <ul style={{ listStyle: 'disc', paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
                       {trigramDetails[detailTri].applications.map((app, idx) => (
                         <li key={idx}>
                           <strong>{app.application}</strong> — {app.description || '—'}
@@ -566,9 +581,9 @@ export default function TrigrammeAdmin() {
                   ) : <p className="muted">Aucune application rattachée.</p>}
                 </div>
                 <div>
-                  <h4>Serveurs (infra)</h4>
+                  <h4 style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-primary)', marginBottom: 8, marginTop: 0 }}>Serveurs (infra)</h4>
                   {trigramDetails[detailTri]?.serveurs?.length ? (
-                    <ul className="list">
+                    <ul style={{ listStyle: 'disc', paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
                       {trigramDetails[detailTri].serveurs.map((srv, idx) => (
                         <li key={idx}>
                           <strong>{srv.vm || 'VM inconnue'}</strong> — {srv.role || 'Rôle inconnu'}
@@ -583,65 +598,6 @@ export default function TrigrammeAdmin() {
           </dialog>
         </div>
       )}
-
-      <style jsx>{`
-        :global(body) {
-          font-family: 'Inter', system-ui, -apple-system, sans-serif;
-          background: #f8fafc;
-          color: #0f172a;
-        }
-
-        h2, h3, h4 {
-          font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
-          color: #003366;
-        }
-
-        .layout { padding: 26px 0 60px; display: flex; flex-direction: column; gap: 18px; }
-        .card { background: #ffffff; border: 1px solid #d6e2f0; border-radius: 14px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 51, 102, 0.06); }
-        .table-wrapper { overflow: auto; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; }
-        th { background: #f1f5f9; color: #003366; letter-spacing: 0.01em; }
-        code { background: #e0ecff; padding: 3px 7px; border-radius: 8px; font-weight: 600; color: #003366; }
-        .hint { color: #475569; margin: 6px 0 12px; }
-        .muted { color: #64748b; }
-        .warn { color: #b91c1c; font-weight: 600; }
-        .status { font-weight: 600; }
-        .ok { color: #15803d; font-weight: 600; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-        .checks { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        .warn-row td { background: #fff1f2; }
-        .warn-list { color: #b91c1c; margin: 8px 0; padding-left: 18px; }
-        .view-switch a.active { font-weight: 700; text-decoration: underline; }
-        .sortable { cursor: pointer; user-select: none; }
-        .table-controls { display: flex; gap: 12px; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; flex-wrap: wrap; }
-        .table-controls input { min-width: 220px; }
-        .pagination { display: flex; align-items: center; gap: 6px; }
-        .add-trigram { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; margin: 10px 0 18px; }
-        .add-trigram input { width: 100%; }
-        .clickable { cursor: pointer; }
-
-        .field label, .add-trigram label { display: block; margin-bottom: 6px; font-weight: 600; color: #0f172a; }
-        .input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #d6e2f0; background: #ffffff; transition: border-color 0.2s ease, box-shadow 0.2s ease; font-size: 14px; }
-        .input:focus { outline: none; border-color: #28a6bf; box-shadow: 0 0 0 3px rgba(40, 166, 191, 0.25); }
-
-        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 12px; border: 1px solid transparent; font-weight: 600; cursor: pointer; transition: transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn.primary { background: #003366; color: #ffffff; box-shadow: 0 8px 18px rgba(0, 51, 102, 0.18); }
-        .btn.primary:hover { transform: translateY(-1px); background: #0a4275; }
-        .btn.ghost { background: #ffffff; color: #003366; border: 1px solid #d6e2f0; }
-        .btn.ghost:hover { background: #f1f5f9; }
-        .btn.ghost.danger { color: #b91c1c; border-color: #fca5a5; }
-        .btn.ghost.danger:hover { background: #fee2e2; }
-
-        dialog.modal { border: 1px solid #d6e2f0; border-radius: 16px; padding: 0; max-width: 860px; width: 92%; box-shadow: 0 24px 50px rgba(0, 17, 51, 0.25); }
-        .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-radius: 16px 16px 0 0; }
-        .modal-body { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; }
-        .list { list-style: disc; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
-        .backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.35); display: grid; place-items: center; z-index: 999; }
-
-        @media (min-width: 900px) { .checks { grid-template-columns: 1fr 1fr; } }
-      `}</style>
     </>
   );
 }

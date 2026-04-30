@@ -48,9 +48,34 @@ async function apiPost(endpoint, body) {
   return data;
 }
 
+async function apiPatch(endpoint, id, body) {
+  const res = await fetch(`${NETBOX_URL}/api/${endpoint}${id}/`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    console.warn(`  ⚠️  PATCH ${endpoint}${id}/ échoué :`, JSON.stringify(data).slice(0, 200));
+    return null;
+  }
+  return data;
+}
+
 async function getOrCreate(endpoint, searchParams, body) {
   const existing = await apiGet(endpoint, searchParams);
   if (existing.length > 0) return existing[0];
+  return apiPost(endpoint, body);
+}
+
+async function getOrCreateOrUpdate(endpoint, searchParams, body, updateFields) {
+  const existing = await apiGet(endpoint, searchParams);
+  if (existing.length > 0) {
+    const obj = existing[0];
+    const needsUpdate = Object.entries(updateFields).some(([k, v]) => obj[k] !== v);
+    if (needsUpdate) await apiPatch(endpoint, obj.id, updateFields);
+    return { ...obj, ...updateFields };
+  }
   return apiPost(endpoint, body);
 }
 
@@ -101,13 +126,14 @@ async function main() {
         color: '0d6efd',
       });
 
-      const vm = await getOrCreate(
+      const vm = await getOrCreateOrUpdate(
         'virtualization/virtual-machines/',
         { name: srv.VM, site_id: site.id },
         {
           name: srv.VM,
           site: site.id,
           status: 'active',
+          description: srv.RoleServeur || '',
           vcpus: srv.CPUs,
           memory: srv.MemoryMiB,
           disk: Math.round((srv.TotalDiskCapacityMiB || 0) / 1024),
@@ -119,6 +145,7 @@ async function main() {
           ].filter(Boolean).join('\n'),
           tags: [{ name: tagName }],
         },
+        { description: srv.RoleServeur || '' },
       );
       if (vm) {
         vmMap.set(srv.VM, { vm, ip: srv.PrimaryIPAddress });

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import MainNav from '../components/MainNav';
 import { INTERFACE_COLORS } from '../lib/constants';
 import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
@@ -240,6 +240,21 @@ export default function FluxPage() {
     return map;
   }, [groupedFlows, buildDiagramData]);
 
+  const activeFilters = [
+    search,
+    etablissement,
+    source,
+    target,
+    interfaceType,
+    protocol,
+    eaiName,
+  ].filter(Boolean).length;
+
+  const visibleInterfaceTypes = useMemo(
+    () => new Set(filtered.map(flow => flow.interfaceType).filter(Boolean)).size,
+    [filtered],
+  );
+
   const resetDiagramView = () => {
     setDiagramTransform({ x: 0, y: 0, scale: 1 });
   };
@@ -278,7 +293,7 @@ export default function FluxPage() {
         <title>Flux applicatifs - {APP_TITLE}</title>
         <meta charSet="UTF-8" />
       </Head>
-      <header className="hero">
+      <header className="hero business-hero flux-hero">
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
@@ -292,19 +307,66 @@ export default function FluxPage() {
               <p className="hero-subtitle">Analysez les échanges entre applications, protocoles et EAI.</p>
             </div>
           </div>
-          <nav className="view-switch" aria-label="Navigation des vues">
-            <Link href="/">Vue Métier</Link>
-            <Link href="/applications">Vue Applicative</Link>
-            <Link href="/flux" className="active">Vue Flux</Link>
-            <Link href="/network">Vue Réseau</Link>
-            <Link href="/incident">Simulation d'incident</Link>
-            <button onClick={handleLogout} style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'var(--pico-primary)', textDecoration: 'underline' }}>Déconnexion</button>
-          </nav>
+          <MainNav onLogout={handleLogout} />
         </div>
       </header>
 
-      <section className="legend-wrapper page-shell">
-        <h2 className="legend-title">Légende &amp; Filtres</h2>
+      <section className="business-command-center flux-command-center page-shell">
+        <div className="business-command-intro">
+          <span className="business-section-kicker">Vue flux</span>
+          <h2>Cartographie des échanges</h2>
+          <p>
+            Passez de la liste détaillée au diagramme pour lire les dépendances
+            entre sources, cibles, protocoles et middleware.
+          </p>
+        </div>
+        <div className="business-kpi-grid" aria-label="Indicateurs flux">
+          <article className="business-kpi-card highlight">
+            <span>Flux visibles</span>
+            <strong>{filtered.length}</strong>
+            <em>{activeFilters ? `${activeFilters} filtre(s) actif(s)` : 'Périmètre complet'}</em>
+          </article>
+          <article className="business-kpi-card">
+            <span>Établissements</span>
+            <strong>{groupedFlows.length}</strong>
+            <em>Avec flux affichés</em>
+          </article>
+          <article className="business-kpi-card">
+            <span>Protocoles</span>
+            <strong>{protocols.length}</strong>
+            <em>Référencés</em>
+          </article>
+          <article className="business-kpi-card">
+            <span>Types</span>
+            <strong>{visibleInterfaceTypes}</strong>
+            <em>Interfaces visibles</em>
+          </article>
+        </div>
+      </section>
+
+      <section className="legend-wrapper business-filter-panel flux-filter-panel page-shell">
+        <div className="business-panel-header">
+          <div>
+            <span className="business-section-kicker">Exploration</span>
+            <h2 className="legend-title">Filtres de flux</h2>
+          </div>
+          <div className="business-view-toggle" aria-label="Mode d'affichage des flux">
+            <button
+              type="button"
+              className={viewMode === 'liste' ? 'active' : ''}
+              onClick={() => setViewMode('liste')}
+            >
+              Liste
+            </button>
+            <button
+              type="button"
+              className={viewMode === 'diagramme' ? 'active' : ''}
+              onClick={() => setViewMode('diagramme')}
+            >
+              Diagramme
+            </button>
+          </div>
+        </div>
         <div className="filters-toolbar">
           <div className="search-compact">
             <input
@@ -417,23 +479,24 @@ export default function FluxPage() {
         {status && <p className="status">{status}</p>}
       </section>
 
-      <main className="page-shell">
+      <main className="page-shell flux-modern">
         {filtered.length === 0 ? (
-          <p className="hint">Aucun flux à afficher.</p>
+          <section className="business-empty-state">
+            <span>Aucun résultat</span>
+            <h3>Aucun flux ne correspond à ces critères.</h3>
+            <p>Élargissez les filtres ou réinitialisez la recherche pour retrouver les échanges applicatifs.</p>
+          </section>
         ) : (
-          groupedFlows.map((group, index) => {
+          groupedFlows.map((group) => {
             const diagramData = diagramByEtablissement.get(group.etablissement);
             return (
-              <section key={group.etablissement} className="etab-block">
-                <div className="etab-header">
-                  <h2>{group.etablissement}</h2>
-                  {index === 0 && (
-                    <div style={{ margin: '0.5rem 0 1rem' }}>
-                      <button onClick={() => setViewMode(viewMode === 'liste' ? 'diagramme' : 'liste')}>
-                        {viewMode === 'liste' ? '🔭 Vue Diagramme' : '📋 Vue Liste'}
-                      </button>
-                    </div>
-                  )}
+              <section key={group.etablissement} className="etab-block flux-etab-card">
+                <div className="etab-header business-etab-header">
+                  <div>
+                    <span className="business-section-kicker">Établissement</span>
+                    <h2>{group.etablissement}</h2>
+                  </div>
+                  <span className="business-count-pill">{group.flows.length} flux</span>
                 </div>
                 {viewMode === 'liste' ? (
                   <div className="table-wrapper">
@@ -574,26 +637,27 @@ export default function FluxPage() {
         .filters-grid input {
           width: 100%;
           padding: 10px 12px;
-          border-radius: var(--radius-sm);
+          border-radius: 14px;
           border: 1.5px solid var(--color-border);
-          background: var(--color-white);
+          background: rgba(255, 255, 255, 0.9);
           font-family: var(--font-body);
           transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
         .filters-grid input:focus {
           outline: none;
           border-color: var(--color-accent);
-          box-shadow: 0 0 0 2px rgba(40, 166, 191, 0.12);
+          box-shadow: 0 0 0 3px rgba(31, 166, 168, 0.14);
         }
         .table-wrapper {
-          margin-top: 20px;
-          border-radius: 16px;
+          margin-top: 0;
+          border: 1px solid rgba(10, 46, 74, 0.08);
+          border-radius: 22px;
           overflow: hidden;
-          box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
-          background: #fff;
+          box-shadow: 0 14px 32px rgba(10, 46, 74, 0.09);
+          background: rgba(255, 255, 255, 0.88);
         }
         .diagram-wrapper {
-          margin-top: 20px;
+          margin-top: 0;
           display: flex;
           flex-direction: column;
           gap: 12px;
@@ -603,11 +667,19 @@ export default function FluxPage() {
           justify-content: flex-end;
           align-items: center;
           gap: 8px;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.7);
+          padding: 10px;
         }
         .diagram-canvas {
-          background: #fff;
-          border-radius: 16px;
-          box-shadow: 0 8px 25px rgba(15, 38, 73, 0.08);
+          border: 1px solid rgba(10, 46, 74, 0.08);
+          border-radius: 24px;
+          background:
+            linear-gradient(rgba(10, 46, 74, 0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(10, 46, 74, 0.035) 1px, transparent 1px),
+            #fff;
+          background-size: 24px 24px;
+          box-shadow: 0 14px 32px rgba(10, 46, 74, 0.09);
           overflow: hidden;
           min-height: 420px;
           cursor: grab;
@@ -631,25 +703,25 @@ export default function FluxPage() {
           font-size: 0.92rem;
         }
         thead {
-          background: #f3f6fb;
+          background: #eef6f3;
           text-transform: uppercase;
           font-size: 0.75rem;
           letter-spacing: 0.04em;
         }
         th, td {
-          padding: 12px 14px;
-          border-bottom: 1px solid #eef2f7;
+          padding: 13px 14px;
+          border-bottom: 1px solid rgba(10, 46, 74, 0.08);
           text-align: left;
         }
         tr:hover {
-          background: #f9fbff;
+          background: rgba(31, 166, 168, 0.06);
         }
         .pill {
           display: inline-flex;
           align-items: center;
           padding: 4px 10px;
           border-radius: 999px;
-          font-weight: 600;
+          font-weight: 800;
           font-size: 0.75rem;
         }
         .eai-tag {
@@ -659,22 +731,22 @@ export default function FluxPage() {
           border-radius: 999px;
           background: #e7f7ee;
           color: #137333;
-          font-weight: 600;
+          font-weight: 800;
           font-size: 0.75rem;
         }
         .muted {
-          color: #6b7280;
+          color: #64748b;
         }
         .desc {
           max-width: 280px;
         }
         .status {
           margin-top: 8px;
-          color: #1f2937;
+          color: #0a5a62;
         }
         .hint {
           margin-top: 20px;
-          color: #6b7280;
+          color: #64748b;
         }
       `}</style>
     </>

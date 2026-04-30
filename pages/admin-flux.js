@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
+import { motion } from 'framer-motion';
 import AdminNav from '../components/AdminNav';
-import { LOGO_URL, ORG_NAME } from '../lib/branding';
+import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
 const FIELD_CATALOG = [
   { key: 'id', label: 'Identifiant flux', hint: 'ID unique (optionnel)' },
@@ -69,6 +70,7 @@ const mergeIncremental = (existing = [], incoming = []) => {
 
 export default function FluxImport() {
   const [files, setFiles] = useState([]);
+  const [fileLabels, setFileLabels] = useState({});
   const [selectedFile, setSelectedFile] = useState('');
   const [existingData, setExistingData] = useState(null);
   const [excelRows, setExcelRows] = useState([]);
@@ -87,7 +89,21 @@ export default function FluxImport() {
   useEffect(() => {
     fetch('/api/files')
       .then(r => r.json())
-      .then(({ files }) => setFiles(files.filter(f => f.endsWith('.flux.json'))))
+      .then(async ({ files }) => {
+        const filtered = files.filter(f => f.endsWith('.flux.json'));
+        setFiles(filtered);
+        const labels = {};
+        await Promise.all(filtered.map(async f => {
+          try {
+            const base = f.replace(/\.json$/, '');
+            const res = await fetch('/api/file/' + encodeURIComponent(base));
+            if (!res.ok) return;
+            const js = await res.json();
+            if (js.etablissement) labels[f] = js.etablissement;
+          } catch { /* keep filename as fallback */ }
+        }));
+        setFileLabels(labels);
+      })
       .catch(() => setStatus('Impossible de charger la liste des fichiers flux'));
   }, []);
 
@@ -187,52 +203,58 @@ export default function FluxImport() {
   return (
     <>
       <Head>
-        <title>Import flux applicatifs</title>
+        <title>Import flux — {APP_TITLE}</title>
       </Head>
-      <header className="hero">
+      <header className="hero business-hero">
         <div className="page-shell hero-grid">
           <div className="hero-brand">
             <div className="brand-mark">
               {LOGO_URL && <img src={LOGO_URL} alt={ORG_NAME} />}
             </div>
-            <div style={{width:'250px'}}>
-              <p className="eyebrow">{ORG_NAME}</p>
-              <h1>Import Excel flux</h1>
-              <p className="hero-subtitle">Chargez un extrait, mappez les colonnes et importez les flux applicatifs.</p>
+            <div>
+              <p className="eyebrow">{ORG_NAME} — Administration</p>
+              <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                Import flux applicatifs
+              </motion.h1>
+              <p className="hero-subtitle">Chargez un extrait Excel, mappez les colonnes et importez les flux.</p>
             </div>
           </div>
           <AdminNav onLogout={handleLogout} />
         </div>
       </header>
 
-      <main className="import-layout page-shell">
-        <section className="card">
-          <h2>1. Sélection du périmètre</h2>
-          <label>Fichier flux cible
-            <select value={selectedFile} onChange={e => setSelectedFile(e.target.value)}>
-              <option value="">— Choisir un établissement —</option>
-              {files.map(f => <option key={f} value={f}>{f.replace('.flux.json', '')}</option>)}
-            </select>
-          </label>
-          <label>Fichier Excel (.xlsx)
-            <input type="file" accept=".xlsx,.xls,.csv" onChange={handleFile} disabled={!libReady} />
-          </label>
-          {libError && <p className="warning">{libError}</p>}
-          {status && <p className="status">{status}</p>}
+      <main className="import-layout page-shell admin-page">
+        <section className="admin-card">
+          <span className="business-section-kicker">Étape 1</span>
+          <h2>Sélection du périmètre</h2>
+          <div className="admin-form-stack" style={{ marginTop: 16 }}>
+            <label className="admin-label">Fichier flux cible
+              <select className="admin-select" value={selectedFile} onChange={e => setSelectedFile(e.target.value)}>
+                <option value="">— Choisir un établissement —</option>
+                {files.map(f => <option key={f} value={f}>{fileLabels[f] || f.replace('.flux.json', '')}</option>)}
+              </select>
+            </label>
+            <label className="admin-label">Fichier Excel (.xlsx / .csv)
+              <input className="admin-input" type="file" accept=".xlsx,.xls,.csv" onChange={handleFile} disabled={!libReady} />
+            </label>
+          </div>
+          {libError && <p className="admin-status error" style={{ marginTop: 12 }}>{libError}</p>}
+          {status && <p className="admin-status info" style={{ marginTop: 12 }}>{status}</p>}
         </section>
 
-        <section className="card">
-          <h2>2. Mapping des colonnes</h2>
-          {!columns.length && <p className="hint">Chargez un fichier pour accéder au mapping.</p>}
+        <section className="admin-card">
+          <span className="business-section-kicker">Étape 2</span>
+          <h2>Mapping des colonnes</h2>
+          {!columns.length && <p style={{ opacity: 0.5, marginTop: 12 }}>Chargez un fichier pour accéder au mapping.</p>}
           {columns.length > 0 && (
-            <div className="mapping-grid">
+            <div className="mapping-grid" style={{ marginTop: 16 }}>
               {FIELD_CATALOG.map(field => (
                 <div key={field.key} className="map-line">
                   <div>
-                    <strong>{field.label}</strong>
-                    <span>{field.hint}</span>
+                    <strong style={{ fontSize: 13, color: 'var(--color-primary)' }}>{field.label}</strong>
+                    <span style={{ fontSize: 12, color: 'var(--color-text)', opacity: 0.55 }}>{field.hint}</span>
                   </div>
-                  <select value={mapping[field.key] || ''} onChange={e => updateMapping(field.key, e.target.value)}>
+                  <select className="admin-select" value={mapping[field.key] || ''} onChange={e => updateMapping(field.key, e.target.value)}>
                     <option value="">— Ignorer —</option>
                     {columns.map(col => <option key={col} value={col}>{col}</option>)}
                   </select>
@@ -242,23 +264,20 @@ export default function FluxImport() {
           )}
         </section>
 
-        <section className="card">
-          <h2>3. Aperçu</h2>
-          {!mappedRows.length && <p className="hint">Aucune donnée à prévisualiser.</p>}
+        <section className="admin-card">
+          <span className="business-section-kicker">Étape 3</span>
+          <h2>Aperçu</h2>
+          {!mappedRows.length && <p style={{ opacity: 0.5, marginTop: 12 }}>Aucune donnée à prévisualiser.</p>}
           {!!mappedRows.length && (
-            <div className="table-wrapper">
-              <table>
+            <div className="admin-table-wrap" style={{ marginTop: 16 }}>
+              <table className="admin-table">
                 <thead>
-                  <tr>
-                    {previewHeaders.map(header => <th key={header}>{header}</th>)}
-                  </tr>
+                  <tr>{previewHeaders.map(h => <th key={h}>{h}</th>)}</tr>
                 </thead>
                 <tbody>
                   {mappedRows.slice(0, 10).map(({ flow }, idx) => (
                     <tr key={idx}>
-                      {previewHeaders.map(header => (
-                        <td key={header}>{flow[header] ?? '-'}</td>
-                      ))}
+                      {previewHeaders.map(h => <td key={h}>{flow[h] ?? '—'}</td>)}
                     </tr>
                   ))}
                 </tbody>
@@ -267,18 +286,21 @@ export default function FluxImport() {
           )}
         </section>
 
-        <section className="card">
-          <h2>4. Import</h2>
-          <div className="import-actions">
-            <label className="inline">
+        <section className="admin-card">
+          <span className="business-section-kicker">Étape 4</span>
+          <h2>Import</h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', marginTop: 16 }}>
+            <label className="admin-label inline">
               <input type="radio" name="mode" value="replace" checked={mode === 'replace'} onChange={() => setMode('replace')} />
               Remplacer les flux existants
             </label>
-            <label className="inline">
+            <label className="admin-label inline">
               <input type="radio" name="mode" value="merge" checked={mode === 'merge'} onChange={() => setMode('merge')} />
               Fusion incrémentale
             </label>
-            <button className="primary" onClick={handleImport} disabled={!selectedFile || !mappedRows.length}>Lancer l'import</button>
+            <button className="admin-btn primary" onClick={handleImport} disabled={!selectedFile || !mappedRows.length}>
+              Lancer l'import
+            </button>
           </div>
         </section>
       </main>

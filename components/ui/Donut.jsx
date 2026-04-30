@@ -1,68 +1,54 @@
-// components/ui/Donut.jsx
 import React from 'react';
-import PropTypes from 'prop-types';
 
-/**
- * Retourne une couleur fixe en fonction du tiers de pourcentage :
- * - Rouge pour 0-33%
- * - Jaune pour 34-66%
- * - Vert pour 67-100%
- * @param {number} pct
- * @returns {string} couleur CSS
- */
-function getTierColor(pct) {
-  const value = parseFloat(pct);
-  if (value <= 33) return '#e74c3c';      // Rouge
-  if (value <= 66) return '#f1c40f';      // Jaune
-  return '#2ecc71';                       // Vert
+const TIERS = [
+  { max: 33,  color: '#ef4444' },
+  { max: 66,  color: '#f59e0b' },
+  { max: 100, color: '#10b981' },
+];
+
+function tierColor(val) {
+  return (TIERS.find(t => val <= t.max) ?? TIERS.at(-1)).color;
 }
 
-/**
- * Donut KPI
- * @param {number|string} pct   Pourcentage (0‑100). Accepte string « xx.x ».
- * @param {string} label        Libellé sous le donut
- * @param {string} color        Couleur manuelle (#hex, rgb…), sinon auto
- */
-export default function Donut({ pct = 0, label = '', color }) {
-  const pctVal = parseFloat(pct).toFixed(1);
-  const donutColor = color || getTierColor(pctVal);
+export default function Donut({ pct = 0, label = '', color, size = 96 }) {
+  const val   = Math.min(100, Math.max(0, parseFloat(pct) || 0));
+  const r     = 38;
+  const cx    = 50;
+  const cy    = 50;
+  const circ  = 2 * Math.PI * r;
+  const dash  = (val / 100) * circ;
+  const fill  = color ?? tierColor(val);
 
   return (
-    <div style={{ textAlign: 'center', minWidth: 120 }}>
-      <span
-        className="donut"
-        style={{
-          '--pct': pctVal,
-          '--clr': donutColor,
-          width: 80,
-          height: 80,
-          borderRadius: '50%',
-          background: `conic-gradient(${donutColor} ${pctVal}%, #eee 0)`,
-          display: 'inline-block',
-          position: 'relative',
-        }}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-            fontSize: '0.8rem',
-            fontWeight: 'bold',
-            color: '#333',
-          }}
+    <div className="report-donut">
+      <svg viewBox="0 0 100 100" width={size} height={size} aria-label={`${label} : ${val.toFixed(0)}%`}>
+        {/* piste */}
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--color-border)" strokeWidth="10" />
+        {/* arc */}
+        <circle
+          cx={cx} cy={cy} r={r}
+          fill="none"
+          stroke={fill}
+          strokeWidth="10"
+          strokeDasharray={`${dash} ${circ}`}
+          strokeLinecap="round"
+          transform={`rotate(-90 ${cx} ${cy})`}
+          style={{ transition: 'stroke-dasharray 0.7s cubic-bezier(.4,0,.2,1)' }}
+        />
+        {/* valeur centrale */}
+        <text
+          x={cx} y={cy}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize="16"
+          fontWeight="700"
+          fill={fill}
+          fontFamily="var(--font-heading)"
         >
-          {pctVal}%
-        </span>
-      </span>
-      <div style={{ marginTop: 4, fontSize: '.9rem' }}>{label}</div>
+          {val.toFixed(0)}%
+        </text>
+      </svg>
+      <p className="report-donut-label">{label}</p>
     </div>
   );
 }
-
-Donut.propTypes = {
-  pct: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  label: PropTypes.string,
-  color: PropTypes.string,
-};

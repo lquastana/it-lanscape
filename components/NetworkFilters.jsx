@@ -16,7 +16,7 @@ export default function NetworkFilters({ filters, onChange }) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
   return (
-    <div className="filters-toolbar">
+    <div className="filters-toolbar network-filters-toolbar">
       <div className="search-compact">
         <input
           ref={searchRef}
@@ -40,8 +40,8 @@ export default function NetworkFilters({ filters, onChange }) {
           </button>
         )}
       </div>
-      <div className="search-mode" style={{ marginLeft: '1rem' }}>
-        <label style={{ marginRight: '0.5rem' }}>
+      <div className="search-mode">
+        <label>
           <input
             type="radio"
             name="mode"
