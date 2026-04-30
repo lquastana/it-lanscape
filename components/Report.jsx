@@ -124,7 +124,19 @@ export default function Report({ metrics = {}, visible = false, onClose }) {
             <h2>Synthèse de convergence</h2>
             <p className="report-header-sub">{applications} application{applications > 1 ? 's' : ''} analysée{applications > 1 ? 's' : ''}</p>
           </div>
-          <button className="report-close" onClick={onClose} aria-label="Fermer">✕</button>
+          <div className="report-header-actions">
+            {diffText && (
+              <button
+                className="report-copy-icon-btn"
+                onClick={() => navigator.clipboard.writeText(diffText)}
+                aria-label="Copier les écarts"
+                title="Copier les écarts"
+              >
+                📋
+              </button>
+            )}
+            <button className="report-close" onClick={onClose} aria-label="Fermer">✕</button>
+          </div>
         </div>
 
         {/* Corps scrollable */}
@@ -186,12 +198,6 @@ export default function Report({ metrics = {}, visible = false, onClose }) {
             <p className="report-footer-hint">
               {diffText.split('\n').length} écart{diffText.split('\n').length > 1 ? 's' : ''} détecté{diffText.split('\n').length > 1 ? 's' : ''}
             </p>
-            <button
-              className="report-copy-btn"
-              onClick={() => navigator.clipboard.writeText(diffText)}
-            >
-              Copier les écarts
-            </button>
           </div>
         )}
       </aside>

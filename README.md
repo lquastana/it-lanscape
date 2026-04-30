@@ -47,6 +47,21 @@ docker compose --profile netbox up -d --build
 node scripts/netbox-seed.js
 ```
 
+Avec `make` :
+
+```bash
+make dev
+make docker
+make docker-netbox
+make docker-stop
+```
+
+Raccourcis disponibles :
+- `make dev` : demarrage local `npm run dev`
+- `make docker` : stack Docker applicative
+- `make docker-netbox` : stack Docker avec profil NetBox
+- `make docker-stop` : arret de la stack Docker
+
 Voir la démo guidée : [docs/demo-5-minutes.md](docs/demo-5-minutes.md).
 
 ## Comptes de démonstration

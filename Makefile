@@ -1,4 +1,4 @@
-.PHONY: dev docker docker-netbox docker-stop
+.PHONY: dev docker docker-netbox docker-netbox-run docker-netbox-run-build docker-stop
 
 # Développement local — hot-reload, pas de Docker
 dev:
@@ -12,6 +12,8 @@ docker:
 	docker compose up --build
 
 # Docker avec NetBox complet avec build
+docker-netbox: docker-netbox-run
+
 docker-netbox-run-build:
 	AUTH_ENABLED=true \
 	NEXTAUTH_SECRET=it-landscape-docker-dev-local-only \
