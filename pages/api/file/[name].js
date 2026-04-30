@@ -6,10 +6,12 @@ import { withAuthz } from '../../../lib/authz.js';
 import { resolveDataPath } from '../../../lib/dataPaths.js';
 import { resolveSchema, formatZodErrors } from '../../../lib/schemas/index.js';
 
+const ALLOWED_NAME_RE = /^[a-z0-9_-]+(\.flux|\.infra|\.network)?\.json$/i;
+
 async function handler(req, res) {
   const { name } = req.query;
-  const safeName = path.basename(name) + '.json';
-  if (!safeName.endsWith('.json')) {
+  const safeName = path.basename(String(name)) + '.json';
+  if (!ALLOWED_NAME_RE.test(safeName)) {
     return res.status(400).json({ error: 'Fichier invalide' });
   }
   const filePath = resolveDataPath(safeName);

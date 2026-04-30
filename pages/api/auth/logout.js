@@ -1,6 +1,12 @@
 export default async function logoutRoute(req, res) {
-  const isProd = process.env.NODE_ENV === 'production';
-  const cookieName = isProd ? '__Secure-next-auth.session-token' : 'next-auth.session-token';
-  res.setHeader('Set-Cookie', `${cookieName}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax`);
+  const siteUrl = process.env.NEXTAUTH_URL || `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}`;
+  const useSecureCookies = siteUrl.startsWith('https://');
+  const expires = 'Thu, 01 Jan 1970 00:00:00 GMT';
+  const base = `Path=/; Expires=${expires}; HttpOnly; SameSite=Lax`;
+
+  res.setHeader('Set-Cookie', [
+    `__Secure-next-auth.session-token=; ${base}; Secure`,
+    `next-auth.session-token=; ${base}${useSecureCookies ? '; Secure' : ''}`,
+  ]);
   res.status(200).json({ ok: true });
 }

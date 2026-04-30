@@ -51,7 +51,7 @@ export default function AdminMetier() {
   useEffect(() => {
     if (!currentFile) { setData(null); return; }
     setStatus('Chargement…');
-    fetch('/api/file/' + encodeURIComponent(currentFile))
+    fetch('/api/file/' + encodeURIComponent(currentFile.replace(/\.json$/, '')))
       .then(r => (r.ok ? r.json() : Promise.reject()))
       .then(js => { setData(js); setStatus(''); })
       .catch(() => setStatus('Erreur de lecture'));
@@ -60,7 +60,7 @@ export default function AdminMetier() {
   const handleSave = async () => {
     if (!currentFile || !data) return;
     setStatus('Enregistrement…');
-    const res = await fetch('/api/file/' + encodeURIComponent(currentFile), {
+    const res = await fetch('/api/file/' + encodeURIComponent(currentFile.replace(/\.json$/, '')), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data, null, 2),
     });
