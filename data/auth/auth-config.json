@@ -4,6 +4,7 @@
     "/flux",
     "/network",
     "/incident",
+    "/quality",
     "/admin-metier",
     "/admin-infra",
     "/admin-flux",
@@ -15,6 +16,7 @@
     "/api/network",
     "/api/files",
     "/api/flux",
+    "/api/quality",
     "/api/file",
     "/api/admin/roles"
   ]

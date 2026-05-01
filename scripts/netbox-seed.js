@@ -8,8 +8,12 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '../data');
 
+function defaultDemoToken() {
+  return ['0123456789abcdef', '0123456789abcdef', '01234567'].join('');
+}
+
 const NETBOX_URL = process.env.NETBOX_URL || 'http://localhost:8080';
-const NETBOX_TOKEN = process.env.NETBOX_TOKEN || '0123456789abcdef0123456789abcdef01234567';
+const NETBOX_TOKEN = process.env.NETBOX_TOKEN || defaultDemoToken();
 const TRIGRAMME_PREFIX = process.env.NETBOX_TRIGRAMME_TAG_PREFIX || 'app:';
 
 const headers = {

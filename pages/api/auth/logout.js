@@ -1,12 +1,6 @@
-export default async function logoutRoute(req, res) {
-  const siteUrl = process.env.NEXTAUTH_URL || `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}`;
-  const useSecureCookies = siteUrl.startsWith('https://');
-  const expires = 'Thu, 01 Jan 1970 00:00:00 GMT';
-  const base = `Path=/; Expires=${expires}; HttpOnly; SameSite=Lax`;
+import { getExpiredAuthCookies } from '../../../lib/authCookies.js';
 
-  res.setHeader('Set-Cookie', [
-    `__Secure-next-auth.session-token=; ${base}; Secure`,
-    `next-auth.session-token=; ${base}${useSecureCookies ? '; Secure' : ''}`,
-  ]);
+export default async function logoutRoute(req, res) {
+  res.setHeader('Set-Cookie', getExpiredAuthCookies(req));
   res.status(200).json({ ok: true });
 }
