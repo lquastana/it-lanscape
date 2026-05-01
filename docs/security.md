@@ -49,7 +49,10 @@ Les valeurs de demonstration et valeurs par defaut sont interdites hors poste
 local :
 
 - `NEXTAUTH_SECRET=change_me_at_least_32_chars` ou toute valeur exemple ;
+- `NEXTAUTH_SECRET=replace-with-a-local-dev-secret-at-least-32-chars` ;
+- `NEXTAUTH_SECRET=un-secret-local-de-dev-suffisamment-long-32c` ;
 - `NETBOX_SECRET_KEY=change-me-in-prod` ou toute valeur exemple ;
+- `NETBOX_SECRET_KEY=replace-with-local-netbox-secret-key-at-least-50-chars` ;
 - `NETBOX_SUPERUSER_PASSWORD=password` ;
 - comptes de demonstration `viewer`, `editor`, `admin`, `valdellys`, `dunes`,
   `saintroch` avec le mot de passe `password` ;
@@ -126,13 +129,15 @@ Procedure de restauration minimale :
 3. Restaurer la configuration d'environnement et les references de secrets.
 4. Redemarrer l'application.
 5. Verifier la connexion, les roles, les vues principales, les imports et
-   l'ecriture d'une ligne d'audit.
+   l'ecriture d'une ligne d'audit et d'une ligne d'historique.
 
 ## Logs et audit
 
 - Les actions sensibles doivent alimenter `data/audit-log.jsonl` :
   ecritures, exports et changements d'habilitations.
 - Le journal d'audit doit etre append-only dans l'usage courant.
+- Les ecritures JSON doivent aussi alimenter `data/.history/history.jsonl` et
+  conserver un snapshot du contenu precedent dans `data/.history/snapshots/`.
 - Les logs applicatifs et proxy doivent etre centralises dans l'outil
   d'observabilite de l'organisation lorsque disponible.
 - Les logs ne doivent jamais contenir de mots de passe, tokens NetBox, secrets
@@ -173,9 +178,9 @@ Procedure de restauration minimale :
 | Surface / action | Public | `viewer` | `editor` | `admin` |
 |------------------|--------|----------|----------|---------|
 | Vue metier `/` | Oui | Oui | Oui | Oui |
-| Vues applications, flux, reseau, incident | Non | Oui | Oui | Oui |
+| Vues applications, flux, reseau, incident, qualite | Non | Oui | Oui | Oui |
 | Lecture API protegee | Non | Oui | Oui | Oui |
-| Imports et editions admin | Non | Non | Oui | Oui |
+| Imports, editions admin et reconciliation NetBox | Non | Non | Oui | Oui |
 | Ecriture des referentiels JSON | Non | Non | Oui | Oui |
 | Gestion des habilitations | Non | Non | Non | Oui |
 | Exports snapshot | Non | Non | Non | Oui |

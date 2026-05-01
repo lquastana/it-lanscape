@@ -20,9 +20,13 @@ make docker
 Avec NetBox local :
 
 ```bash
+make docker-netbox
+# ou, pour forcer un rebuild :
 make docker-netbox-run-build
 node scripts/netbox-seed.js
 ```
+
+Les cibles Docker du `Makefile` lancent Compose en mode attaché. Pour un lancement détaché, utiliser directement `docker compose up -d --build` ou `docker compose --profile netbox up -d --build`.
 
 ## Avant de proposer une modification
 
@@ -44,6 +48,8 @@ Selon le changement, lancez aussi :
 npm run lint
 npm audit --audit-level=high
 ```
+
+`npm run lint` peut afficher des avertissements Next.js existants ; la commande doit toutefois se terminer avec un code de sortie valide.
 
 ## Données de démonstration
 

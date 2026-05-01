@@ -16,8 +16,9 @@ MVP Next.js pour cartographier un système d'information hospitalier : applicati
 - **Vue réseau** : VLANs, réseaux, passerelles et serveurs par établissement.
 - **Vue flux** : source, cible, protocole, type de message et EAI.
 - **Simulation d'incident** : recherche des impacts directs et indirects d'un serveur, d'une application ou d'un flux indisponible.
+- **Data Quality Center** : score qualité, anomalies prioritaires et export Markdown.
 - **Administration** : édition des référentiels JSON, imports Excel, gestion des trigrammes et habilitations.
-- **Sécurité MVP** : authentification NextAuth, rôles `viewer` / `editor` / `admin`, audit append-only JSONL des écritures et exports.
+- **Sécurité MVP** : authentification NextAuth, rôles `viewer` / `editor` / `admin`, audit append-only JSONL, historique des écritures JSON et exports.
 
 ## Aperçu
 
@@ -55,8 +56,11 @@ MVP Next.js pour cartographier un système d'information hospitalier : applicati
 - `data/auth/access-rules.json` : comptes de démonstration avec mots de passe hachés.
 - `data/auth/auth-config.json` : règles de protection UI/API.
 - `data/audit-log.jsonl` : journal local non versionné des actions auditées.
+- `data/.history/history.jsonl` et `data/.history/snapshots/` : historique technique non versionné des écritures JSON.
 
 ## Démarrage rapide
+
+En local, `npm run dev` crée automatiquement `.env.local` au premier lancement avec un `NEXTAUTH_SECRET` aléatoire.
 
 ```bash
 npm install
@@ -76,7 +80,7 @@ Avec NetBox intégré :
 
 ```bash
 cp .env.example .env
-# Dans .env, renseigner NETBOX_URL=http://netbox:8080 et des valeurs identiques pour NETBOX_TOKEN et NETBOX_SUPERUSER_API_TOKEN.
+# Dans .env, renseigner NETBOX_URL=http://netbox:8080 et la même valeur pour NETBOX_TOKEN et NETBOX_SUPERUSER_API_TOKEN.
 docker compose --profile netbox up -d --build
 node scripts/netbox-seed.js
 ```
@@ -87,14 +91,19 @@ Avec `make` :
 make dev
 make docker
 make docker-netbox
+make docker-netbox-run-build
 make docker-stop
 ```
 
 Raccourcis disponibles :
-- `make dev` : demarrage local `npm run dev`
-- `make docker` : stack Docker applicative
-- `make docker-netbox` : stack Docker avec profil NetBox et source NetBox activée par défaut
-- `make docker-stop` : arret de la stack Docker
+- `make dev` : démarrage local via `npm run dev`.
+- `make docker` : stack Docker applicative seule, avec build si nécessaire, en mode attaché.
+- `make docker-netbox` : alias de `make docker-netbox-run`.
+- `make docker-netbox-run` : stack Docker avec profil NetBox, sans rebuild forcé, en mode attaché.
+- `make docker-netbox-run-build` : stack Docker avec profil NetBox et rebuild forcé.
+- `make docker-stop` : arrêt de la stack Docker, profil NetBox inclus.
+
+Les cibles NetBox du `Makefile` configurent automatiquement l'application pour lire NetBox via `http://netbox:8080` avec le token de démonstration. Après démarrage, lancer `node scripts/netbox-seed.js` depuis l'hôte pour alimenter NetBox sur http://localhost:8080.
 
 Voir la démo guidée : [docs/demo-5-minutes.md](docs/demo-5-minutes.md).
 
@@ -146,14 +155,15 @@ Principales restrictions :
 | Surface | Restriction |
 |---------|-------------|
 | `/` | Public |
-| `/applications`, `/flux`, `/network`, `/incident` | `viewer+` |
-| `/admin-*` | `editor+` |
+| `/applications`, `/flux`, `/network`, `/incident`, `/quality` | `viewer+` |
+| `/admin-metier`, `/admin-flux`, `/admin-trigramme`, `/admin-netbox-reconciliation` | `editor+` |
 | `/admin-habilitations` | `admin` |
 | `GET /api/export` | `admin` |
-| `POST /api/file/[name]` | `editor+` |
+| `GET /api/files`, `GET /api/file/[name]`, `GET /api/flux`, `GET /api/infrastructure`, `GET /api/network`, `GET /api/quality` | `viewer+` |
+| `POST /api/file/[name]`, `GET /api/netbox-reconciliation` | `editor+` |
 | `GET/POST /api/admin/roles` | `admin` |
 
-Les écritures et exports alimentent `data/audit-log.jsonl`.
+Les écritures et exports alimentent `data/audit-log.jsonl`. Les écritures JSON passent aussi par `data/.history/history.jsonl` avec snapshot du contenu précédent.
 
 ## NetBox
 
@@ -169,17 +179,20 @@ Mapping du trigramme applicatif, par priorité :
 ```bash
 npm test
 npm run build
+npm run lint
 ```
 
-Les tests couvrent la cohérence JSON, la configuration d'accès et les helpers RBAC/audit.
+Les tests couvrent la cohérence JSON, la configuration d'accès, les schémas Zod, le Data Quality Center, les exports Markdown, NetBox et les helpers RBAC/audit. `npm run lint` peut afficher des avertissements Next.js existants sans bloquer la commande.
 
 ## Documentation
 - [Positionnement produit](docs/product-positioning.md)
 - [Démo en 5 minutes](docs/demo-5-minutes.md)
 - [Architecture](docs/architecture.md)
 - [Simulation d'incident](docs/incident-simulation.md)
+- [Sécurité](docs/security.md)
 - [Roadmap](docs/roadmap.md)
 - [ADR stockage JSON](docs/adr/0001-data-storage-json.md)
+- [ADR JSON renforcé et historisation](docs/adr/0002-json-renforce-historisation.md)
 
 ## Licence
 

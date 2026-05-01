@@ -2,12 +2,13 @@
 
 ## Versions supportées
 
-`it-landscape` est encore en phase alpha. Seule la branche `main` et la dernière release publiée reçoivent les correctifs de sécurité.
+Seule la branche `main` et la dernière release publiée reçoivent les correctifs de sécurité. Les versions plus anciennes ne sont pas maintenues, sauf mention explicite dans une release.
 
 | Version | Support |
 |---------|---------|
-| `v0.1.x-alpha` | Correctifs critiques uniquement |
-| `< v0.1.0-alpha` | Non supporté |
+| Dernière release | Correctifs de sécurité |
+| `main` | Correctifs de sécurité |
+| Versions antérieures | Non supporté |
 
 ## Signaler une vulnérabilité
 

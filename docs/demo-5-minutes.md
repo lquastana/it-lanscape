@@ -4,6 +4,17 @@ Objectif : lancer le MVP, se connecter avec un compte de test, puis trouver l'im
 
 ## 1. Lancer l'application
 
+Option locale, sans Docker :
+
+```bash
+npm install
+npm run dev
+```
+
+`npm run dev` crée automatiquement `.env.local` au premier lancement avec un secret NextAuth local.
+
+Option Docker applicative seule :
+
 ```bash
 cp .env.example .env
 docker compose up -d --build
@@ -15,12 +26,12 @@ Variante avec NetBox :
 
 ```bash
 cp .env.example .env
-# Dans .env, renseigner NETBOX_URL=http://netbox:8080 et des valeurs identiques pour NETBOX_TOKEN et NETBOX_SUPERUSER_API_TOKEN.
+# Dans .env, renseigner NETBOX_URL=http://netbox:8080 et la même valeur pour NETBOX_TOKEN et NETBOX_SUPERUSER_API_TOKEN.
 docker compose --profile netbox up -d --build
 node scripts/netbox-seed.js
 ```
 
-Avec `make docker-netbox-run` ou `make docker-netbox-run-build`, l'application est automatiquement configurée pour lire NetBox via `http://netbox:8080` avec le token de démonstration.
+Avec `make docker-netbox`, `make docker-netbox-run` ou `make docker-netbox-run-build`, l'application est automatiquement configurée pour lire NetBox via `http://netbox:8080` avec le token de démonstration. Ces cibles lancent Docker Compose en mode attaché ; garder le terminal ouvert ou utiliser les commandes `docker compose ... -d` ci-dessus pour un lancement détaché.
 
 NetBox est alors disponible sur http://localhost:8080.
 
@@ -61,8 +72,8 @@ Le scénario de démo s'appuie sur :
    - flux entrants et sortants ;
    - dépendances indirectes ;
    - criticité métier.
-7. Sauvegarder le scénario si besoin.
-8. Exporter ou imprimer la synthèse pour support d'atelier.
+7. Enregistrer le scénario si besoin pour le rejouer dans le navigateur.
+8. Exporter la synthèse en Markdown ou imprimer la page pour support d'atelier.
 
 ## 5. Montrer l'administration
 
@@ -78,9 +89,12 @@ Avec `editor` :
 Avec `viewer` :
 - montrer l'accès lecture seule aux vues principales.
 
+Dans **Qualité**, montrer le score, les anomalies prioritaires et l'export Markdown.
+
 ## 6. Points à dire pendant la démo
 
 - Le stockage JSON rend le MVP facile à lancer et à auditer.
+- Les écritures JSON sont verrouillées, historisées et accompagnées d'un snapshot précédent.
 - NetBox peut prendre le relais comme source de vérité infrastructure/réseau.
 - RBAC et audit existent déjà, mais les secrets et comptes doivent être remplacés avant production.
 - La roadmap vise l'industrialisation : PostgreSQL, historisation, observabilité, SIEM/audit centralisé et multi-tenant durci.
