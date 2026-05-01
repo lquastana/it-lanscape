@@ -15,10 +15,12 @@ Variante avec NetBox :
 
 ```bash
 cp .env.example .env
-# Dans .env, renseigner NETBOX_URL=http://netbox:8080 et un NETBOX_TOKEN valide.
+# Dans .env, renseigner NETBOX_URL=http://netbox:8080 et des valeurs identiques pour NETBOX_TOKEN et NETBOX_SUPERUSER_API_TOKEN.
 docker compose --profile netbox up -d --build
 node scripts/netbox-seed.js
 ```
+
+Avec `make docker-netbox-run` ou `make docker-netbox-run-build`, l'application est automatiquement configurée pour lire NetBox via `http://netbox:8080` avec le token de démonstration.
 
 NetBox est alors disponible sur http://localhost:8080.
 

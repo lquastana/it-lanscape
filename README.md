@@ -72,6 +72,7 @@ Avec NetBox intégré :
 
 ```bash
 cp .env.example .env
+# Dans .env, renseigner NETBOX_URL=http://netbox:8080 et des valeurs identiques pour NETBOX_TOKEN et NETBOX_SUPERUSER_API_TOKEN.
 docker compose --profile netbox up -d --build
 node scripts/netbox-seed.js
 ```
@@ -88,7 +89,7 @@ make docker-stop
 Raccourcis disponibles :
 - `make dev` : demarrage local `npm run dev`
 - `make docker` : stack Docker applicative
-- `make docker-netbox` : stack Docker avec profil NetBox
+- `make docker-netbox` : stack Docker avec profil NetBox et source NetBox activée par défaut
 - `make docker-stop` : arret de la stack Docker
 
 Voir la démo guidée : [docs/demo-5-minutes.md](docs/demo-5-minutes.md).
@@ -113,6 +114,7 @@ NetBox, si le profil Docker `netbox` est activé :
 | `admin` | `password` |
 
 > Warning production : ne jamais utiliser les comptes, mots de passe, tokens ou secrets par défaut en production.
+> En preview HTTPS type Codespaces, définir `NETBOX_COOKIE_SECURE=true` et `NETBOX_COOKIE_SAMESITE=None` dans `.env` pour conserver la protection CSRF sans la désactiver.
 
 ## Secrets et environnements
 

@@ -18,7 +18,8 @@ function requiredRoleForPath(pathname) {
     pathname.startsWith('/applications') ||
     pathname.startsWith('/flux') ||
     pathname.startsWith('/network') ||
-    pathname.startsWith('/incident')
+    pathname.startsWith('/incident') ||
+    pathname.startsWith('/quality')
   ) return 'viewer';
   return null;
 }

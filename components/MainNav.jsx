@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: '/flux',         label: 'Vue Flux' },
   { href: '/network',      label: 'Vue Réseau' },
   { href: '/incident',     label: "Simulation d'incident" },
+  { href: '/quality',      label: 'Qualité' },
 ];
 
 export default function MainNav({ onLogout }) {
