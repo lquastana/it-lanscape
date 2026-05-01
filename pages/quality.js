@@ -5,12 +5,18 @@ import {
   AlertTriangle,
   CheckCircle2,
   Database,
+  Download,
   Gauge,
   ListChecks,
   ShieldAlert,
 } from 'lucide-react';
 import MainNav from '../components/MainNav';
 import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
+import {
+  buildQualityMarkdownReport,
+  downloadMarkdownFile,
+  markdownFilename,
+} from '../lib/markdownReports';
 
 const DIMENSION_ORDER = ['completeness', 'coherence', 'validity', 'exploitability'];
 const SEVERITY_CLASSES = {
@@ -88,6 +94,14 @@ export default function QualityPage() {
     window.location.href = '/login';
   };
 
+  const handleMarkdownExport = () => {
+    if (!quality) return;
+    downloadMarkdownFile(
+      markdownFilename('data-quality-center'),
+      buildQualityMarkdownReport(quality),
+    );
+  };
+
   return (
     <>
       <Head>
@@ -151,6 +165,10 @@ export default function QualityPage() {
                   {quality.metrics.issues} anomalie(s), dont {quality.metrics.severityCounts.critical} critique(s)
                   et {quality.metrics.severityCounts.high} forte(s).
                 </small>
+                <button type="button" className="business-report-button quality-export-button" onClick={handleMarkdownExport}>
+                  <Download size={16} aria-hidden="true" />
+                  Exporter en Markdown
+                </button>
               </div>
             </article>
 

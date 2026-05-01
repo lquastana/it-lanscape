@@ -1,8 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
+import { Download } from 'lucide-react';
 import MainNav from '../../components/MainNav';
 import { LOGO_URL, ORG_NAME, APP_TITLE } from '../../lib/branding';
+import {
+  buildIncidentMarkdownReport,
+  downloadMarkdownFile,
+  markdownFilename,
+} from '../../lib/markdownReports';
 
 const STATUS_OPTIONS = [
   { value: 'hs', label: 'HS' },
@@ -141,7 +147,6 @@ export default function IncidentSimulationPage() {
   const [scenarioName, setScenarioName] = useState('');
   const [savedScenarios, setSavedScenarios] = useState([]);
   const [autoRun, setAutoRun] = useState(false);
-  const printDetailsStateRef = useRef(null);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -179,32 +184,6 @@ export default function IncidentSimulationPage() {
     if (typeof window === 'undefined') return;
     window.localStorage.setItem('incident-scenarios', JSON.stringify(savedScenarios));
   }, [savedScenarios]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-    const selector = '.impact-details details.impact-report';
-    const handleBeforePrint = () => {
-      const detailsList = Array.from(document.querySelectorAll(selector));
-      printDetailsStateRef.current = detailsList.map(detail => detail.open);
-      detailsList.forEach(detail => {
-        detail.open = true;
-      });
-    };
-    const handleAfterPrint = () => {
-      const detailsList = Array.from(document.querySelectorAll(selector));
-      detailsList.forEach((detail, index) => {
-        const previous = printDetailsStateRef.current?.[index];
-        detail.open = Boolean(previous);
-      });
-    };
-
-    window.addEventListener('beforeprint', handleBeforePrint);
-    window.addEventListener('afterprint', handleAfterPrint);
-    return () => {
-      window.removeEventListener('beforeprint', handleBeforePrint);
-      window.removeEventListener('afterprint', handleAfterPrint);
-    };
-  }, []);
 
   const { appMeta, serverOptions, flowOptions, links, serversByApp, hebergeurOptions } = useMemo(() => {
     const appIndex = new Map();
@@ -829,6 +808,17 @@ export default function IncidentSimulationPage() {
     };
   }, [analysis, selectedComponents.length]);
 
+  const handleMarkdownExport = () => {
+    downloadMarkdownFile(
+      markdownFilename('rapport-incident-pra-pca'),
+      buildIncidentMarkdownReport({
+        selectedComponents,
+        analysis,
+        reportByEtablissement,
+      }),
+    );
+  };
+
   return (
     <>
       <Head>
@@ -1009,8 +999,9 @@ export default function IncidentSimulationPage() {
               <span className="business-section-kicker">Analyse</span>
               <h2>Résultats &amp; impacts</h2>
             </div>
-            <button type="button" className="btn-secondary no-print" onClick={() => window.print()}>
-              Exporter en PDF
+            <button type="button" className="btn-secondary no-print report-download-button" onClick={handleMarkdownExport}>
+              <Download size={16} aria-hidden="true" />
+              Exporter en Markdown
             </button>
           </div>
           {!analysis ? (
