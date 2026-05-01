@@ -216,7 +216,8 @@ export default function AdminHabilitations() {
                     </div>
                     <button className="admin-btn danger sm"
                       onClick={() => deleteUser(user.username)}
-                      disabled={saving === `del-${user.username}`}>
+                      disabled={saving === `del-${user.username}`}
+                      aria-label={`Supprimer l'utilisateur ${user.username}`}>
                       {saving === `del-${user.username}` ? '…' : 'Supprimer'}
                     </button>
                   </div>
