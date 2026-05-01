@@ -21,6 +21,8 @@ export default function AdminMetier() {
   const [status, setStatus]         = useState('');
   const [edit, setEdit]             = useState(null);
   const dlgRef = useRef(null);
+  const dlgTitleId = 'admin-dialog-title';
+  const openerRef = useRef(null);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout');
@@ -80,13 +82,23 @@ export default function AdminMetier() {
   const editProcess = (eIdx, dIdx, pIdx) => {
     const proc = pIdx != null ? data.etablissements[eIdx].domaines[dIdx].processus[pIdx] : EMPTY_PROCESS;
     setEdit({ type: 'process', path: ['etablissements', eIdx, 'domaines', dIdx, 'processus', pIdx ?? '__new'], obj: proc, isNew: pIdx == null });
+    openerRef.current = document.activeElement;
     dlgRef.current.showModal();
+    setTimeout(() => dlgRef.current?.querySelector('input,select,textarea,button')?.focus(), 0);
   };
 
   const editApp = (eIdx, dIdx, pIdx, aIdx) => {
     const app = aIdx != null ? data.etablissements[eIdx].domaines[dIdx].processus[pIdx].applications[aIdx] : EMPTY_APP;
     setEdit({ type: 'app', path: ['etablissements', eIdx, 'domaines', dIdx, 'processus', pIdx, 'applications', aIdx ?? '__new'], obj: app, isNew: aIdx == null });
+    openerRef.current = document.activeElement;
     dlgRef.current.showModal();
+    setTimeout(() => dlgRef.current?.querySelector('input,select,textarea,button')?.focus(), 0);
+  };
+
+  const closeDialog = () => {
+    dlgRef.current.close();
+    setEdit(null);
+    openerRef.current?.focus();
   };
 
   const delAtPath = path => {
@@ -114,6 +126,7 @@ export default function AdminMetier() {
       else patchAtPath(edit.path, () => newApp);
     }
     dlgRef.current.close(); setEdit(null);
+    openerRef.current?.focus();
   };
 
   const statusClass = status.startsWith('✅') ? 'ok' : status.startsWith('❌') ? 'error' : 'info';
@@ -176,7 +189,7 @@ export default function AdminMetier() {
                         <summary className="tree-summary">
                           <span className="tree-label">{dom.nom}</span>
                           <span className="tree-actions">
-                            <button className="admin-btn ghost sm" onClick={e => { e.stopPropagation(); editProcess(eIdx, dIdx, null); }}>
+                            <button className="admin-btn ghost sm" onClick={e => { e.stopPropagation(); editProcess(eIdx, dIdx, null); }} aria-label={`Ajouter un processus au domaine ${dom.nom}`}>
                               + Processus
                             </button>
                           </span>
@@ -190,9 +203,9 @@ export default function AdminMetier() {
                                   <span className="admin-badge accent" style={{ marginLeft: 8 }}>{proc.applications.length}</span>
                                 </span>
                                 <span className="tree-actions">
-                                  <button className="admin-btn ghost sm" onClick={e => { e.stopPropagation(); editApp(eIdx, dIdx, pIdx, null); }}>+ App</button>
-                                  <button className="admin-btn ghost sm" onClick={e => { e.stopPropagation(); editProcess(eIdx, dIdx, pIdx); }}>Éditer</button>
-                                  <button className="admin-btn danger sm" onClick={e => { e.stopPropagation(); if (confirm('Supprimer ce processus ?')) delAtPath(['etablissements', eIdx, 'domaines', dIdx, 'processus', pIdx]); }}>Supprimer</button>
+                                  <button className="admin-btn ghost sm" onClick={e => { e.stopPropagation(); editApp(eIdx, dIdx, pIdx, null); }} aria-label={`Ajouter une application au processus ${proc.nom}`}>+ App</button>
+                                  <button className="admin-btn ghost sm" onClick={e => { e.stopPropagation(); editProcess(eIdx, dIdx, pIdx); }} aria-label={`Éditer le processus ${proc.nom}`}>Éditer</button>
+                                  <button className="admin-btn danger sm" onClick={e => { e.stopPropagation(); if (confirm('Supprimer ce processus ?')) delAtPath(['etablissements', eIdx, 'domaines', dIdx, 'processus', pIdx]); }} aria-label={`Supprimer le processus ${proc.nom}`}>Supprimer</button>
                                 </span>
                               </summary>
                               <ul className="app-list">
@@ -204,8 +217,8 @@ export default function AdminMetier() {
                                       {app.criticite === 'Critique' && <span className="admin-badge danger" style={{ marginLeft: 6 }}>Critique</span>}
                                     </span>
                                     <span className="tree-actions">
-                                      <button className="admin-btn ghost sm" onClick={() => editApp(eIdx, dIdx, pIdx, aIdx)}>Éditer</button>
-                                      <button className="admin-btn danger sm" onClick={() => { if (confirm('Supprimer cette application ?')) delAtPath(['etablissements', eIdx, 'domaines', dIdx, 'processus', pIdx, 'applications', aIdx]); }}>Supprimer</button>
+                                      <button className="admin-btn ghost sm" onClick={() => editApp(eIdx, dIdx, pIdx, aIdx)} aria-label={`Éditer l'application ${app.nom}`}>Éditer</button>
+                                      <button className="admin-btn danger sm" onClick={() => { if (confirm('Supprimer cette application ?')) delAtPath(['etablissements', eIdx, 'domaines', dIdx, 'processus', pIdx, 'applications', aIdx]); }} aria-label={`Supprimer l'application ${app.nom}`}>Supprimer</button>
                                     </span>
                                   </li>
                                 ))}
@@ -224,12 +237,12 @@ export default function AdminMetier() {
       </main>
 
       {/* Dialog */}
-      <dialog ref={dlgRef} className="admin-dialog" onCancel={() => setEdit(null)}>
+      <dialog ref={dlgRef} className="admin-dialog" aria-labelledby={dlgTitleId} onCancel={() => { setEdit(null); openerRef.current?.focus(); }}>
         {edit && (
           <form onSubmit={handleSubmit} key={edit.path?.join('/')}>
             <div className="admin-dialog-head">
               <span className="business-section-kicker">{edit.isNew ? 'Nouveau' : 'Modifier'}</span>
-              <h2>{edit.type === 'process' ? 'Processus' : 'Application'}</h2>
+              <h2 id={dlgTitleId}>{edit.type === 'process' ? 'Processus' : 'Application'}</h2>
             </div>
             <div className="admin-dialog-body admin-form-stack">
               <label className="admin-label">
@@ -276,7 +289,7 @@ export default function AdminMetier() {
               </>)}
             </div>
             <div className="admin-dialog-footer">
-              <button type="button" className="admin-btn ghost" onClick={() => dlgRef.current.close()}>Annuler</button>
+              <button type="button" className="admin-btn ghost" onClick={closeDialog}>Annuler</button>
               <button type="submit" className="admin-btn primary">Valider</button>
             </div>
           </form>

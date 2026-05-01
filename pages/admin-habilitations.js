@@ -216,7 +216,8 @@ export default function AdminHabilitations() {
                     </div>
                     <button className="admin-btn danger sm"
                       onClick={() => deleteUser(user.username)}
-                      disabled={saving === `del-${user.username}`}>
+                      disabled={saving === `del-${user.username}`}
+                      aria-label={`Supprimer l'utilisateur ${user.username}`}>
                       {saving === `del-${user.username}` ? '…' : 'Supprimer'}
                     </button>
                   </div>
@@ -241,7 +242,8 @@ export default function AdminHabilitations() {
                   <div className="admin-user-actions">
                     <button className="admin-btn secondary sm"
                       onClick={() => updatePassword(user.username)}
-                      disabled={saving === `pw-${user.username}`}>
+                      disabled={saving === `pw-${user.username}`}
+                      aria-label={`Mettre à jour le mot de passe de ${user.username}`}>
                       {saving === `pw-${user.username}` ? 'Mise à jour…' : 'Mettre à jour le mot de passe'}
                     </button>
                     {saving === user.username && <span style={{ fontSize: 13, opacity: 0.6 }}>Enregistrement…</span>}
