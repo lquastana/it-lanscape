@@ -1,0 +1,63 @@
+name: Docker GHCR
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to build"
+        required: true
+        default: "main"
+      image_tag:
+        description: "Primary image tag"
+        required: true
+        default: "dev"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker tags
+        id: docker-tags
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}
+          INPUT_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.image_tag || '' }}
+        run: |
+          tag="${INPUT_TAG:-${GITHUB_REF_NAME}}"
+          {
+            echo "tags<<EOF"
+            echo "${IMAGE}:${tag}"
+            if [[ "${tag}" == v* ]]; then
+              echo "${IMAGE}:${tag#v}"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.docker-tags.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ github.event_name == 'workflow_dispatch' && inputs.image_tag || github.ref_name }}
