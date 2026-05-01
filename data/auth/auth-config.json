@@ -9,6 +9,7 @@
     "/admin-infra",
     "/admin-flux",
     "/admin-trigramme",
+    "/admin-netbox-reconciliation",
     "/admin-habilitations"
   ],
   "protectedApiRoutes": [
@@ -17,6 +18,7 @@
     "/api/files",
     "/api/flux",
     "/api/quality",
+    "/api/netbox-reconciliation",
     "/api/file",
     "/api/admin/roles"
   ]

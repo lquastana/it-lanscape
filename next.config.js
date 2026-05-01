@@ -18,6 +18,11 @@ const nextConfig = {
         destination: '/incident',
         permanent: false,
       },
+      {
+        source: '/netbox-reconciliation',
+        destination: '/admin-netbox-reconciliation',
+        permanent: false,
+      },
     ];
   },
   async headers() {

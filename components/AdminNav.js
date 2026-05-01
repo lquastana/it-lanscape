@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { href: '/admin-metier',    label: 'Vue métier' },
   { href: '/admin-flux',      label: 'Flux' },
   { href: '/admin-trigramme', label: 'Trigrammes' },
+  { href: '/admin-netbox-reconciliation', label: 'Réconciliation NetBox' },
 ];
 
 export default function AdminNav({ onLogout }) {

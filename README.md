@@ -36,6 +36,10 @@ MVP Next.js pour cartographier un système d'information hospitalier : applicati
 
 ![Vue réseau](docs/assets/gifs/screen-network.gif)
 
+### Data Quality Center
+
+![Data Quality Center](docs/assets/gifs/screen-quality.gif)
+
 ### Simulation d'incident
 
 ![Simulation d'incident](docs/assets/gifs/screen-incident.gif)
