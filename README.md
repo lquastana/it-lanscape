@@ -158,6 +158,31 @@ Mapping du trigramme applicatif, par priorité :
 2. tag court de trois caractères, par exemple `LAB` ;
 3. custom field `trigramme`, `app_code` ou `application_code`.
 
+## Déploiement production Docker
+
+Le fichier `docker-compose.prod.yml` fournit une configuration prête pour la production.
+
+### Variables obligatoires
+
+| Variable | Description | Exemple |
+|----------|-------------|---------|
+| `NEXTAUTH_URL` | URL publique de l'application | `https://landscape.example.com` |
+| `NEXTAUTH_SECRET` | Clé secrète NextAuth (générer avec `openssl rand -base64 32`) | `changeme-generate-a-real-secret` |
+| `AUTH_ENABLED` | Active l'authentification | `true` |
+| `IT_LANDSCAPE_ENV` | Environnement cible | `production` |
+
+### Lancement
+
+```bash
+cp .env.example .env
+# Éditer .env avec les vraies valeurs de production
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+> **⚠️ Avant toute mise en production**, remplacez les comptes par défaut (`admin`/`password`, etc.) dans `data/auth/access-rules.json`. Les identifiants de démonstration sont bloquants en production.
+
+Pour plus de détails sur la sécurisation : [SECURITY.md](SECURITY.md) · [docs/security.md](docs/security.md).
+
 ## Tests
 
 ```bash
