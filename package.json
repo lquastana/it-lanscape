@@ -1,6 +1,6 @@
 {
   "name": "it-landscape",
-  "version": "1.0.0",
+  "version": "0.3.0-alpha",
   "type": "module",
   "scripts": {
     "predev": "node scripts/dev-init.mjs",
