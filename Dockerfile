@@ -1,15 +1,18 @@
 FROM node:22-alpine AS deps
+RUN npm install -g npm@latest
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
 FROM node:22-alpine AS builder
+RUN npm install -g npm@latest
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
 FROM node:22-alpine AS runner
+RUN npm install -g npm@latest
 WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1
