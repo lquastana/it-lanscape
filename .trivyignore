@@ -1,0 +1,7 @@
+# uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided
+# GHSA-w5hq-g745-h8pq — Fixed in uuid 14.0.0
+# The vulnerability only affects v3/v5/v6 when a custom `buf` parameter is passed.
+# Both exceljs and next-auth use only uuid.v4() without a buf argument.
+# Upgrading to uuid 14.0.0 is deferred until exceljs/next-auth support it upstream,
+# to avoid ESM/CJS compatibility risk with next-auth JWT session handling.
+GHSA-w5hq-g745-h8pq
