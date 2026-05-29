@@ -12,6 +12,8 @@ flowchart LR
   Store --> JSON[(Fichiers JSON)]
   Store --> History[(data/.history)]
   Guard --> Audit[(audit-log.jsonl)]
+  Guard --> Templates[lib/templates/]
+  Templates --> JSON
   API -. optionnel .-> NetBox[(NetBox API)]
 ```
 
@@ -24,7 +26,8 @@ flowchart LR
 - **Audit** : fichier append-only `data/audit-log.jsonl` pour tracer écritures, exports et changements d'habilitation.
 - **Stockage MVP** : fichiers JSON versionnables sous `data/`, séparés par établissement et par vue.
 - **Écriture JSON sécurisée** : verrou par fichier, écriture atomique, historique `data/.history/history.jsonl` et snapshot du contenu précédent.
-- **NetBox optionnel** : source de vérité possible pour l'infrastructure et le réseau lorsque `NETBOX_URL` et `NETBOX_TOKEN` sont configurés.
+- **Templates de génération** (`lib/templates/`) : quatre templates JSON avec placeholders (`__NOM__`, `__PFX__`, `__PFX_UP__`, `__IP__`) instanciés à la création d'un établissement pour produire les fichiers métier, infra, réseau et flux.
+- **NetBox optionnel** : source de vérité possible pour l'infrastructure et le réseau lorsque `NETBOX_URL` et `NETBOX_TOKEN` sont configurés. Le seed UI (`POST /api/netbox-seed`) crée site, VMs, IPs et VLANs depuis les JSON de l'établissement.
 
 ## Flux de données
 
@@ -41,7 +44,34 @@ flowchart LR
 | Vue métier `/` | Public |
 | Vues consultation détaillées : applications, flux, réseau, incident, qualité | `viewer` |
 | Imports, éditions admin et réconciliation NetBox | `editor` |
+| `POST /api/files` — création d'établissement (+ génération des 4 fichiers depuis templates) | `editor` |
+| `POST /api/netbox-seed` — seed Netbox : site + VMs + IPs + VLANs + préfixes | `editor` |
+| `DELETE /api/file/[name]` — suppression d'établissement (4 fichiers companions) | `admin` |
 | Habilitations et exports snapshot | `admin` |
+
+## Cycle de vie d'un établissement
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant UI as Admin métier
+  participant API as POST /api/files
+  participant Seed as POST /api/netbox-seed
+  participant NB as NetBox
+
+  User->>UI: Saisit nom + filename
+  UI->>API: POST { nom, filename }
+  API->>API: Calcule __PFX__ et __IP__
+  API->>API: Instancie les 4 templates
+  API-->>UI: 201 { ok, file }
+  opt Seed Netbox coché
+    UI->>Seed: POST { nom, filename }
+    Seed->>NB: Crée site
+    Seed->>NB: Crée VMs + tags + interfaces + IPs
+    Seed->>NB: Crée VLANs + préfixes + gateways
+    Seed-->>UI: { vms: 22, vlans: 4 }
+  end
+```
 
 ## Limites assumées du MVP
 

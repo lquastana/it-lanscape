@@ -1,0 +1,280 @@
+{
+  "etablissement": "__NOM__",
+  "flux": [
+    {
+      "id": "__PFX_UP__-FLX-001",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Admissions et mouvements vers le DPI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-002",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "IFC",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Données de séjour pour préparation de facturation"
+    },
+    {
+      "id": "__PFX_UP__-FLX-003",
+      "sourceTrigramme": "CRS",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ORM",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Demandes d'examens d'imagerie vers le DPI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-004",
+      "sourceTrigramme": "CRS",
+      "targetTrigramme": "SEC",
+      "protocol": "DICOM",
+      "port": 104,
+      "messageType": "DICOM",
+      "interfaceType": "Medicale",
+      "eaiName": "Direct",
+      "description": "Transfert des images vers le PACS"
+    },
+    {
+      "id": "__PFX_UP__-FLX-005",
+      "sourceTrigramme": "SIL",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "RDE",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Ordonnances et délivrances médicaments vers le DPI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-006",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "MAI",
+      "protocol": "SMTP/TLS",
+      "port": 587,
+      "messageType": "MSS",
+      "interfaceType": "Administrative",
+      "eaiName": "Passerelle MSS",
+      "description": "Envoi de messages sécurisés via Mailiz"
+    },
+    {
+      "id": "__PFX_UP__-FLX-007",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Synchronisation des lits et plannings vers ORBIS Planning"
+    },
+    {
+      "id": "__PFX_UP__-FLX-008",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "PYX",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "RDE",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Données de dispensation vers les armoires Pyxis"
+    },
+    {
+      "id": "__PFX_UP__-FLX-009",
+      "sourceTrigramme": "URG",
+      "targetTrigramme": "ORB",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ADT",
+      "interfaceType": "Medicale",
+      "eaiName": "Enovacom Engine",
+      "description": "Flux patient urgences vers le DPI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-010",
+      "sourceTrigramme": "MAI",
+      "targetTrigramme": "ORB",
+      "protocol": "SMTP/TLS",
+      "port": 587,
+      "messageType": "MSS",
+      "interfaceType": "Medicale",
+      "eaiName": "Passerelle MSS",
+      "description": "Envoi de comptes rendus médicaux via messagerie sécurisée"
+    },
+    {
+      "id": "__PFX_UP__-FLX-011",
+      "sourceTrigramme": "IFC",
+      "targetTrigramme": "SGE",
+      "protocol": "SFTP",
+      "port": 22,
+      "messageType": "Factures",
+      "interfaceType": "Facturation",
+      "eaiName": "ETL",
+      "description": "Transfert des factures vers la comptabilité Sage"
+    },
+    {
+      "id": "__PFX_UP__-FLX-012",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "ENO",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "ORM",
+      "interfaceType": "Administrative",
+      "eaiName": "Enovacom Engine",
+      "description": "Orchestration des messages applicatifs via l'EAI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-013",
+      "sourceTrigramme": "ORB",
+      "targetTrigramme": "CEN",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Monitoring",
+      "interfaceType": "Autre",
+      "eaiName": "API",
+      "description": "Supervision des services DPI par Centreon"
+    },
+    {
+      "id": "__PFX_UP__-FLX-014",
+      "sourceTrigramme": "CAR",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification cardiologie vers ORBIS Planning"
+    },
+    {
+      "id": "__PFX_UP__-FLX-015",
+      "sourceTrigramme": "ONC",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification oncologie vers ORBIS Planning"
+    },
+    {
+      "id": "__PFX_UP__-FLX-016",
+      "sourceTrigramme": "BLO",
+      "targetTrigramme": "ORP",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Planning",
+      "interfaceType": "Planification",
+      "eaiName": "API interne",
+      "description": "Planification bloc opératoire vers ORBIS Planning"
+    },
+    {
+      "id": "__PFX_UP__-FLX-017",
+      "sourceTrigramme": "CAR",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité cardiologie vers iGAP"
+    },
+    {
+      "id": "__PFX_UP__-FLX-018",
+      "sourceTrigramme": "ONC",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation spécialité oncologie vers iGAP"
+    },
+    {
+      "id": "__PFX_UP__-FLX-019",
+      "sourceTrigramme": "BLO",
+      "targetTrigramme": "GAP",
+      "protocol": "HL7",
+      "port": 2575,
+      "messageType": "DFT",
+      "interfaceType": "Facturation",
+      "eaiName": "Enovacom Engine",
+      "description": "Facturation bloc opératoire vers iGAP"
+    },
+    {
+      "id": "__PFX_UP__-FLX-020",
+      "sourceTrigramme": "DOC",
+      "targetTrigramme": "ORB",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Téléconsultation",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Données cliniques Doctolib vers le DPI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-021",
+      "sourceTrigramme": "HAD",
+      "targetTrigramme": "ORB",
+      "protocol": "FHIR",
+      "port": 443,
+      "messageType": "CarePlan",
+      "interfaceType": "Medicale",
+      "eaiName": "API",
+      "description": "Transmission des plans de soins HAD vers le DPI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-022",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "MYR",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Analytics",
+      "interfaceType": "Administrative",
+      "eaiName": "API",
+      "description": "Alimentation du reporting financier MyReport"
+    },
+    {
+      "id": "__PFX_UP__-FLX-023",
+      "sourceTrigramme": "GAP",
+      "targetTrigramme": "TAB",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "KPI",
+      "interfaceType": "Administrative",
+      "eaiName": "API",
+      "description": "Indicateurs d'activité pour Tableau BI"
+    },
+    {
+      "id": "__PFX_UP__-FLX-024",
+      "sourceTrigramme": "SGE",
+      "targetTrigramme": "SFR",
+      "protocol": "API",
+      "port": 443,
+      "messageType": "Comptabilité",
+      "interfaceType": "Administrative",
+      "eaiName": "API interne",
+      "description": "Données analytiques Sage 1000 vers Sage FRP"
+    },
+    {
+      "id": "__PFX_UP__-FLX-025",
+      "sourceTrigramme": "ENO",
+      "targetTrigramme": "GLP",
+      "protocol": "HTTPS",
+      "port": 443,
+      "messageType": "Incidents",
+      "interfaceType": "Autre",
+      "eaiName": "API",
+      "description": "Remontée des incidents EAI vers GLPI"
+    }
+  ]
+}

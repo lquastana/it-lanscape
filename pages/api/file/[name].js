@@ -73,17 +73,38 @@ async function handler(req, res) {
       }
       res.status(500).json({ error: 'Erreur écriture fichier' });
     }
+  } else if (req.method === 'DELETE') {
+    try {
+      const base = path.basename(String(req.query.name));
+      const companions = ['.flux', '.infra', '.network'].map(s => resolveDataPath(base + s + '.json'));
+      await Promise.allSettled(companions.map(p => fs.unlink(p)));
+      await fs.unlink(filePath);
+
+      const actor = req.actor || {};
+      await appendAudit({
+        action: 'delete',
+        target: `data/${safeName}`,
+        actor: { user: actor.user || 'unknown', role: actor.role || 'unknown' },
+        via: actor.via || 'unknown',
+        clientIp: actor.clientIp || null,
+        beforeHash: null,
+        afterHash: null,
+        before: null,
+        after: null,
+        bytes: 0,
+      });
+      res.status(200).json({ ok: true });
+    } catch {
+      res.status(500).json({ error: 'Erreur suppression fichier' });
+    }
   } else {
     res.status(405).end();
   }
 }
 
 export default async function routeHandler(req, res) {
-  if (req.method === 'GET') {
-    return withAuthz('read', handler)(req, res);
-  }
-  if (req.method === 'POST') {
-    return withAuthz('write', handler)(req, res);
-  }
+  if (req.method === 'GET') return withAuthz('read', handler)(req, res);
+  if (req.method === 'POST') return withAuthz('write', handler)(req, res);
+  if (req.method === 'DELETE') return withAuthz('admin', handler)(req, res);
   return res.status(405).end();
 }

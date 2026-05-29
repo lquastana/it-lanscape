@@ -17,6 +17,7 @@ MVP Next.js pour cartographier un système d'information hospitalier : applicati
 - **Vue flux** : source, cible, protocole, type de message et EAI.
 - **Simulation d'incident** : recherche des impacts directs et indirects d'un serveur, d'une application ou d'un flux indisponible.
 - **Data Quality Center** : score qualité, anomalies prioritaires et export Markdown.
+- **Gestion des établissements** : création et suppression d'établissements depuis l'UI, avec génération automatique des fichiers métier, infra, réseau et flux à partir de templates génériques, et seed Netbox optionnel à la création.
 - **Administration** : édition des référentiels JSON, imports Excel, gestion des trigrammes et habilitations.
 - **Sécurité MVP** : authentification NextAuth, rôles `viewer` / `editor` / `admin`, audit append-only JSONL, historique des écritures JSON et exports.
 
@@ -49,14 +50,27 @@ MVP Next.js pour cartographier un système d'information hospitalier : applicati
 
 ## Données
 - `data/*.json` : vue fonctionnelle.
-- `data/*.infra.json` : inventaire serveurs.
-- `data/*.network.json` : VLANs et réseaux.
-- `data/*.flux.json` : flux applicatifs.
+- `data/*.infra.json` : inventaire serveurs (22 VMs par établissement avec OS, éditeur, trigramme, etc.).
+- `data/*.network.json` : VLANs et réseaux (4 VLANs : ADMIN/SOINS/IMAGERIE/TECH).
+- `data/*.flux.json` : flux applicatifs (25 flux HL7/DICOM/FHIR/API entre trigrammes).
 - `data/trigrammes.json` : dictionnaire trigramme vers application.
 - `data/auth/access-rules.json` : comptes de démonstration avec mots de passe hachés.
 - `data/auth/auth-config.json` : règles de protection UI/API.
 - `data/audit-log.jsonl` : journal local non versionné des actions auditées.
 - `data/.history/history.jsonl` et `data/.history/snapshots/` : historique technique non versionné des écritures JSON.
+
+### Templates de génération
+
+À la création d'un établissement, les quatre fichiers sont générés automatiquement à partir des templates `lib/templates/` :
+
+| Template | Contenu généré |
+|---|---|
+| `etablissement-sante.json` | Vue fonctionnelle : 13 domaines, processus et applications avec trigrammes |
+| `infra-sante.json` | 22 serveurs locaux couvrant tous les trigrammes hébergés |
+| `network-sante.json` | 4 VLANs (IDs 210–240), préfixes CIDR et passerelles |
+| `flux-sante.json` | 25 flux reliant les trigrammes (HL7, DICOM, FHIR, API, SFTP…) |
+
+Les placeholders `__NOM__`, `__PFX__`, `__PFX_UP__` et `__IP__` sont remplacés à la création. Le préfixe (`__PFX__`) est dérivé des initiales du nom de fichier (ex. `ch_corte` → `cco`) ; l'octet IP (`__IP__`) est calculé par hash du filename dans la plage `10.100–253.x.x`, garantissant l'absence de conflit avec les données démo (`10.10–30.x.x`).
 
 ## Démarrage rapide
 
@@ -82,7 +96,16 @@ Avec NetBox intégré :
 cp .env.example .env
 # Dans .env, renseigner NETBOX_URL=http://netbox:8080 et la même valeur pour NETBOX_TOKEN et NETBOX_SUPERUSER_API_TOKEN.
 docker compose --profile netbox up -d --build
-node scripts/netbox-seed.js
+node scripts/netbox-seed.js   # peuple les établissements démo
+```
+
+En preview HTTPS (Codespaces, port-forwarding TLS) ajouter dans `.env` :
+
+```dotenv
+NETBOX_COOKIE_SECURE=true
+NETBOX_COOKIE_SAMESITE=None
+# Conserver https://localhost:8080 dans NETBOX_CSRF_TRUSTED_ORIGINS
+# (le proxy Codespaces réécrit l'Origin avec cette valeur)
 ```
 
 Avec `make` :
@@ -161,18 +184,48 @@ Principales restrictions :
 | `GET /api/export` | `admin` |
 | `GET /api/files`, `GET /api/file/[name]`, `GET /api/flux`, `GET /api/infrastructure`, `GET /api/network`, `GET /api/quality` | `viewer+` |
 | `POST /api/file/[name]`, `GET /api/netbox-reconciliation` | `editor+` |
+| `POST /api/files` (création établissement) | `editor+` |
+| `POST /api/netbox-seed` (seed site + VMs + VLANs) | `editor+` |
+| `DELETE /api/file/[name]` (suppression établissement) | `admin` |
 | `GET/POST /api/admin/roles` | `admin` |
 
 Les écritures et exports alimentent `data/audit-log.jsonl`. Les écritures JSON passent aussi par `data/.history/history.jsonl` avec snapshot du contenu précédent.
 
 ## NetBox
 
-Quand `NETBOX_URL` et `NETBOX_TOKEN` sont définis, les endpoints infrastructure et réseau peuvent lire NetBox comme source de vérité. Le script `node scripts/netbox-seed.js` peuple NetBox depuis les JSON locaux pour une démonstration.
+Quand `NETBOX_URL` et `NETBOX_TOKEN` sont définis, les endpoints infrastructure et réseau peuvent lire NetBox comme source de vérité.
 
-Mapping du trigramme applicatif, par priorité :
+### Seed initial (données démo)
+
+```bash
+node scripts/netbox-seed.js
+```
+
+Peuple les trois établissements de démonstration : sites, VMs, IPs, interfaces, VLANs, préfixes et passerelles.
+
+### Seed à la création d'un établissement (UI)
+
+Depuis la page **Administration métier**, cocher **Seed Netbox** à la création d'un établissement déclenche `POST /api/netbox-seed` qui :
+
+1. Crée ou retrouve le site Netbox.
+2. Lit `{filename}.infra.json` → crée les VMs avec CPU/RAM/disque/OS/éditeur, tags trigramme et interfaces `eth0` avec IP primaire.
+3. Lit `{filename}.network.json` → crée les VLANs, préfixes CIDR et passerelles (role `anycast`).
+
+Le statut affiché dans l'UI résume le résultat : nombre de VMs et VLANs créés.
+
+### Mapping du trigramme applicatif, par priorité
 1. tag préfixé, par exemple `app:LAB` ;
 2. tag court de trois caractères, par exemple `LAB` ;
 3. custom field `trigramme`, `app_code` ou `application_code`.
+
+### CSRF derrière un proxy HTTPS
+
+Le script `config/netbox/patch-settings.sh` s'exécute au démarrage du conteneur et injecte à la fin de `settings.py` :
+- `CSRF_COOKIE_SECURE`, `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SAMESITE`, `SESSION_COOKIE_SAMESITE` depuis les variables d'environnement.
+- `CSRF_TRUSTED_ORIGINS` depuis `NETBOX_CSRF_TRUSTED_ORIGINS` (liste séparée par des espaces).
+- `USE_X_FORWARDED_HOST = True` et `SECURE_PROXY_SSL_HEADER` pour la confiance au proxy TLS.
+
+Le bloc est **toujours remplacé** au redémarrage, garantissant la prise en compte des changements de variables d'environnement sans reconstruction de l'image.
 
 ## Tests
 
