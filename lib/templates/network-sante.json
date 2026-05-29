@@ -1,0 +1,67 @@
+{
+  "etablissement": "__NOM__",
+  "vlans": [
+    {
+      "id": 210,
+      "nom": "VLAN-ADMIN",
+      "description": "Applications administratives et support",
+      "network": "10.__IP__.10.0/24",
+      "interco": "INTERCO-ADMIN",
+      "gateway": "10.__IP__.10.254",
+      "serveurs": [
+        { "ip": "10.__IP__.10.10", "nom": "__PFX__-gap-01" },
+        { "ip": "10.__IP__.10.11", "nom": "__PFX__-ifact-01" },
+        { "ip": "10.__IP__.10.12", "nom": "__PFX__-sage-01" },
+        { "ip": "10.__IP__.10.13", "nom": "__PFX__-sfr-01" },
+        { "ip": "10.__IP__.10.14", "nom": "__PFX__-carl-01" },
+        { "ip": "10.__IP__.10.15", "nom": "__PFX__-sax-01" }
+      ]
+    },
+    {
+      "id": 220,
+      "nom": "VLAN-SOINS",
+      "description": "DPI, urgences, pharmacie et spécialités",
+      "network": "10.__IP__.20.0/24",
+      "interco": "INTERCO-SOIN",
+      "gateway": "10.__IP__.20.254",
+      "serveurs": [
+        { "ip": "10.__IP__.20.10", "nom": "__PFX__-orbis-app-01" },
+        { "ip": "10.__IP__.20.11", "nom": "__PFX__-orbis-db-01" },
+        { "ip": "10.__IP__.20.12", "nom": "__PFX__-orbis-plan-01" },
+        { "ip": "10.__IP__.20.13", "nom": "__PFX__-pyxis-01" },
+        { "ip": "10.__IP__.20.14", "nom": "__PFX__-sillage-01" },
+        { "ip": "10.__IP__.20.15", "nom": "__PFX__-urgences-01" },
+        { "ip": "10.__IP__.20.16", "nom": "__PFX__-cardio-01" },
+        { "ip": "10.__IP__.20.17", "nom": "__PFX__-onco-01" },
+        { "ip": "10.__IP__.20.18", "nom": "__PFX__-bloc-01" }
+      ]
+    },
+    {
+      "id": 230,
+      "nom": "VLAN-IMAGERIE",
+      "description": "Plateau d'imagerie et vidéosurveillance",
+      "network": "10.__IP__.30.0/24",
+      "interco": "INTERCO-IMAG",
+      "gateway": "10.__IP__.30.254",
+      "serveurs": [
+        { "ip": "10.__IP__.30.10", "nom": "__PFX__-ris-01" },
+        { "ip": "10.__IP__.30.11", "nom": "__PFX__-pacs-01" },
+        { "ip": "10.__IP__.30.12", "nom": "__PFX__-milestone-01" }
+      ]
+    },
+    {
+      "id": 240,
+      "nom": "VLAN-TECH",
+      "description": "EAI, supervision, ITSM et téléphonie",
+      "network": "10.__IP__.40.0/24",
+      "interco": "INTERCO-TECH",
+      "gateway": "10.__IP__.40.254",
+      "serveurs": [
+        { "ip": "10.__IP__.40.10", "nom": "__PFX__-eai-01" },
+        { "ip": "10.__IP__.40.11", "nom": "__PFX__-centreon-01" },
+        { "ip": "10.__IP__.40.12", "nom": "__PFX__-glpi-01" },
+        { "ip": "10.__IP__.40.13", "nom": "__PFX__-ucm-01" }
+      ]
+    }
+  ]
+}

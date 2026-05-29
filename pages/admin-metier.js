@@ -5,6 +5,12 @@ import AdminNav from '../components/AdminNav';
 import { LOGO_URL, ORG_NAME, APP_TITLE } from '../lib/branding';
 
 const EMPTY_PROCESS = { nom: '', description: '', applications: [] };
+
+const slugify = str => str
+  .normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '_')
+  .replace(/^_+|_+$/g, '');
 const IFACE_KEYS = ['Planification', 'Facturation', 'Administrative', 'Medicale', 'Autre'];
 const EMPTY_APP = {
   nom: '', description: '', editeur: '', referent: '', hebergement: '',
@@ -20,7 +26,10 @@ export default function AdminMetier() {
   const [data, setData]             = useState(null);
   const [status, setStatus]         = useState('');
   const [edit, setEdit]             = useState(null);
+  const [newEtabForm, setNewEtabForm] = useState({ nom: '', filename: '', seedNetbox: false });
+  const [netboxEnabled, setNetboxEnabled] = useState(false);
   const dlgRef = useRef(null);
+  const newEtabRef = useRef(null);
   const dlgTitleId = 'admin-dialog-title';
   const openerRef = useRef(null);
 
@@ -28,6 +37,13 @@ export default function AdminMetier() {
     await fetch('/api/auth/logout');
     window.location.href = '/login';
   };
+
+  useEffect(() => {
+    fetch('/api/netbox-seed')
+      .then(r => r.ok ? r.json() : { enabled: false })
+      .then(({ enabled }) => setNetboxEnabled(Boolean(enabled)))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch('/api/files')
@@ -67,6 +83,75 @@ export default function AdminMetier() {
       body: JSON.stringify(data, null, 2),
     });
     setStatus(res.ok ? '✅ Enregistré avec succès' : '❌ Erreur d\'enregistrement');
+  };
+
+  const handleCreateEtab = async e => {
+    e.preventDefault();
+    const { nom, filename } = newEtabForm;
+    setStatus('Création…');
+    const res = await fetch('/api/files', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nom, filename }),
+    });
+    const json = await res.json();
+    if (!res.ok) {
+      setStatus('❌ ' + (json.error || 'Erreur création'));
+      newEtabRef.current.close();
+      return;
+    }
+    newEtabRef.current.close();
+    const { file } = json;
+    const filesRes = await fetch('/api/files');
+    const { files: updatedFiles } = await filesRes.json();
+    const filtered = updatedFiles.filter(f => !f.endsWith('.infra.json') && !f.endsWith('.network.json') && !f.endsWith('.flux.json') && f !== 'trigrammes.json');
+    setFiles(filtered);
+    setFileLabels(prev => ({ ...prev, [file]: nom }));
+    setCurrent(file);
+
+    if (newEtabForm.seedNetbox) {
+      setStatus('Seed Netbox en cours…');
+      const seedRes = await fetch('/api/netbox-seed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom, filename }),
+      });
+      const seedJson = await seedRes.json();
+      if (seedRes.ok) {
+        const parts = ['✅ Établissement créé'];
+        parts.push(seedJson.created ? '+ site Netbox créé' : '(site Netbox déjà existant)');
+        if (seedJson.vms?.length) parts.push(`${seedJson.vms.length} VM(s)`);
+        if (seedJson.vlans?.length) parts.push(`${seedJson.vlans.length} VLAN(s)`);
+        setStatus(parts.join(' — '));
+      } else {
+        setStatus(`✅ Établissement créé — ⚠️ Netbox : ${seedJson.error}`);
+      }
+    } else {
+      setStatus('✅ Établissement créé');
+    }
+  };
+
+  const handleDeleteEtab = async () => {
+    if (!currentFile || !data) return;
+    const nom = data.etablissements?.[0]?.nom || currentFile;
+    if (!confirm(`Supprimer l'établissement « ${nom} » et ses 4 fichiers associés ? Cette action est irréversible.`)) return;
+    setStatus('Suppression…');
+    const res = await fetch('/api/file/' + encodeURIComponent(currentFile.replace(/\.json$/, '')), {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({}));
+      setStatus('❌ ' + (error || 'Erreur suppression'));
+      return;
+    }
+    const filesRes = await fetch('/api/files');
+    const { files: updatedFiles } = await filesRes.json();
+    const filtered = updatedFiles.filter(f => !f.endsWith('.infra.json') && !f.endsWith('.network.json') && !f.endsWith('.flux.json') && f !== 'trigrammes.json');
+    setFiles(filtered);
+    setFileLabels(prev => { const copy = { ...prev }; delete copy[currentFile]; return copy; });
+    setCurrent('');
+    setData(null);
+    setStatus('✅ Établissement supprimé');
   };
 
   const patchAtPath = (path, mutator) => {
@@ -166,9 +251,17 @@ export default function AdminMetier() {
             <option value="">— Sélectionner un établissement —</option>
             {files.map(f => <option key={f} value={f}>{fileLabels[f] || f}</option>)}
           </select>
+          <button className="admin-btn secondary" onClick={() => { setNewEtabForm({ nom: '', filename: '' }); newEtabRef.current.showModal(); }}>
+            + Nouvel établissement
+          </button>
           <button className="admin-btn primary" disabled={!data} onClick={handleSave}>
             Enregistrer
           </button>
+          {data && (
+            <button className="admin-btn danger" onClick={handleDeleteEtab}>
+              Supprimer
+            </button>
+          )}
           {status && <span className={`admin-status ${statusClass}`}>{status}</span>}
         </div>
 
@@ -294,6 +387,53 @@ export default function AdminMetier() {
             </div>
           </form>
         )}
+      </dialog>
+
+      {/* Dialog nouvel établissement */}
+      <dialog ref={newEtabRef} className="admin-dialog" aria-labelledby="new-etab-title" onCancel={() => newEtabRef.current.close()}>
+        <form onSubmit={handleCreateEtab}>
+          <div className="admin-dialog-head">
+            <span className="business-section-kicker">Nouveau</span>
+            <h2 id="new-etab-title">Établissement</h2>
+          </div>
+          <div className="admin-dialog-body admin-form-stack">
+            <label className="admin-label">
+              Nom de l&apos;établissement
+              <input
+                className="admin-input"
+                value={newEtabForm.nom}
+                onChange={e => setNewEtabForm(f => ({ ...f, nom: e.target.value, filename: slugify(e.target.value) }))}
+                required
+                autoFocus
+              />
+            </label>
+            <label className="admin-label">
+              Nom du fichier <small style={{ fontWeight: 400, opacity: 0.7 }}>(sans .json)</small>
+              <input
+                className="admin-input"
+                value={newEtabForm.filename}
+                onChange={e => setNewEtabForm(f => ({ ...f, filename: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '') }))}
+                required
+                pattern="[a-z0-9_-]+"
+                title="Lettres minuscules, chiffres, tirets ou underscores"
+              />
+            </label>
+            <label className="admin-label inline" style={{ marginTop: 4, opacity: netboxEnabled ? 1 : 0.4 }} title={netboxEnabled ? '' : 'NETBOX_URL et NETBOX_TOKEN non configurés'}>
+              <input
+                type="checkbox"
+                checked={newEtabForm.seedNetbox}
+                disabled={!netboxEnabled}
+                onChange={e => setNewEtabForm(f => ({ ...f, seedNetbox: e.target.checked }))}
+              />
+              {' '}Créer le site dans Netbox
+              {!netboxEnabled && <small style={{ marginLeft: 6, fontStyle: 'italic' }}>(non configuré)</small>}
+            </label>
+          </div>
+          <div className="admin-dialog-footer">
+            <button type="button" className="admin-btn ghost" onClick={() => newEtabRef.current.close()}>Annuler</button>
+            <button type="submit" className="admin-btn primary" disabled={!newEtabForm.filename}>Créer</button>
+          </div>
+        </form>
       </dialog>
 
       <style jsx>{`
